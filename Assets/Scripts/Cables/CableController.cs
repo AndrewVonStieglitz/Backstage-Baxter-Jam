@@ -164,9 +164,9 @@ namespace Cables
             nodes.Remove(node);
         }
 
-        private void CreateNode(Vector3 pointPos, OrientationUtil.Orientation orientation)
+        private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation)
         {
-            var nodeObject = Instantiate(nodePrefab, pointPos, Quaternion.identity);
+            var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity);
 
             var node = nodeObject.GetComponent<CableNode>();
 
@@ -175,6 +175,8 @@ namespace Cables
             node.Orientation = orientation;
             
             nodes.Add(node);
+            
+            GameEvents.CableWind(this, orientation, nodePos);
         }
     }
 }
