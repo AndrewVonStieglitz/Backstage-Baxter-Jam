@@ -1,22 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Cables.OrientationUtil;
 
-public class PoleController : MonoBehaviour
+namespace Cables
 {
-    public enum Orientation { horizontal, vertical }
-
-    private Orientation poleOrientation;
-    public Orientation PoleOrientation { get => poleOrientation; }
-    // Start is called before the first frame update
-    void Start()
+    public class PoleController : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private Orientation poleOrientation;
+        public Orientation PoleOrientation { get => poleOrientation; }
     }
 }

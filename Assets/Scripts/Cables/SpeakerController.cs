@@ -1,21 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SpeakerController : MonoBehaviour
+namespace Cables
 {
-    [SerializeField] private int speakerID;
-    public int SpeakerID { get => speakerID; }
-
-    // Start is called before the first frame update
-    void Start()
+    public class SpeakerController : MonoBehaviour
     {
-        
-    }
+        [SerializeField] private int speakerID;
+        public int SpeakerID { get => speakerID; }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Start is called before the first frame update
+        void Start()
+        {
         
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+        
+        }
     }
 }

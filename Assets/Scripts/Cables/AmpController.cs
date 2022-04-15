@@ -1,21 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AmpController : MonoBehaviour
+namespace Cables
 {
-    [SerializeField] private int ampID;
-    public int AmpID { get => ampID; }
-
-    // Start is called before the first frame update
-    void Start()
+    public class AmpController : MonoBehaviour
     {
-        
-    }
+        [SerializeField] private int ampID;
+        public int AmpID { get => ampID; }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Start is called before the first frame update
+        void Start()
+        {
         
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+        
+        }
     }
 }

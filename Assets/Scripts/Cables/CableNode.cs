@@ -1,30 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Cables.OrientationUtil;
 
-public class CableNode : MonoBehaviour
+namespace Cables
 {
-    private PoleController.Orientation nodeOrientation;
-    public PoleController.Orientation NodeOrientation { get => nodeOrientation; }
-
-    private CableController cable;
-    public CableController CableID { get => cable; }
-    // Start is called before the first frame update
-
-    public CableNode(PoleController.Orientation nodeOrientation, CableController cable)
+    public class CableNode : MonoBehaviour
     {
-        this.nodeOrientation = nodeOrientation;
-        this.cable = cable;
-    }
+        private Orientation nodeOrientation;
+        public Orientation NodeOrientation { get => nodeOrientation; }
 
-    void Start()
-    {
+        private CableController cable;
+        public CableController CableControllerID { get => cable; }
+
+        public CableNode(Orientation nodeOrientation, CableController cable)
+        {
+            this.nodeOrientation = nodeOrientation;
+            this.cable = cable;
+        }
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public Orientation Orientation { get; set; }
     }
 }

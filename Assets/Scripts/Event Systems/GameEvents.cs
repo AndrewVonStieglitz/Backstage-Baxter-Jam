@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Cables;
 
 /*
  * Event List ============================
@@ -111,8 +112,8 @@ public static class GameEvents
         }
     }
 
-    public static Action<CableController, PoleController.Orientation, Vector3> onCableWind;
-    public static void CableWind(CableController cable, PoleController.Orientation orientation, Vector3 location)
+    public static Action<CableController, OrientationUtil.Orientation, Vector3> onCableWind;
+    public static void CableWind(CableController cable, OrientationUtil.Orientation orientation, Vector3 location)
     {
         if (onCableWind != null)
         {
