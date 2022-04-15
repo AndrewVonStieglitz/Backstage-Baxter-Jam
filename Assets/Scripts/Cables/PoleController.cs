@@ -5,7 +5,7 @@ namespace Cables
 {
     public class PoleController : MonoBehaviour
     {
-        private Orientation poleOrientation;
+        [SerializeField] private Orientation poleOrientation;
         public Orientation PoleOrientation { get => poleOrientation; }
     }
 }

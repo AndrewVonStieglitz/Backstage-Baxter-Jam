@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cables
 {
@@ -13,13 +14,16 @@ namespace Cables
         private int ampID;
         public int AmpID { get => ampID; }
 
+        public UnityEvent<int> nodeCreated = new UnityEvent<int>();
+        public UnityEvent<CableNode> nodeDestroyed = new UnityEvent<CableNode>();
+
         public CableController(int cableID, int ampID)
         {
             this.cableID = cableID;
             this.ampID = ampID;
         }
 
-        private enum Direction { Left, Right, Up, Down }
+        public enum Direction { Left, Right, Up, Down }
         
         [SerializeField] private GameObject nodePrefab;
         [SerializeField] private float friction;
@@ -32,8 +36,8 @@ namespace Cables
         private Vector3 velocity;
         
         // Pole Tracking
-        private PoleController previousRegion;
-        private PoleController currentRegion;
+        private PoleController previousPole;
+        private PoleController currentPole;
 
         private Direction pipeEntryDirection;
 
@@ -67,31 +71,41 @@ namespace Cables
         
         private void OnTriggerEnter2D(Collider2D col)
         {
-            // if (!col.CompareTag("Region")) return;
-            //
-            // var region = col.GetComponent<Region>();
-            //
-            // if (currentRegion == region)
-            // {
-            //     Debug.Log("New Node in " + col.gameObject.name);
-            //
-            //     CreateNode(currentRegion);
-            // }
-            //
-            // previousRegion = currentRegion;
-            // currentRegion = region;
-
             if (!col.CompareTag("Pipe")) return;
-            
-            var regionOrientation = col.GetComponent<PoleController>().PoleOrientation;
-            
-            pipeEntryDirection = VelocityToDirection(regionOrientation);
-            
-            // Debug.Log("Pipe Entry Direction: " + pipeEntryDirection + "(" + velocity + ")");
 
-            Vector2 nodePosition = NodePosition(transform.position, regionOrientation, col, pipeEntryDirection);
+            var pole = col.GetComponent<PoleController>();
             
-            CreateNode(nodePosition, regionOrientation);
+            var poleOrientation = pole.PoleOrientation;
+
+            if (previousPole == null || poleOrientation == currentPole.PoleOrientation)
+            {
+                pipeEntryDirection = VelocityToDirection(poleOrientation);
+
+                Vector2 nodePosition = NodePosition(transform.position, poleOrientation, col, pipeEntryDirection);
+
+                CreateNode(nodePosition, poleOrientation);
+            }
+            
+            previousPole = currentPole;
+            currentPole = pole;
+        }
+
+        private void OnTriggerExit2D(Collider2D col)
+        {
+            if (!col.CompareTag("Pipe")) return;
+
+            var pole = col.GetComponent<PoleController>();
+
+            if (pole != currentPole) return;
+
+            if (pole.PoleOrientation != nodes[nodes.Count - 1].Orientation) return;
+            
+            var pipeExitDirection = VelocityToDirection(pole.PoleOrientation);
+
+            if (pipeExitDirection != pipeEntryDirection)
+            {
+                DestroyNode(nodes.Last());
+            }
         }
 
         private Vector2 NodePosition(Vector3 transformPosition, OrientationUtil.Orientation o, Collider2D col, Direction pipeEntryDirection)
@@ -143,27 +157,6 @@ namespace Cables
             }
         }
 
-        private void OnTriggerExit2D(Collider2D col)
-        {
-            if (!col.CompareTag("Pipe")) return;
-
-            var pipeExitDirection = VelocityToDirection(col.GetComponent<PoleController>().PoleOrientation);
-
-            // Debug.Log("Pipe Exit Direction: " + pipeExitDirection + "(" + velocity + ")");
-
-            if (pipeExitDirection != pipeEntryDirection)
-            {
-                DestroyNode(nodes.Last());
-            }
-        }
-
-        private void DestroyNode(CableNode node)
-        {
-            Destroy(node.gameObject);
-
-            nodes.Remove(node);
-        }
-
         private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation)
         {
             var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity);
@@ -173,10 +166,25 @@ namespace Cables
             if (node == null) throw new Exception("No node component on node prefab.");
 
             node.Orientation = orientation;
+
+            node.poleSide = nodes.Count < 1 || nodes[nodes.Count - 1].poleSide == CableNode.PoleSide.Under
+                ? CableNode.PoleSide.Over
+                : CableNode.PoleSide.Under;
             
             nodes.Add(node);
             
+            nodeCreated.Invoke(nodes.Count - 1);
+            
             GameEvents.CableWind(this, orientation, nodePos);
+        }
+
+        private void DestroyNode(CableNode node)
+        {
+            Destroy(node.gameObject);
+
+            nodes.Remove(node);
+            
+            nodeDestroyed.Invoke(node);
         }
     }
 }
