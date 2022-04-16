@@ -22,7 +22,7 @@ public class MusicController : MonoBehaviour
     {
         if (cable.AmpID <= musicList.Count && cable.AmpID >= 0)
         {
-            speaker.PlayMusic(musicList[cable.AmpID - 1]);
+            speaker.PlayMusic(musicList[cable.AmpID - 1], cable.AmpID);
         }
         else
         {
