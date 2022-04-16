@@ -56,6 +56,11 @@ public class SpeakerController : MonoBehaviour
     {
         if (speaker == this)
         {
+            if (connectedCable)
+            {
+                GameEvents.CableDisconnect(connectedCable, speaker);
+            }
+
             connectedCable = cable;
         }
     }
