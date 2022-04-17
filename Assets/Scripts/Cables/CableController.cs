@@ -8,40 +8,30 @@ namespace Cables
 {
     public class CableController : MonoBehaviour
     {
-        public enum CableState
-        {
-            InProgress,
-            Completed,
-            Abandoned
-        }
+        public enum CableState { InProgress, Completed, Abandoned }
         
-        public CableState state;
-        
-        [SerializeField] private int cableID;
-        public int CableID { get => cableID; }
+        public enum Direction { Left, Right, Up, Down }
 
-        public AmpController amp;
+        [SerializeField] private int cableID;
+        [SerializeField] private GameObject nodePrefab;
+        [SerializeField] private float friction;
+        [SerializeField] public Material cableMaterial;
+        [SerializeField] private Transform nodeParent;
+        
+        public int CableID { get => cableID; }
 
         public UnityEvent initialised = new UnityEvent();
         public UnityEvent<int> nodeCreated = new UnityEvent<int>();
         public UnityEvent<CableNode> nodeDestroyed = new UnityEvent<CableNode>();
         public UnityEvent cableCompleted = new UnityEvent();
 
-        public enum Direction { Left, Right, Up, Down }
-        
-        [SerializeField] private GameObject nodePrefab;
-        [SerializeField] private float friction;
-        [SerializeField] public Material cableMaterial;
-        [SerializeField] private Transform nodeParent;
-        
+        public CableState state;
+        public AmpController amp;
         public float cableWidth;
-
         public List<CableNode> nodes = new List<CableNode>();
         
-        // Pole Tracking
         private PoleController previousPole;
         private PoleController currentPole;
-
         private Direction pipeEntryDirection;
 
         private void OnEnable()
@@ -60,21 +50,6 @@ namespace Cables
             if (cable != this) return;
             
             Destroy(gameObject);
-        }
-
-        private void Update()
-        {
-            // TODO: Get the angle between the last node and the player
-            // TODO: Duplicate code. See CableRenderer.FlatEndedness.
-            // if (nodes.Count > 1)
-            // {
-            //     var angle = Vector2.Angle(nodes[nodes.Count - 1].transform.position, player.position);
-            //     
-            //     // TODO: If the angle exceeds the friction
-            //     // if (angle)
-            //
-            //     // TODO: Slide the node along the pipe
-            // }
         }
 
         public void PipeEnter(PoleController pole, Direction pipeEntryDirection, Vector2 nodePosition)

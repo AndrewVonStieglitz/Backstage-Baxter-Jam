@@ -6,8 +6,6 @@ namespace Cables
     {
         [SerializeField] private int speakerID;
         
-        private int ampID;
-
         public int AmpID
         {
             get => ampID;
@@ -21,6 +19,7 @@ namespace Cables
         private CableController connectedCable;
         private AudioSource speakerAudio;
         private AmpController amp;
+        private int ampID;
 
         private void Awake()
         {
