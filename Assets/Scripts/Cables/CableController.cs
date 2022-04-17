@@ -15,13 +15,6 @@ namespace Cables
             Abandoned
         }
         
-        private int ampID;
-
-        public int AmpID
-        {
-            get => ampID;
-        }
-
         public CableState state;
         
         [SerializeField] private int cableID;
