@@ -10,10 +10,10 @@ namespace Cables
         [SerializeField] private GameObject cablePrefab;
         [SerializeField] private CableHead cableHead;
 
-        private List<CableController> cables = new List<CableController>();
-        
         public int AmpID { get => ampID; }
         
+        private List<CableController> cables = new List<CableController>();
+
         private void OnEnable()
         {
             GameEvents.onCableDisconnect += OnCableDisconnect;
