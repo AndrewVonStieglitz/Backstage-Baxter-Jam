@@ -1,21 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmpController : MonoBehaviour
+namespace Cables
 {
-    [SerializeField] private int ampID;
-    public int AmpID { get => ampID; }
-
-    // Start is called before the first frame update
-    void Start()
+    public class AmpController : MonoBehaviour
     {
-        
-    }
+        [SerializeField] private int ampID;
+        [SerializeField] private Material cableMaterial;
+        [SerializeField] private GameObject cablePrefab;
+        [SerializeField] private CableHead cableHead;
 
-    // Update is called once per frame
-    void Update()
-    {
+        private List<CableController> cables = new List<CableController>();
         
+        public int AmpID { get => ampID; }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (!col.CompareTag("CableHead")) return;
+
+            if (cableHead.cable != null && cableHead.cable.amp == this) return;
+
+            var cableObject = Instantiate(cablePrefab, transform);
+            var cable = cableObject.GetComponent<CableController>();
+
+            cables.Add(cable);
+            
+            cableHead.NewCable(cable);
+
+            cable.Initialise(this, cableMaterial);
+        }
     }
 }

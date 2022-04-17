@@ -1,104 +1,116 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SpeakerController : MonoBehaviour
+namespace Cables
 {
-    [SerializeField] private int speakerID;
-    public int SpeakerID { get => speakerID; }
-
-    private int ampID;
-    public int AmpID { get => ampID; }
-
-    private CableController connectedCable;
-
-    private AudioSource speakerAudio;
-
-    private void Awake()
+    public class SpeakerController : MonoBehaviour
     {
-        speakerAudio = GetComponent<AudioSource>();
+        [SerializeField] private int speakerID;
+        
+        private int ampID;
 
-        //Adds component if does not currently exist
-        if (!speakerAudio)
+        public int AmpID
         {
-            speakerAudio = gameObject.AddComponent<AudioSource>();
-            speakerAudio.loop = true;
-            speakerAudio.playOnAwake = false;
-            speakerAudio.Stop();
+            get => ampID;
         }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void OnEnable()
-    {
-        GameEvents.onCableConnect += ConnectCable;
-        GameEvents.onCableDisconnect += DisconnectCable;
-    }
-
-    private void OnDisable()
-    {
-        GameEvents.onCableConnect -= ConnectCable;
-        GameEvents.onCableDisconnect -= DisconnectCable;
-    }
-
-    public void ConnectCable(CableController cable, SpeakerController speaker)
-    {
-        if (speaker == this)
+        public int SpeakerID
         {
-            if (connectedCable)
+            get => speakerID;
+        }
+
+        private CableController connectedCable;
+        private AudioSource speakerAudio;
+        private AmpController amp;
+
+        private void Awake()
+        {
+            speakerAudio = GetComponent<AudioSource>();
+
+            //Adds component if does not currently exist
+            if (!speakerAudio)
             {
-                GameEvents.CableDisconnect(connectedCable, speaker);
+                speakerAudio = gameObject.AddComponent<AudioSource>();
+                speakerAudio.loop = true;
+                speakerAudio.playOnAwake = false;
+                speakerAudio.Stop();
             }
-
-            connectedCable = cable;
         }
-    }
 
-    public void DisconnectCable(CableController cable, SpeakerController speaker)
-    {
-        if (speaker == this)
+        private void OnTriggerEnter2D(Collider2D col)
         {
-            connectedCable = null;
+            if (!col.CompareTag("CableHead")) return;
+
+            var cableHead = col.GetComponent<CableHead>();
+
+            if (cableHead == null) return;
+
+            var cable = cableHead.cable;
+
+            if (cable == null) return;
+
+            amp = cable.amp;
+
+            cable.Complete(transform.position);
         }
-    }
 
-    public void PlayMusic(AudioClip audioclip, int AmpID)
-    {
-        if (speakerAudio)
+        private void OnEnable()
         {
-            this.ampID = AmpID;
-            speakerAudio.clip = audioclip;
-            speakerAudio.Play();
+            GameEvents.onCableConnect += ConnectCable;
+            GameEvents.onCableDisconnect += DisconnectCable;
         }
-        else
+
+        private void OnDisable()
         {
-            Debug.Log("Speaker is missing audio source");
+            GameEvents.onCableConnect -= ConnectCable;
+            GameEvents.onCableDisconnect -= DisconnectCable;
         }
-    }
 
-
-
-    public void StopMusic()
-    {
-        if (speakerAudio)
+        public void ConnectCable(CableController cable, SpeakerController speaker)
         {
-            speakerAudio.clip = null;
-            speakerAudio.Stop();
+            if (speaker == this)
+            {
+                if (connectedCable)
+                {
+                    GameEvents.CableDisconnect(connectedCable, speaker);
+                }
+
+                connectedCable = cable;
+            }
         }
-        else
+
+        public void DisconnectCable(CableController cable, SpeakerController speaker)
         {
-            Debug.Log("Speaker is missing audio source");
+            if (speaker == this)
+            {
+                connectedCable = null;
+            }
+        }
+
+        public void PlayMusic(AudioClip audioclip, int AmpID)
+        {
+            if (speakerAudio)
+            {
+                this.ampID = AmpID;
+                speakerAudio.clip = audioclip;
+                speakerAudio.Play();
+            }
+            else
+            {
+                Debug.Log("Speaker is missing audio source");
+            }
+        }
+
+        public void StopMusic()
+        {
+            if (speakerAudio)
+            {
+                speakerAudio.clip = null;
+                speakerAudio.Stop();
+            }
+            else
+            {
+                Debug.Log("Speaker is missing audio source");
+            }
         }
     }
 }
