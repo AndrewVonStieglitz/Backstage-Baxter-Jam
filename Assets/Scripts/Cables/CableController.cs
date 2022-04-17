@@ -8,32 +8,35 @@ namespace Cables
 {
     public class CableController : MonoBehaviour
     {
+        public enum CableState
+        {
+            InProgress,
+            Completed,
+            Abandoned
+        }
+
+        public CableState state;
+        
         [SerializeField] private int cableID;
         public int CableID { get => cableID; }
 
-        private int ampID;
-        public int AmpID { get => ampID; }
+        public AmpController amp;
 
+        public UnityEvent initialised = new UnityEvent();
         public UnityEvent<int> nodeCreated = new UnityEvent<int>();
         public UnityEvent<CableNode> nodeDestroyed = new UnityEvent<CableNode>();
-
-        public CableController(int cableID, int ampID)
-        {
-            this.cableID = cableID;
-            this.ampID = ampID;
-        }
+        public UnityEvent cableCompleted = new UnityEvent();
 
         public enum Direction { Left, Right, Up, Down }
         
         [SerializeField] private GameObject nodePrefab;
         [SerializeField] private float friction;
+        [SerializeField] public Material cableMaterial;
+        [SerializeField] private Transform nodeParent;
         
         public float cableWidth;
 
         public List<CableNode> nodes = new List<CableNode>();
-
-        private Vector3 lastPosition;
-        private Vector3 velocity;
         
         // Pole Tracking
         private PoleController previousPole;
@@ -41,48 +44,29 @@ namespace Cables
 
         private Direction pipeEntryDirection;
 
-        private void Awake()
-        {
-            lastPosition = transform.position;
-
-            GetComponent<BoxCollider2D>().size = new Vector2(cableWidth, cableWidth);
-        }
-
         private void Update()
         {
             // TODO: Get the angle between the last node and the player
             // TODO: Duplicate code. See CableRenderer.FlatEndedness.
-            if (nodes.Count > 1)
-            {
-                var angle = Vector2.Angle(nodes[nodes.Count - 1].transform.position, transform.position);
-                
-                // TODO: If the angle exceeds the friction
-                // if (angle)
-            
-                // TODO: Slide the node along the pipe
-            }
+            // if (nodes.Count > 1)
+            // {
+            //     var angle = Vector2.Angle(nodes[nodes.Count - 1].transform.position, player.position);
+            //     
+            //     // TODO: If the angle exceeds the friction
+            //     // if (angle)
+            //
+            //     // TODO: Slide the node along the pipe
+            // }
         }
-        
-        private void FixedUpdate()
-        {
-            velocity = (transform.position - lastPosition) / Time.deltaTime;
-            lastPosition = transform.position;
-        }
-        
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (!col.CompareTag("Pipe")) return;
 
-            var pole = col.GetComponent<PoleController>();
-            
+        public void PipeEnter(PoleController pole, Direction pipeEntryDirection, Vector2 nodePosition)
+        {
             var poleOrientation = pole.PoleOrientation;
+
+            this.pipeEntryDirection = pipeEntryDirection;
 
             if (previousPole == null || poleOrientation == currentPole.PoleOrientation)
             {
-                pipeEntryDirection = VelocityToDirection(poleOrientation);
-
-                Vector2 nodePosition = NodePosition(transform.position, poleOrientation, col, pipeEntryDirection);
-
                 CreateNode(nodePosition, poleOrientation);
             }
             
@@ -90,76 +74,21 @@ namespace Cables
             currentPole = pole;
         }
 
-        private void OnTriggerExit2D(Collider2D col)
+        public void PipeExit(PoleController pole, Direction pipeExitDirection)
         {
-            if (!col.CompareTag("Pipe")) return;
-
-            var pole = col.GetComponent<PoleController>();
-
             if (pole != currentPole) return;
 
             if (pole.PoleOrientation != nodes[nodes.Count - 1].Orientation) return;
             
-            var pipeExitDirection = VelocityToDirection(pole.PoleOrientation);
-
             if (pipeExitDirection != pipeEntryDirection)
             {
                 DestroyNode(nodes.Last());
             }
         }
 
-        private Vector2 NodePosition(Vector3 transformPosition, OrientationUtil.Orientation o, Collider2D col, Direction pipeEntryDirection)
-        {
-            OrientationUtil.OrientedVector2 oPosition = new OrientationUtil.OrientedVector2(transformPosition);
-
-            float fromPipeCentre = 0;
-
-            var bounds = col.bounds;
-
-            // TODO: Clean this up using OrientedVectors
-            if (o == OrientationUtil.Orientation.Horizontal)
-            {
-                if (pipeEntryDirection == Direction.Down)
-                {
-                    fromPipeCentre = bounds.center.y + bounds.extents.y + cableWidth / 2;
-                }
-                else
-                {
-                    fromPipeCentre = bounds.center.y - bounds.extents.y - cableWidth / 2;
-                }
-            }
-            else
-            {
-                if (pipeEntryDirection == Direction.Left)
-                {
-                    fromPipeCentre = bounds.center.x + bounds.extents.x + cableWidth / 2;
-                }
-                else
-                {
-                    fromPipeCentre = bounds.center.x - bounds.extents.x - cableWidth / 2;
-                }
-            }
-            
-            OrientationUtil.OrientedVector2 oVector = new OrientationUtil.OrientedVector2(oPosition.X(o), fromPipeCentre);
-
-            return new Vector2(oVector.X(o), oVector.Y(o));
-        }
-
-        private Direction VelocityToDirection(OrientationUtil.Orientation orientation)
-        {
-            if (orientation == OrientationUtil.Orientation.Horizontal)
-            {
-                return velocity.y > 0 ? Direction.Up : Direction.Down;
-            }
-            else
-            {
-                return velocity.x > 0 ? Direction.Right : Direction.Left;
-            }
-        }
-
         private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation)
         {
-            var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity);
+            var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity, nodeParent);
 
             var node = nodeObject.GetComponent<CableNode>();
 
@@ -185,6 +114,25 @@ namespace Cables
             nodes.Remove(node);
             
             nodeDestroyed.Invoke(node);
+        }
+
+        public void Initialise(AmpController amp, Material cableMaterial)
+        {
+            this.amp = amp;
+            this.cableMaterial = cableMaterial;
+            
+            CreateNode(amp.transform.position, OrientationUtil.Orientation.Horizontal);
+            
+            initialised.Invoke();
+        }
+
+        public void Complete(Vector3 pos)
+        {
+            state = CableState.Completed;
+
+            CreateNode(pos, OrientationUtil.Orientation.Horizontal);
+            
+            cableCompleted.Invoke();
         }
     }
 }

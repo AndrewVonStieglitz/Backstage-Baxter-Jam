@@ -9,6 +9,7 @@ namespace Cables
     public class CableSegmentsRenderer : CableRenderer
     {
         [SerializeField] private GameObject cableSegmentPrefab;
+        [SerializeField] private Transform cableSegmentParent;
 
         private Dictionary<CableNode, LineRenderer> cableSegments = new Dictionary<CableNode, LineRenderer>();
 
@@ -23,7 +24,14 @@ namespace Cables
 
         private void Update()
         {
-            DrawPlayerSegment();
+            if (cable.state == CableController.CableState.InProgress)
+            {
+                lineRenderer.enabled = true;
+
+                DrawPlayerSegment();
+            }
+            else
+                lineRenderer.enabled = false;
         }
 
         private void DrawPlayerSegment()
@@ -45,7 +53,7 @@ namespace Cables
                 points3D.Add(new Vector3(lastPoint.x - joinCoverUpLength, lastPoint.y, lastPoint.z));
             }
 
-            // var direction = DirectionBetweenPoints(lastNode.transform.position, transform.position, lastNode.Orientation);
+            // var direction = DirectionBetweenPoints(lastNode.transform.position, player.position, lastNode.Orientation);
             // points3D = SetZPositionsWithDirection(points, direction).ToList();
             
             points3D = SetZPositions(points, lastNode.poleSide == CableNode.PoleSide.Over ? 1 : -1).ToList();
@@ -69,10 +77,11 @@ namespace Cables
         {
             if (cable.nodes.Count < 2) return;
 
-            var cableSegmentObject = Instantiate(cableSegmentPrefab);
+            var cableSegmentObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var cableSegment = cableSegmentObject.GetComponent<LineRenderer>();
             
             SetLineWidth(cableSegment);
+            cableSegment.material = cableMaterial;
 
             var node = cable.nodes[nodeIndex];
             var prevNode = nodes[nodes.Count - 2];
@@ -101,7 +110,7 @@ namespace Cables
             points2D.Add(new Vector2(b.x + joinCoverUpLength, b.y));
             
             
-            // var direction = DirectionBetweenPoints(prevNode.transform.position, transform.position, prevNode.Orientation);
+            // var direction = DirectionBetweenPoints(prevNode.transform.position, player.position, prevNode.Orientation);
             // var points3D = SetZPositionsWithDirection(points2D, direction).ToList();
 
             var points3D = SetZPositions(points2D, node.poleSide == CableNode.PoleSide.Over ? -1 : 1).ToList();

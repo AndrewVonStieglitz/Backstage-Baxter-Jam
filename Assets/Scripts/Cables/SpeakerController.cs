@@ -7,16 +7,23 @@ namespace Cables
         [SerializeField] private int speakerID;
         public int SpeakerID { get => speakerID; }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        private AmpController amp;
 
-        // Update is called once per frame
-        void Update()
+        private void OnTriggerEnter2D(Collider2D col)
         {
-        
+            if (!col.CompareTag("CableHead")) return;
+
+            var cableHead = col.GetComponent<CableHead>();
+
+            if (cableHead == null) return;
+            
+            var cable = cableHead.cable;
+
+            if (cable == null) return;
+
+            amp = cable.amp;
+
+            cable.Complete(transform.position);
         }
     }
 }

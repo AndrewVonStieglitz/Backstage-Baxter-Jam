@@ -11,7 +11,8 @@ namespace Cables
         [SerializeField] protected int pointsBetweenPins;
         [SerializeField] protected CableController cable;
         [SerializeField] protected float joinCoverUpLength;
-    
+        [SerializeField] protected Material cableMaterial;
+
         [Header("Player Section")]
         [SerializeField] private CurveFunctions.CurveFunction startCurveFunction;
         [SerializeField] private CurveFunctions.CurveFunction endCurveFunction;
@@ -23,11 +24,25 @@ namespace Cables
 
         protected LineRenderer lineRenderer;
 
+        protected CableHead cableHead;
+
         protected virtual void Awake()
         {
             lineRenderer = GetComponent<LineRenderer>();
 
             SetLineWidth(lineRenderer);
+            
+            cable.initialised.AddListener(OnInitialised);
+
+            // TODO: Temp
+            cableHead = FindObjectOfType<CableHead>();
+        }
+
+        private void OnInitialised()
+        {
+            cableMaterial = cable.cableMaterial;
+
+            lineRenderer.material = cableMaterial;
         }
 
         protected void SetLineWidth(LineRenderer lineRenderer)
@@ -123,7 +138,7 @@ namespace Cables
             var lastNode = nodes[nodes.Count - 1];
 
             var a = lastNode.transform.position;
-            var b = transform.position;
+            var b = cableHead.transform.position;
 
             return PointsBetweenPositions(a, b, lastNode.Orientation);
         }
