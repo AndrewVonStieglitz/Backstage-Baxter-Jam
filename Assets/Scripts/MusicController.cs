@@ -31,16 +31,18 @@ public class MusicController : MonoBehaviour
 
     private void PlayMusic(CableController cable, SpeakerController speaker)
     {
-        if (cable.AmpID <= musicList.Count && cable.AmpID >= 0)
+        var ampID = cable.amp.AmpID;
+        
+        if (ampID <= musicList.Count && ampID >= 0)
         {
-            speaker.PlayMusic(musicList[cable.AmpID - 1], cable.AmpID, timer);
+            speaker.PlayMusic(musicList[ampID], ampID);
         }
         else
         {
             Debug.Log("ID is invalid. Song may not be added to MusicController's musicList");
         }
     }
-
+    
     private void StopMusic(CableController cable, SpeakerController speaker)
     {
         speaker.StopMusic();

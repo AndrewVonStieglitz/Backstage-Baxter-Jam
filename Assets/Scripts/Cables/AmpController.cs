@@ -10,9 +10,19 @@ namespace Cables
         [SerializeField] private GameObject cablePrefab;
         [SerializeField] private CableHead cableHead;
 
-        private List<CableController> cables = new List<CableController>();
-        
         public int AmpID { get => ampID; }
+        
+        private List<CableController> cables = new List<CableController>();
+
+        private void OnEnable()
+        {
+            GameEvents.onCableDisconnect += OnCableDisconnect;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.onCableDisconnect -= OnCableDisconnect;
+        }
 
         private void OnTriggerEnter2D(Collider2D col)
         {
@@ -28,6 +38,14 @@ namespace Cables
             cableHead.NewCable(cable);
 
             cable.Initialise(this, cableMaterial);
+        }
+        
+        // TODO: This should be listening for the cable getting destroyed, not disconnected.
+        private void OnCableDisconnect(CableController cable, SpeakerController speaker)
+        {
+            if (!cables.Contains(cable)) return;
+
+            cables.Remove(cable);
         }
     }
 }

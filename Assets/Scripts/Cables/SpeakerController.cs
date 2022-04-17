@@ -6,8 +6,6 @@ namespace Cables
     {
         [SerializeField] private int speakerID;
         
-        private int ampID;
-
         public int AmpID
         {
             get => ampID;
@@ -21,6 +19,7 @@ namespace Cables
         private CableController connectedCable;
         private AudioSource speakerAudio;
         private AmpController amp;
+        private int ampID;
 
         private void Awake()
         {
@@ -51,43 +50,15 @@ namespace Cables
             amp = cable.amp;
 
             cable.Complete(transform.position);
-        }
 
-        private void OnEnable()
-        {
-            GameEvents.onCableConnect += ConnectCable;
-            GameEvents.onCableDisconnect += DisconnectCable;
-        }
-
-    public void PlayMusic(AudioClip audioclip, int AmpID, float time)
-    {
-        if (speakerAudio)
-        {
-            this.ampID = AmpID;
-            speakerAudio.clip = audioclip;
-            speakerAudio.time = time;
-            speakerAudio.Play();
-        }
-
-        public void ConnectCable(CableController cable, SpeakerController speaker)
-        {
-            if (speaker == this)
+            if (connectedCable)
             {
-                if (connectedCable)
-                {
-                    GameEvents.CableDisconnect(connectedCable, speaker);
-                }
-
-                connectedCable = cable;
+                GameEvents.CableDisconnect(connectedCable, this);
             }
-        }
 
-        public void DisconnectCable(CableController cable, SpeakerController speaker)
-        {
-            if (speaker == this)
-            {
-                connectedCable = null;
-            }
+            connectedCable = cable;
+            
+            GameEvents.CableConnect(cable, this);
         }
 
         public void PlayMusic(AudioClip audioclip, int AmpID)
