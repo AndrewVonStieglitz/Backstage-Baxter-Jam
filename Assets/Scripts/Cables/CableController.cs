@@ -44,6 +44,24 @@ namespace Cables
 
         private Direction pipeEntryDirection;
 
+        private void OnEnable()
+        {
+            GameEvents.onCableDisconnect += OnCableDisconnect;
+        }
+        
+        private void OnDisable()
+        {
+            GameEvents.onCableDisconnect -= OnCableDisconnect;
+        }
+
+        // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.
+        private void OnCableDisconnect(CableController cable, SpeakerController speaker)
+        {
+            if (cable != this) return;
+            
+            Destroy(gameObject);
+        }
+
         private void Update()
         {
             // TODO: Get the angle between the last node and the player
