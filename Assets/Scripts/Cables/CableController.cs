@@ -14,6 +14,13 @@ namespace Cables
             Completed,
             Abandoned
         }
+        
+        private int ampID;
+
+        public int AmpID
+        {
+            get => ampID;
+        }
 
         public CableState state;
         
