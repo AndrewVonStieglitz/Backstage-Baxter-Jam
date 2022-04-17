@@ -4,15 +4,34 @@ using UnityEngine;
 
 public class MusicController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private List<AudioClip> musicList = new List<AudioClip>();
+
+    private void OnEnable()
     {
-        
+        GameEvents.onCableConnect += PlayMusic;
+        GameEvents.onCableDisconnect += StopMusic;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        GameEvents.onCableConnect -= PlayMusic;
+        GameEvents.onCableDisconnect -= StopMusic;
+    }
+
+    private void PlayMusic(CableController cable, SpeakerController speaker)
+    {
+        if (cable.AmpID <= musicList.Count && cable.AmpID >= 0)
+        {
+            speaker.PlayMusic(musicList[cable.AmpID - 1], cable.AmpID);
+        }
+        else
+        {
+            Debug.Log("ID is invalid. Song may not be added to MusicController's musicList");
+        }
+    }
+
+    private void StopMusic(CableController cable, SpeakerController speaker)
+    {
+        speaker.StopMusic();
     }
 }
