@@ -6,24 +6,34 @@ using UnityEngine;
 public class MusicController : MonoBehaviour
 {
     [SerializeField] private List<AudioClip> musicList = new List<AudioClip>();
+    private float timer;
 
     private void OnEnable()
     {
         GameEvents.onCableConnect += PlayMusic;
-        GameEvents.onCableDisconnect += StopMusic;
+        //GameEvents.onCableDisconnect += StopMusic;
     }
 
     private void OnDisable()
     {
         GameEvents.onCableConnect -= PlayMusic;
-        GameEvents.onCableDisconnect -= StopMusic;
+        //GameEvents.onCableDisconnect -= StopMusic;
+    }
+
+    private void Update()
+    {
+        if (GameManager.CurrentGameState == GameManager.GameState.playing )
+        {
+            timer += Time.deltaTime;
+        }
+
     }
 
     private void PlayMusic(CableController cable, SpeakerController speaker)
     {
         if (cable.AmpID <= musicList.Count && cable.AmpID >= 0)
         {
-            speaker.PlayMusic(musicList[cable.AmpID - 1], cable.AmpID);
+            speaker.PlayMusic(musicList[cable.AmpID - 1], cable.AmpID, timer);
         }
         else
         {

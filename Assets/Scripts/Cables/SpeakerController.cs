@@ -59,10 +59,14 @@ namespace Cables
             GameEvents.onCableDisconnect += DisconnectCable;
         }
 
-        private void OnDisable()
+    public void PlayMusic(AudioClip audioclip, int AmpID, float time)
+    {
+        if (speakerAudio)
         {
-            GameEvents.onCableConnect -= ConnectCable;
-            GameEvents.onCableDisconnect -= DisconnectCable;
+            this.ampID = AmpID;
+            speakerAudio.clip = audioclip;
+            speakerAudio.time = time;
+            speakerAudio.Play();
         }
 
         public void ConnectCable(CableController cable, SpeakerController speaker)
