@@ -51,39 +51,15 @@ namespace Cables
             amp = cable.amp;
 
             cable.Complete(transform.position);
-        }
 
-        private void OnEnable()
-        {
-            GameEvents.onCableConnect += ConnectCable;
-            GameEvents.onCableDisconnect += DisconnectCable;
-        }
-
-        private void OnDisable()
-        {
-            GameEvents.onCableConnect -= ConnectCable;
-            GameEvents.onCableDisconnect -= DisconnectCable;
-        }
-
-        public void ConnectCable(CableController cable, SpeakerController speaker)
-        {
-            if (speaker == this)
+            if (connectedCable)
             {
-                if (connectedCable)
-                {
-                    GameEvents.CableDisconnect(connectedCable, speaker);
-                }
-
-                connectedCable = cable;
+                GameEvents.CableDisconnect(connectedCable, this);
             }
-        }
 
-        public void DisconnectCable(CableController cable, SpeakerController speaker)
-        {
-            if (speaker == this)
-            {
-                connectedCable = null;
-            }
+            connectedCable = cable;
+            
+            GameEvents.CableConnect(cable, this);
         }
 
         public void PlayMusic(AudioClip audioclip, int AmpID)
