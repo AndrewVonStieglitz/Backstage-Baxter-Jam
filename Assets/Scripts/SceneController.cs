@@ -8,14 +8,9 @@ public class SceneController : MonoBehaviour
     [SerializeField] string level1SceneName;
     [SerializeField] string gameOverSceneName;
     [SerializeField] string mainMenuSceneName;
-
-    Scene level1Scene, mainMenuScene, gameOverScene;
     // Start is called before the first frame update
     private void Awake()
     {
-        mainMenuScene = SceneManager.GetSceneByName(mainMenuSceneName);
-        gameOverScene = SceneManager.GetSceneByName(gameOverSceneName);
-        level1Scene = SceneManager.GetSceneByName(level1SceneName);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -65,9 +60,10 @@ public class SceneController : MonoBehaviour
 
     private void OnSceneLoadDo(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if (scene == level1Scene)
+        if (scene.name == level1SceneName)
         {
             GameEvents.GameStart();
+            Debug.Log("Starting Game");
         }
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] static private float maxTime;
-    static public float MaxTime { get => maxTime; }
+    [SerializeField] private float maxTime;
+    public float MaxTime { get => maxTime; }
 
     static private float timer;
     static public float Timer { get => timer; }
@@ -48,10 +48,11 @@ public class GameManager : MonoBehaviour
         GameEvents.onTimeUp -= OnTimeUp;
     }
 
-    private static void OnGameStart()
+    private void OnGameStart()
     {
         currentGameState = GameState.playing;
         timer = maxTime;
+        Debug.Log("Game Started");
     }
 
     private static void OnGameOver()
