@@ -28,7 +28,7 @@ namespace Cables
         {
             if (!col.CompareTag("CableHead")) return;
 
-            if (cableHead.cable != null && cableHead.cable.amp == this) return;
+            if (cableHead.cable != null) return;
 
             var cableObject = Instantiate(cablePrefab, transform);
             var cable = cableObject.GetComponent<CableController>();
