@@ -292,15 +292,15 @@ PrefabInstance:
     - target: {fileID: 3875656460513808459, guid: 61975eca0f6f1594c87af25fec1df86b, type: 3}
       propertyPath: musicList.Array.data[0]
       value: 
-      objectReference: {fileID: 8300000, guid: 6372368a3855f5144b8c7c808a33ece8, type: 3}
+      objectReference: {fileID: 8300000, guid: fe68a6d6839683d4ca6d48a6c0281d1f, type: 3}
     - target: {fileID: 3875656460513808459, guid: 61975eca0f6f1594c87af25fec1df86b, type: 3}
       propertyPath: musicList.Array.data[1]
       value: 
-      objectReference: {fileID: 8300000, guid: 1589bb30f0e95364c8b773cf5b6233cb, type: 3}
+      objectReference: {fileID: 8300000, guid: fe68a6d6839683d4ca6d48a6c0281d1f, type: 3}
     - target: {fileID: 3875656460513808459, guid: 61975eca0f6f1594c87af25fec1df86b, type: 3}
       propertyPath: musicList.Array.data[2]
       value: 
-      objectReference: {fileID: 8300000, guid: c5be1110c52f5cd48b710195db1f46bb, type: 3}
+      objectReference: {fileID: 8300000, guid: fe68a6d6839683d4ca6d48a6c0281d1f, type: 3}
     - target: {fileID: 3875656460513808461, guid: 61975eca0f6f1594c87af25fec1df86b, type: 3}
       propertyPath: m_Name
       value: MusicPlayer
@@ -731,7 +731,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564174797}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3882833, y: 5.5236893, z: -20.91621}
+  m_LocalPosition: {x: -4.84, y: 10.48, z: -20.91621}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 280144349}

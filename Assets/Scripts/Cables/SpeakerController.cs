@@ -61,12 +61,13 @@ namespace Cables
             GameEvents.CableConnect(cable, this);
         }
 
-        public void PlayMusic(AudioClip audioclip, int AmpID)
+        public void PlayMusic(AudioClip audioclip, int AmpID, float time)
         {
             if (speakerAudio)
             {
                 this.ampID = AmpID;
                 speakerAudio.clip = audioclip;
+                speakerAudio.time = time % audioclip.length;
                 speakerAudio.Play();
             }
             else
