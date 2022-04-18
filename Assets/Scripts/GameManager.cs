@@ -48,13 +48,13 @@ public class GameManager : MonoBehaviour
         GameEvents.onTimeUp -= OnTimeUp;
     }
 
-    private void OnGameStart()
+    private static void OnGameStart()
     {
         currentGameState = GameState.playing;
         timer = maxTime;
     }
 
-    private void OnGameOver()
+    private static void OnGameOver()
     {
         currentGameState = GameState.menu;
     }
