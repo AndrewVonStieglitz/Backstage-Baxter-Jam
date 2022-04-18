@@ -243,23 +243,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 605232504423771604, guid: e07545b1004fdf948a4605b2d9fa7261, type: 3}
   m_PrefabInstance: {fileID: 605232504199696592}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1230964115 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8950431176560661091, guid: e8decbb710da163409d3706197103971, type: 3}
-  m_PrefabInstance: {fileID: 2068674292}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1230964119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1230964115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc1aef15b5c0e3e4c8433eda56f9641d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2068674292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -267,9 +250,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2433516483878185267, guid: e8decbb710da163409d3706197103971, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+    - target: {fileID: 1230964119, guid: e8decbb710da163409d3706197103971, type: 3}
+      propertyPath: jumpSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230964119, guid: e8decbb710da163409d3706197103971, type: 3}
+      propertyPath: jumpingTimer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3281876493896007283, guid: e8decbb710da163409d3706197103971, type: 3}
       propertyPath: m_RootOrder
@@ -315,6 +302,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7571214672300641421, guid: e8decbb710da163409d3706197103971, type: 3}
+      propertyPath: m_GravityScale
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8950431176560661091, guid: e8decbb710da163409d3706197103971, type: 3}
       propertyPath: m_Name
       value: Baxter
@@ -330,7 +321,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 605232504423771602, guid: e07545b1004fdf948a4605b2d9fa7261, type: 3}
       propertyPath: m_Name
-      value: Square (1)
+      value: Square
       objectReference: {fileID: 0}
     - target: {fileID: 605232504423771604, guid: e07545b1004fdf948a4605b2d9fa7261, type: 3}
       propertyPath: m_RootOrder

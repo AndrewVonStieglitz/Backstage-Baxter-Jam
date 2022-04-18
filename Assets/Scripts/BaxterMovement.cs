@@ -1,30 +1,48 @@
 using UnityEngine;
 
 public class BaxterMovement : MonoBehaviour {
-
-    bool LeftP = false;
-    bool rightP = false;
-    bool jumpP = false;
+    public float speed;
+    public float jumpSpeed;
+    bool isGrounded = false;
+    float jumping;
+    public float jumpingTimer;
 
     Rigidbody2D rb;
-
-    private void Start() {
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-    }
-    private void Update() {
-        LeftP = Input.GetKey(KeyCode.LeftArrow);
-        rightP = Input.GetKey(KeyCode.RightArrow);
-        jumpP = Input.GetKey(KeyCode.UpArrow);
+    
+    private void Awake() {
+        rb = GetComponent<Rigidbody2D>();
     }
     private void FixedUpdate() {
-        if (LeftP) {
-            rb.AddForce(new Vector2(-1, 0) * 10);
-        } 
-        if (rightP) {
-            rb.AddForce(new Vector2(1, 0) * 10);
+        if (isGrounded) {
+            if (Input.GetKey(KeyCode.W)) {
+                jumping = jumpingTimer;
+            }
+        } else {
+            if (!Input.GetKey(KeyCode.W)) {
+                jumping -= 10;
+            }
         }
-        if (jumpP) {
-            rb.AddForce(new Vector2(0, 1) * 10);
+
+        if (jumping > 0) { 
+            jumping -= 1;
+            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+        }
+
+        if (Input.GetKey(KeyCode.A)) {
+            rb.velocity = new Vector2(-speed, rb.velocity.y);
+        }
+        if (Input.GetKey(KeyCode.D)) {
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Ground") {
+            isGrounded = true;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Ground") {
+            isGrounded = false;
         }
     }
 }
