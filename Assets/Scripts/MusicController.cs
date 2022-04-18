@@ -8,7 +8,6 @@ public class MusicController : MonoBehaviour
     private float timer;
 
     private bool timerActive;
-    private float timer;
 
     private void OnEnable()
     {
@@ -22,15 +21,6 @@ public class MusicController : MonoBehaviour
         GameEvents.onGameStart -= StartTimer;
         GameEvents.onCableConnect -= PlayMusic;
         //GameEvents.onCableDisconnect -= StopMusic;
-    }
-
-    private void Update()
-    {
-        if (GameManager.CurrentGameState == GameManager.GameState.playing )
-        {
-            timer += Time.deltaTime;
-        }
-
     }
 
     private void Update()
