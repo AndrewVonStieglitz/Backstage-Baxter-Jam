@@ -58,8 +58,8 @@ namespace Cables
 
             this.pipeEntryDirection = pipeEntryDirection;
 
-            if (previousPole == null || poleOrientation == currentPole.PoleOrientation)
-            {
+            if (currentPole != null && (poleOrientation == currentPole.PoleOrientation || poleOrientation == nodes.Last().Orientation))
+            {  
                 CreateNode(nodePosition, poleOrientation);
             }
             
@@ -73,10 +73,11 @@ namespace Cables
 
             if (pole.PoleOrientation != nodes[nodes.Count - 1].Orientation) return;
             
-            if (pipeExitDirection != pipeEntryDirection)
-            {
-                DestroyNode(nodes.Last());
-            }
+            if (pipeExitDirection == pipeEntryDirection) return;
+
+            if (nodes.Count <= 1) return;
+            
+            DestroyNode(nodes.Last());
         }
 
         private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation)
