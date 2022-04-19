@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static Cables.CableController;
 
 namespace Cables
 {
@@ -64,19 +63,19 @@ namespace Cables
             lastPosition = transform.position;
         }
 
-        private Direction VelocityToDirection(OrientationUtil.Orientation orientation)
+        private DirectionUtil.Direction VelocityToDirection(OrientationUtil.Orientation orientation)
         {
             if (orientation == OrientationUtil.Orientation.Horizontal)
             {
-                return velocity.y > 0 ? Direction.Up : Direction.Down;
+                return velocity.y > 0 ? DirectionUtil.Direction.Up : DirectionUtil.Direction.Down;
             }
             else
             {
-                return velocity.x > 0 ? Direction.Right : Direction.Left;
+                return velocity.x > 0 ? DirectionUtil.Direction.Right : DirectionUtil.Direction.Left;
             }
         }
 
-        private Vector2 NodePosition(Vector3 transformPosition, OrientationUtil.Orientation o, Collider2D col, Direction pipeEntryDirection)
+        private Vector2 NodePosition(Vector3 transformPosition, OrientationUtil.Orientation o, Collider2D col, DirectionUtil.Direction pipeEntryDirection)
         {
             OrientationUtil.OrientedVector2 oPosition = new OrientationUtil.OrientedVector2(transformPosition);
 
@@ -87,7 +86,7 @@ namespace Cables
             // TODO: Clean this up using OrientedVectors
             if (o == OrientationUtil.Orientation.Horizontal)
             {
-                if (pipeEntryDirection == Direction.Down)
+                if (pipeEntryDirection == DirectionUtil.Direction.Down)
                 {
                     fromPipeCentre = bounds.center.y + bounds.extents.y + cable.cableWidth / 2;
                 }
@@ -98,7 +97,7 @@ namespace Cables
             }
             else
             {
-                if (pipeEntryDirection == Direction.Left)
+                if (pipeEntryDirection == DirectionUtil.Direction.Left)
                 {
                     fromPipeCentre = bounds.center.x + bounds.extents.x + cable.cableWidth / 2;
                 }

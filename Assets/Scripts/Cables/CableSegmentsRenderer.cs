@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Cables.OrientationUtil;
 
 namespace Cables
 {
@@ -64,9 +62,6 @@ namespace Cables
                 
                 points3D.Add(new Vector3(lastPoint.x - joinCoverUpLength, lastPoint.y, lastPoint.z));
             }
-
-            // var direction = DirectionBetweenPoints(lastNode.transform.position, player.position, lastNode.Orientation);
-            // points3D = SetZPositionsWithDirection(points, direction).ToList();
             
             points3D = SetZPositions(points, lastNode.poleSide == CableNode.PoleSide.Over ? 1 : -1).ToList();
             
@@ -120,10 +115,6 @@ namespace Cables
             
             // TODO Orient
             points2D.Add(new Vector2(b.x + joinCoverUpLength, b.y));
-            
-           // TODO: Can be removed 
-            // var direction = DirectionBetweenPoints(prevNode.transform.position, player.position, prevNode.Orientation);
-            // var points3D = SetZPositionsWithDirection(points2D, direction).ToList();
 
             var points3D = SetZPositions(points2D, node.poleSide == CableNode.PoleSide.Over ? -1 : 1).ToList();
             
@@ -138,32 +129,6 @@ namespace Cables
             cableSegments.Remove(node);
         }
 
-        private CableController.Direction DirectionBetweenPoints(Vector2 a, Vector2 b, Orientation orientation)
-        {
-            if (orientation == Orientation.Horizontal)
-            {
-                return b.y - a.y > 0 ? CableController.Direction.Down : CableController.Direction.Up;
-            }
-            else
-            {
-                return b.x - a.x < 0 ? CableController.Direction.Left : CableController.Direction.Right;
-            }
-        }
-        
-        private IEnumerable<Vector3> SetZPositionsWithDirection(IEnumerable<Vector2> points, CableController.Direction direction)
-        {
-            float zPos = direction switch
-            {
-                CableController.Direction.Left => 1,
-                CableController.Direction.Right => -1,
-                CableController.Direction.Up => 1,
-                CableController.Direction.Down => -1,
-                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-            };
-
-            return SetZPositions(points, zPos);
-        }
-        
         private static IEnumerable<Vector3> SetZPositions(IEnumerable<Vector2> points, float zPos)
         {
             return points.Select(p => new Vector3(p.x, p.y, zPos));

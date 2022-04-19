@@ -9,8 +9,6 @@ namespace Cables
     public class CableController : MonoBehaviour
     {
         public enum CableState { InProgress, Completed, Abandoned }
-        
-        public enum Direction { Left, Right, Up, Down }
 
         [SerializeField] private int cableID;
         [SerializeField] private GameObject nodePrefab;
@@ -31,7 +29,7 @@ namespace Cables
         
         private PoleController previousPole;
         private PoleController currentPole;
-        private Direction pipeEntryDirection;
+        private DirectionUtil.Direction pipeEntryDirection;
 
         private void OnEnable()
         {
@@ -51,7 +49,7 @@ namespace Cables
             Destroy(gameObject);
         }
 
-        public void PipeEnter(PoleController pole, Direction pipeEntryDirection, Vector2 nodePosition)
+        public void PipeEnter(PoleController pole, DirectionUtil.Direction pipeEntryDirection, Vector2 nodePosition)
         {
             var poleOrientation = pole.PoleOrientation;
 
@@ -66,7 +64,7 @@ namespace Cables
             currentPole = pole;
         }
 
-        public void PipeExit(PoleController pole, Direction pipeExitDirection)
+        public void PipeExit(PoleController pole, DirectionUtil.Direction pipeExitDirection)
         {
             if (pole != currentPole) return;
 
