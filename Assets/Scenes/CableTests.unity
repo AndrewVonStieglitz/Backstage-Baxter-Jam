@@ -453,6 +453,10 @@ PrefabInstance:
       propertyPath: cableHead
       value: 
       objectReference: {fileID: 280144351}
+    - target: {fileID: 544789550738435327, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
+      propertyPath: cableSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9cd646b3660094a4ab034f4e212ada66, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
 --- !u!4 &655218954 stripped
@@ -585,6 +589,10 @@ PrefabInstance:
       propertyPath: cableHead
       value: 
       objectReference: {fileID: 280144351}
+    - target: {fileID: 544789550738435327, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
+      propertyPath: cableSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
 --- !u!4 &1136756925 stripped
@@ -731,7 +739,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564174797}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09, y: 14.48, z: -20.91621}
+  m_LocalPosition: {x: 2.76, y: 12.29, z: -20.91621}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 280144349}
@@ -944,6 +952,10 @@ PrefabInstance:
       propertyPath: cableHead
       value: 
       objectReference: {fileID: 280144351}
+    - target: {fileID: 544789550738435327, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
+      propertyPath: cableSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9738370b10e40734d9db95c3c47eaff9, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
 --- !u!1001 &553583980566495888

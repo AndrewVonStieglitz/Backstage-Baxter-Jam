@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static Cables.OrientationUtil;
 
@@ -11,7 +10,6 @@ namespace Cables
         [SerializeField] protected int pointsBetweenPins;
         [SerializeField] protected CableController cable;
         [SerializeField] protected float joinCoverUpLength;
-        [SerializeField] protected Material cableMaterial;
 
         [Header("Player Section")]
         [SerializeField] private CurveFunctions.CurveFunction startCurveFunction;
@@ -21,10 +19,9 @@ namespace Cables
         [SerializeField] private float caternaryLength;
 
         protected List<CableNode> nodes => cable.nodes;
-
         protected LineRenderer lineRenderer;
-
         protected CableHead cableHead;
+        protected Sprite cableSprite;
 
         protected virtual void Awake()
         {
@@ -32,17 +29,24 @@ namespace Cables
 
             SetLineWidth(lineRenderer);
             
-            cable.initialised.AddListener(OnInitialised);
-
             // TODO: Temp
             cableHead = FindObjectOfType<CableHead>();
         }
-
-        private void OnInitialised()
+        
+        protected virtual void OnEnable()
         {
-            cableMaterial = cable.cableMaterial;
+            cable.initialised.AddListener(OnInitialised);
+        }
 
-            lineRenderer.material = cableMaterial;
+        protected virtual void OnDisable()
+        {
+            cable.initialised.RemoveListener(OnInitialised);
+        }
+
+        protected virtual void OnInitialised()
+        {
+            cableSprite = cable.amp.cableSprite;
+            lineRenderer.material.mainTexture = cableSprite.texture; 
         }
 
         protected void SetLineWidth(LineRenderer lineRenderer)

@@ -15,7 +15,6 @@ namespace Cables
         [SerializeField] private int cableID;
         [SerializeField] private GameObject nodePrefab;
         [SerializeField] private float friction;
-        [SerializeField] public Material cableMaterial;
         [SerializeField] private Transform nodeParent;
         
         public int CableID { get => cableID; }
@@ -110,10 +109,9 @@ namespace Cables
             nodeDestroyed.Invoke(node);
         }
 
-        public void Initialise(AmpController amp, Material cableMaterial)
+        public void Initialise(AmpController amp)
         {
             this.amp = amp;
-            this.cableMaterial = cableMaterial;
             
             CreateNode(amp.transform.position, OrientationUtil.Orientation.Horizontal);
             

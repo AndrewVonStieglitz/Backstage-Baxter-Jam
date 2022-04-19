@@ -13,14 +13,26 @@ namespace Cables
 
         private Dictionary<CableNode, LineRenderer> cableSegments = new Dictionary<CableNode, LineRenderer>();
 
-        protected override void Awake()
+        protected override void OnInitialised()
         {
-            base.Awake();
-            
-            // TODO: Unlisten from these
+            base.OnInitialised();
+
+            for (var index = 0; index < cable.nodes.Count; index++)
+            {
+                OnNodeCreated(index);
+            }
+
             cable.nodeCreated.AddListener(OnNodeCreated);
             cable.nodeDestroyed.AddListener(OnNodeDestroyed);
         }
+
+        // protected override void OnDisable()
+        // {
+        //     base.OnDisable();
+        //     
+        //     cable.nodeCreated.RemoveListener(OnNodeCreated);
+        //     cable.nodeDestroyed.RemoveListener(OnNodeDestroyed);
+        // }
 
         private void Update()
         {
@@ -81,7 +93,7 @@ namespace Cables
             var cableSegment = cableSegmentObject.GetComponent<LineRenderer>();
             
             SetLineWidth(cableSegment);
-            cableSegment.material = cableMaterial;
+            cableSegment.material.mainTexture = cableSprite.texture; 
 
             var node = cable.nodes[nodeIndex];
             var prevNode = nodes[nodes.Count - 2];
@@ -109,7 +121,7 @@ namespace Cables
             // TODO Orient
             points2D.Add(new Vector2(b.x + joinCoverUpLength, b.y));
             
-            
+           // TODO: Can be removed 
             // var direction = DirectionBetweenPoints(prevNode.transform.position, player.position, prevNode.Orientation);
             // var points3D = SetZPositionsWithDirection(points2D, direction).ToList();
 
