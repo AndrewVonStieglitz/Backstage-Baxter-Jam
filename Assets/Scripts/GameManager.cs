@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
     private static void OnGameOver()
     {
         currentGameState = GameState.menu;
+        MenuEvents.onGameEnded();
     }
 
     private void OnTimeUp()
