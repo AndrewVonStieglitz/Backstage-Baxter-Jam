@@ -5,22 +5,22 @@ using UnityEngine;
 public class MusicController : MonoBehaviour
 {
     [SerializeField] private List<AudioClip> musicList = new List<AudioClip>();
+    private float timer;
 
     private bool timerActive;
-    private float timer;
 
     private void OnEnable()
     {
         GameEvents.onGameStart += StartTimer;
         GameEvents.onCableConnect += PlayMusic;
-        GameEvents.onCableDisconnect += StopMusic;
+        //GameEvents.onCableDisconnect += StopMusic;
     }
 
     private void OnDisable()
     {
         GameEvents.onGameStart -= StartTimer;
         GameEvents.onCableConnect -= PlayMusic;
-        GameEvents.onCableDisconnect -= StopMusic;
+        //GameEvents.onCableDisconnect -= StopMusic;
     }
 
     private void Update()
