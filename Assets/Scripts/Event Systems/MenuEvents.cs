@@ -23,6 +23,15 @@ public static class MenuEvents
         }
     }
 
+    public static Action onReturnToMainMenu;
+    public static void ReturnToMainMenu()
+    {
+        if (onReturnToMainMenu != null)
+        {
+            onReturnToMainMenu();
+        }
+    }
+
     public static Action onGameQuit;
     public static void GameQuit()
     {
