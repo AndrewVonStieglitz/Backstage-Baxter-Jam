@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Cables.OrientationUtil;
 
 namespace Cables
 {
@@ -89,17 +88,17 @@ namespace Cables
         }
 
 
-        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b, Orientation orientation)
+        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b)
         {
-            return PointsBetweenPositions(a, b, orientation, startCurveFunction, endCurveFunction);
+            return PointsBetweenPositions(a, b, startCurveFunction, endCurveFunction);
         }
 
-        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b, Orientation orientation, CurveFunctions.CurveFunction curveFunctionID)
+        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b, CurveFunctions.CurveFunction curveFunctionID)
         {
-            return PointsBetweenPositions(a, b, orientation, curveFunctionID, curveFunctionID);
+            return PointsBetweenPositions(a, b, curveFunctionID, curveFunctionID);
         }
 
-        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b, Orientation orientation,
+        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b,
             CurveFunctions.CurveFunction startCurveID, CurveFunctions.CurveFunction endCurveID)
         {
             var points = new List<Vector2>();
@@ -144,7 +143,7 @@ namespace Cables
             var a = lastNode.transform.position;
             var b = cableHead.transform.position;
 
-            return PointsBetweenPositions(a, b, lastNode.Orientation);
+            return PointsBetweenPositions(a, b);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using static Cables.OrientationUtil;
 
@@ -14,6 +15,8 @@ namespace Cables
         public PoleSide poleSide;
 
         private Orientation nodeOrientation;
+        
+        [Obsolete("Use CableNode.Normal instead.")]
         public Orientation NodeOrientation { get => nodeOrientation; }
 
         public CableNode(Orientation nodeOrientation)
@@ -21,6 +24,9 @@ namespace Cables
             this.nodeOrientation = nodeOrientation;
         }
         
+        [Obsolete("Use CableNode.Normal instead.")]
         public Orientation Orientation { get; set; }
+        
+        public Vector2 Normal { get; set; }
     }
 }

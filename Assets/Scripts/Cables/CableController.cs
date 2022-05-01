@@ -27,9 +27,7 @@ namespace Cables
         public float cableWidth;
         public List<CableNode> nodes = new List<CableNode>();
         
-        private PoleController previousPole;
-        private PoleController currentPole;
-        private DirectionUtil.Direction pipeEntryDirection;
+        private Vector2 pipeEntryNormal;
 
         private void OnEnable()
         {
@@ -41,6 +39,15 @@ namespace Cables
             GameEvents.onCableDisconnect -= OnCableDisconnect;
         }
 
+        public void Initialise(AmpController amp)
+        {
+            this.amp = amp;
+            
+            CreateNode(amp.transform.position, OrientationUtil.Orientation.Horizontal, Vector2.zero);
+            
+            initialised.Invoke();
+        }
+
         // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.
         private void OnCableDisconnect(CableController cable, SpeakerController speaker)
         {
@@ -49,35 +56,27 @@ namespace Cables
             Destroy(gameObject);
         }
 
-        public void PipeEnter(PoleController pole, DirectionUtil.Direction pipeEntryDirection, Vector2 nodePosition)
+        public void PipeEnter(PoleController pole, Vector2 nodePosition, Vector2 normal)
         {
             var poleOrientation = pole.PoleOrientation;
 
-            this.pipeEntryDirection = pipeEntryDirection;
+            pipeEntryNormal = normal;
 
-            if (currentPole != null && (poleOrientation == currentPole.PoleOrientation || poleOrientation == nodes.Last().Orientation))
-            {  
-                CreateNode(nodePosition, poleOrientation);
-            }
+            if (!(Vector2.Dot(nodePosition - (Vector2)nodes.Last().transform.position, normal) > 0)) return;
             
-            previousPole = currentPole;
-            currentPole = pole;
+            CreateNode(nodePosition, poleOrientation, normal);
         }
 
-        public void PipeExit(PoleController pole, DirectionUtil.Direction pipeExitDirection)
+        public void PipeExit(PoleController pole, Vector2 normal)
         {
-            if (pole != currentPole) return;
-
-            if (pole.PoleOrientation != nodes[nodes.Count - 1].Orientation) return;
-            
-            if (pipeExitDirection == pipeEntryDirection) return;
-
             if (nodes.Count <= 1) return;
+
+            if (Vector2.Dot(pipeEntryNormal, normal) < 0) return;
             
             DestroyNode(nodes.Last());
         }
 
-        private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation)
+        private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation, Vector2 normal)
         {
             var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity, nodeParent);
 
@@ -86,6 +85,7 @@ namespace Cables
             if (node == null) throw new Exception("No node component on node prefab.");
 
             node.Orientation = orientation;
+            node.Normal = normal;
 
             node.poleSide = nodes.Count < 1 || nodes[nodes.Count - 1].poleSide == CableNode.PoleSide.Under
                 ? CableNode.PoleSide.Over
@@ -107,20 +107,11 @@ namespace Cables
             nodeDestroyed.Invoke(node);
         }
 
-        public void Initialise(AmpController amp)
-        {
-            this.amp = amp;
-            
-            CreateNode(amp.transform.position, OrientationUtil.Orientation.Horizontal);
-            
-            initialised.Invoke();
-        }
-
         public void Complete(Vector3 pos)
         {
             state = CableState.Completed;
 
-            CreateNode(pos, OrientationUtil.Orientation.Horizontal);
+            CreateNode(pos, OrientationUtil.Orientation.Horizontal, Vector2.zero);
             
             cableCompleted.Invoke();
         }

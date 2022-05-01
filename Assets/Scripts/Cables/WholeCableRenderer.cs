@@ -23,7 +23,7 @@ namespace Cables
                 var b = (Vector2) nodes[nodeIndex + 1].transform.position;
                 var o = nodes[nodeIndex].Orientation;
                 
-                points.AddRange(PointsBetweenPositions(a, b, o));
+                points.AddRange(PointsBetweenPositions(a, b));
             }
 
             // Connection between the last node and the player
