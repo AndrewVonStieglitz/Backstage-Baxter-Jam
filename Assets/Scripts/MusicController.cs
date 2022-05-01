@@ -11,6 +11,7 @@ public class MusicController : MonoBehaviour
 
     private void OnEnable()
     {
+        StartTimer();
         GameEvents.onGameStart += StartTimer;
         GameEvents.onCableConnect += PlayMusic;
         //GameEvents.onCableDisconnect += StopMusic;
