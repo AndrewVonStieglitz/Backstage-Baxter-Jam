@@ -34,13 +34,11 @@ namespace Cables
             
             if (!col.CompareTag("Pipe")) return;
 
-            var pole = col.GetComponent<PoleController>();
-
             var hit = TriggerCollision(velocity);
 
             Vector2 nodePosition = hit.point + hit.normal * cable.cableWidth / 2;
             
-            cable.PipeEnter(pole, nodePosition, hit.normal);
+            cable.PipeEnter(nodePosition, hit.normal);
         }
 
         private void OnTriggerExit2D(Collider2D col)
@@ -50,16 +48,14 @@ namespace Cables
             
             if (!col.CompareTag("Pipe")) return;
 
-            var pole = col.GetComponent<PoleController>();
-
             var hit = TriggerCollision(-velocity);
             
-            cable.PipeExit(pole, hit.normal);
+            cable.PipeExit(hit.normal);
         }
 
         private RaycastHit2D TriggerCollision(Vector2 castDirection)
         {
-            RaycastHit2D[] hits = new RaycastHit2D[1];
+            var hits = new RaycastHit2D[1];
             
             boxCollider2D.Cast(castDirection, hits, 1);
 

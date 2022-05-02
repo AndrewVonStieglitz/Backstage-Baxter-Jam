@@ -21,7 +21,6 @@ namespace Cables
             {
                 var a = (Vector2) nodes[nodeIndex].transform.position;
                 var b = (Vector2) nodes[nodeIndex + 1].transform.position;
-                var o = nodes[nodeIndex].Orientation;
                 
                 points.AddRange(PointsBetweenPositions(a, b));
             }
@@ -53,13 +52,15 @@ namespace Cables
                 float vectorSlope;
 
                 // Prevent division by zero
-                if (vector.X(node.Orientation) == 0)
+                var nodeOrientation = NodeOrientation(node).Inverse();
+                
+                if (vector.X(nodeOrientation) == 0)
                 {
                     vectorSlope = 20;
                 }
                 else
                 {
-                    vectorSlope = vector.Y(node.Orientation) / vector.X(node.Orientation);
+                    vectorSlope = vector.Y(nodeOrientation) / vector.X(nodeOrientation);
                 }
 
                 points3D.Add(new Vector3(point.x, point.y, (Sigmoid(vectorSlope) - 0.5f) * 30));

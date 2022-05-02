@@ -43,7 +43,7 @@ namespace Cables
         {
             this.amp = amp;
             
-            CreateNode(amp.transform.position, OrientationUtil.Orientation.Horizontal, Vector2.zero);
+            CreateNode(amp.transform.position, Vector2.zero);
             
             initialised.Invoke();
         }
@@ -56,18 +56,16 @@ namespace Cables
             Destroy(gameObject);
         }
 
-        public void PipeEnter(PoleController pole, Vector2 nodePosition, Vector2 normal)
+        public void PipeEnter(Vector2 nodePos, Vector2 normal)
         {
-            var poleOrientation = pole.PoleOrientation;
-
             pipeEntryNormal = normal;
 
-            if (!(Vector2.Dot(nodePosition - (Vector2)nodes.Last().transform.position, normal) > 0)) return;
+            if (!(Vector2.Dot(nodePos - (Vector2)nodes.Last().transform.position, normal) > 0)) return;
             
-            CreateNode(nodePosition, poleOrientation, normal);
+            CreateNode(nodePos, normal);
         }
 
-        public void PipeExit(PoleController pole, Vector2 normal)
+        public void PipeExit(Vector2 normal)
         {
             if (nodes.Count <= 1) return;
 
@@ -76,7 +74,7 @@ namespace Cables
             DestroyNode(nodes.Last());
         }
 
-        private void CreateNode(Vector3 nodePos, OrientationUtil.Orientation orientation, Vector2 normal)
+        private void CreateNode(Vector3 nodePos, Vector2 normal)
         {
             var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity, nodeParent);
 
@@ -84,7 +82,6 @@ namespace Cables
 
             if (node == null) throw new Exception("No node component on node prefab.");
 
-            node.Orientation = orientation;
             node.Normal = normal;
 
             node.poleSide = nodes.Count < 1 || nodes[nodes.Count - 1].poleSide == CableNode.PoleSide.Under
@@ -95,7 +92,7 @@ namespace Cables
             
             nodeCreated.Invoke(nodes.Count - 1);
             
-            GameEvents.CableWind(this, orientation, nodePos);
+            GameEvents.CableWind(this, nodePos);
         }
 
         private void DestroyNode(CableNode node)
@@ -111,7 +108,7 @@ namespace Cables
         {
             state = CableState.Completed;
 
-            CreateNode(pos, OrientationUtil.Orientation.Horizontal, Vector2.zero);
+            CreateNode(pos, Vector2.zero);
             
             cableCompleted.Invoke();
         }

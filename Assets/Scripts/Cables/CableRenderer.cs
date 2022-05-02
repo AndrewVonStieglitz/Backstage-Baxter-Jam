@@ -79,7 +79,7 @@ namespace Cables
         // TODO: Clean this up
         private Vector2 SinLerp(Vector2 a, Vector2 b, float t)
         {
-            return CurveFunctions.SinLerp(a, b, t, nodes[nodes.Count - 1].Orientation);
+            return CurveFunctions.SinLerp(a, b, t, NodeOrientation(nodes[nodes.Count - 1]));
         }
 
         private Vector2 CatenaryLerp(Vector2 start, Vector2 end, float t)
@@ -144,6 +144,11 @@ namespace Cables
             var b = cableHead.transform.position;
 
             return PointsBetweenPositions(a, b);
+        }
+
+        protected static OrientationUtil.Orientation NodeOrientation(CableNode node)
+        {
+            return OrientationUtil.VectorToOrientation(node.Normal);
         }
     }
 }

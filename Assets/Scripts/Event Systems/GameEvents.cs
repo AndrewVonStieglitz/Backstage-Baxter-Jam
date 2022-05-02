@@ -112,12 +112,12 @@ public static class GameEvents
         }
     }
 
-    public static Action<CableController, OrientationUtil.Orientation, Vector3> onCableWind;
-    public static void CableWind(CableController cable, OrientationUtil.Orientation orientation, Vector3 location)
+    public static Action<CableController, Vector3> onCableWind;
+    public static void CableWind(CableController cable, Vector3 location)
     {
         if (onCableWind != null)
         {
-            onCableWind(cable, orientation, location);
+            onCableWind(cable, location);
         }
     }
 

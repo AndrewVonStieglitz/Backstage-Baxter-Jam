@@ -102,14 +102,14 @@ namespace Cables
 
             points2D.Add(a);
 
-            if (node.Orientation == prevNode.Orientation)
-            {
-                points2D.AddRange(PointsBetweenPositions(a, b, CurveFunctions.CurveFunction.Sine));
-            }
-            else
-            {
+            // if (node.Orientation == prevNode.Orientation)
+            // {
+            //     points2D.AddRange(PointsBetweenPositions(a, b, CurveFunctions.CurveFunction.Sine));
+            // }
+            // else
+            // {
                 points2D.AddRange(PointsBetweenPositions(a, b, CurveFunctions.CurveFunction.Sine, CurveFunctions.CurveFunction.Bezier));
-            }
+            // }
             
             points2D.Add(b);
             
