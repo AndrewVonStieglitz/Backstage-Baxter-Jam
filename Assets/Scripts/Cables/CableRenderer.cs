@@ -1,25 +1,26 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Cables
 {
     public abstract class CableRenderer : MonoBehaviour
     {
-        [SerializeField] protected int pointsBetweenPins;
+        [FormerlySerializedAs("pointsBetweenPins")] [SerializeField] protected int pointsBetweenNodes;
         [SerializeField] protected CableController cable;
         [SerializeField] protected float joinCoverUpLength;
 
+        [FormerlySerializedAs("startCurveFunction")]
         [Header("Player Section")]
-        [SerializeField] private CurveFunctions.CurveFunction startCurveFunction;
-        [SerializeField] private CurveFunctions.CurveFunction endCurveFunction;
+        [SerializeField] private CurveFunctions.CurveFunction startCurveFunctionID;
+        [FormerlySerializedAs("endCurveFunction")] [SerializeField] private CurveFunctions.CurveFunction endCurveFunctionID;
         [SerializeField] private AnimationCurve curveInterpolation;
         [SerializeField] private bool lerpToSine;
         [SerializeField] private float caternaryLength;
 
-        protected List<CableNode> nodes => cable.nodes;
+        protected List<CableNode> Nodes => cable.nodes;
         protected LineRenderer lineRenderer;
-        protected CableHead cableHead;
         protected Sprite cableSprite;
 
         protected virtual void Awake()
@@ -27,9 +28,6 @@ namespace Cables
             lineRenderer = GetComponent<LineRenderer>();
 
             SetLineWidth(lineRenderer);
-            
-            // TODO: Temp
-            cableHead = FindObjectOfType<CableHead>();
         }
         
         protected virtual void OnEnable()
@@ -53,52 +51,28 @@ namespace Cables
             lineRenderer.widthCurve = AnimationCurve.Constant(1, 1, cable.cableWidth);
         }
 
-        // protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b, Orientation orientation)
-        // {
-        //     var points = new List<Vector2>();
-        //     
-        //     for (int i = 0; i < pointsBetweenPins; i++)
-        //     {
-        //         // TODO: How will this work if the orientations of the two nodes are different?
-        //         points.Add(CurveFunctions.SinLerp(a, b, i / (float)pointsBetweenPins, orientation));
-        //     }
-        //
-        //     return points;
-        // }
-
-        private Func<Vector2, Vector2, float, Vector2> GetCurveFunction(CurveFunctions.CurveFunction curveFunction) =>
+        private Func<CableNode, CableNode, float, Vector2> GetCurveFunction(CurveFunctions.CurveFunction curveFunction) =>
             curveFunction switch
             {
-                CurveFunctions.CurveFunction.Straight => Vector2.Lerp,
-                CurveFunctions.CurveFunction.Sine => SinLerp,
-                CurveFunctions.CurveFunction.Catenary => CatenaryLerp,
-                CurveFunctions.CurveFunction.Bezier => CurveFunctions.BezierLerp,
+                CurveFunctions.CurveFunction.Straight => (a, b, t) => Vector2.Lerp(a.transform.position, b.transform.position, t),
+                CurveFunctions.CurveFunction.Sine => (a, b, t) => CurveFunctions.SinLerp(a.transform.position, b.transform.position, t, NodeOrientation(Nodes[Nodes.Count - 1])),
+                CurveFunctions.CurveFunction.Catenary => (a, b, t) => CurveFunctions.CatenaryLerp(a.transform.position, b.transform.position, t, caternaryLength),
+                CurveFunctions.CurveFunction.RightAngleCubic => (a, b, t) => CurveFunctions.BezierLerp(a.transform.position, b.transform.position, t),
+                CurveFunctions.CurveFunction.TangentQuartic => PointWithQuartic,
                 _ => throw new ArgumentOutOfRangeException(nameof(curveFunction), curveFunction, null)
             };
 
-        // TODO: Clean this up
-        private Vector2 SinLerp(Vector2 a, Vector2 b, float t)
+        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b)
         {
-            return CurveFunctions.SinLerp(a, b, t, NodeOrientation(nodes[nodes.Count - 1]));
+            return PointsBetweenPositions(a, b, startCurveFunctionID, endCurveFunctionID);
         }
 
-        private Vector2 CatenaryLerp(Vector2 start, Vector2 end, float t)
-        {
-            return CurveFunctions.CatenaryLerp(start, end, t, caternaryLength);
-        }
-
-
-        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b)
-        {
-            return PointsBetweenPositions(a, b, startCurveFunction, endCurveFunction);
-        }
-
-        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b, CurveFunctions.CurveFunction curveFunctionID)
+        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b, CurveFunctions.CurveFunction curveFunctionID)
         {
             return PointsBetweenPositions(a, b, curveFunctionID, curveFunctionID);
         }
 
-        protected IEnumerable<Vector2> PointsBetweenPositions(Vector2 a, Vector2 b,
+        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b,
             CurveFunctions.CurveFunction startCurveID, CurveFunctions.CurveFunction endCurveID)
         {
             var points = new List<Vector2>();
@@ -106,11 +80,11 @@ namespace Cables
             var startCurveFunction = GetCurveFunction(startCurveID);
             var endCurveFunction = GetCurveFunction(endCurveID);
             
-            for (int i = 0; i < pointsBetweenPins; i++)
+            for (int i = 0; i <= pointsBetweenNodes; i++)
             {
                 // TODO: How will this work if the orientations of the two nodes are different?
 
-                var t = i / (float)pointsBetweenPins;
+                var t = i / (float)pointsBetweenNodes;
 
                 var startPoint = startCurveFunction(a, b, t);
                 var endPoint = endCurveFunction(a, b, t);
@@ -134,21 +108,42 @@ namespace Cables
             return points;
         }
 
-        protected IEnumerable<Vector2> PlayerSegmentPoints(List<Vector2> points)
-        {
-            if (nodes.Count < 1) return new List<Vector2>();
-
-            var lastNode = nodes[nodes.Count - 1];
-
-            var a = lastNode.transform.position;
-            var b = cableHead.transform.position;
-
-            return PointsBetweenPositions(a, b);
-        }
-
         protected static OrientationUtil.Orientation NodeOrientation(CableNode node)
         {
             return OrientationUtil.VectorToOrientation(node.Normal);
+        }
+
+        protected virtual void OnValidate() { }
+
+        // TODO: Move this to CurveFunctions
+        protected Vector2 PointWithQuartic(CableNode a, CableNode b, float t)
+        {
+            var aPos = (Vector2) a.transform.position;
+            var dPos = (Vector2) b.transform.position;
+
+            var aTangent = (Vector2) Vector3.Cross(a.Normal.normalized, Vector3.forward);
+            var dTangent = (Vector2) Vector3.Cross(b.Normal.normalized, Vector3.back);
+
+            var bPos = Vector2.Distance(aPos + aTangent, dPos) > Vector2.Distance(aPos, dPos) ? aPos - aTangent : aPos + aTangent;
+            var cPos = Vector2.Distance(dPos + dTangent, aPos) > Vector2.Distance(dPos, aPos) ? dPos - dTangent : dPos + dTangent;
+            
+            // Draw anchors
+            Debug.DrawLine(aPos, bPos, Color.red, 30f);
+            Debug.DrawLine(cPos, dPos, Color.red, 30f);
+
+            return QuarticBezier(aPos, bPos, cPos, dPos, t);
+        }
+
+        private Vector2 QuarticBezier(Vector2 a, Vector2 b, Vector2 c, Vector2 d, float t)
+        {
+            var ab = Vector2.Lerp(a, b, t);
+            var bc = Vector2.Lerp(b, c, t);
+            var cd = Vector2.Lerp(c, d, t);
+
+            var abc = Vector2.Lerp(ab, bc, t);
+            var bcd = Vector2.Lerp(bc, cd, t);
+
+            return Vector2.Lerp(abc, bcd, t);
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,9 +17,10 @@ namespace Cables
         public int CableID { get => cableID; }
 
         public UnityEvent initialised = new UnityEvent();
-        public UnityEvent<int> nodeCreated = new UnityEvent<int>();
+        public UnityEvent<CableNode> nodeCreated = new UnityEvent<CableNode>();
         public UnityEvent<CableNode> nodeDestroyed = new UnityEvent<CableNode>();
         public UnityEvent cableCompleted = new UnityEvent();
+        public UnityEvent<CableNode> nodeMoved = new UnityEvent<CableNode>();
 
         public CableState state;
         public AmpController amp;
@@ -44,6 +44,7 @@ namespace Cables
             this.amp = amp;
             
             CreateNode(amp.transform.position, Vector2.zero);
+            CreateNode(amp.transform.position, Vector2.zero);
             
             initialised.Invoke();
         }
@@ -60,7 +61,7 @@ namespace Cables
         {
             pipeEntryNormal = normal;
 
-            if (!(Vector2.Dot(nodePos - (Vector2)nodes.Last().transform.position, normal) > 0)) return;
+            if (!(Vector2.Dot(nodePos - (Vector2)nodes[nodes.Count - 2].transform.position, normal) > 0)) return;
             
             CreateNode(nodePos, normal);
         }
@@ -71,7 +72,7 @@ namespace Cables
 
             if (Vector2.Dot(pipeEntryNormal, normal) < 0) return;
             
-            DestroyNode(nodes.Last());
+            DestroyNode(nodes[nodes.Count - 1]);
         }
 
         private void CreateNode(Vector3 nodePos, Vector2 normal)
@@ -81,18 +82,24 @@ namespace Cables
             var node = nodeObject.GetComponent<CableNode>();
 
             if (node == null) throw new Exception("No node component on node prefab.");
+            
+            node.nodeMoved.AddListener(OnNodeMoved);
 
             node.Normal = normal;
+            
+            if (nodes.Count < 1)
+                nodes.Add(node);
+            else
+                nodes.Insert(nodes.Count - 1, node);
 
-            node.poleSide = nodes.Count < 1 || nodes[nodes.Count - 1].poleSide == CableNode.PoleSide.Under
-                ? CableNode.PoleSide.Over
-                : CableNode.PoleSide.Under;
-            
-            nodes.Add(node);
-            
-            nodeCreated.Invoke(nodes.Count - 1);
+            nodeCreated.Invoke(node);
             
             GameEvents.CableWind(this, nodePos);
+        }
+
+        private void OnNodeMoved(CableNode node)
+        {
+            nodeMoved.Invoke(node);
         }
 
         private void DestroyNode(CableNode node)
@@ -104,11 +111,9 @@ namespace Cables
             nodeDestroyed.Invoke(node);
         }
 
-        public void Complete(Vector3 pos)
+        public void Complete()
         {
             state = CableState.Completed;
-
-            CreateNode(pos, Vector2.zero);
             
             cableCompleted.Invoke();
         }

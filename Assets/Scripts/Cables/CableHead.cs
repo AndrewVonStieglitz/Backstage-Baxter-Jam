@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Cables
 {
@@ -38,6 +39,9 @@ namespace Cables
 
             Vector2 nodePosition = hit.point + hit.normal * cable.cableWidth / 2;
             
+            // Draw collision normals
+            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+            
             cable.PipeEnter(nodePosition, hit.normal);
         }
 
@@ -68,6 +72,8 @@ namespace Cables
 
             velocity = (transform.position - lastPosition) / Time.deltaTime;
             lastPosition = transform.position;
+
+            cable.nodes.Last().MoveNode(transform.position);
         }
     }
 }

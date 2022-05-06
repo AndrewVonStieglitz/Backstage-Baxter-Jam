@@ -15,13 +15,21 @@ namespace Cables
         {
             base.OnInitialised();
 
-            for (var index = 0; index < cable.nodes.Count; index++)
+            foreach (var node in Nodes)
             {
-                OnNodeCreated(index);
+                OnNodeCreated(node);
             }
 
             cable.nodeCreated.AddListener(OnNodeCreated);
             cable.nodeDestroyed.AddListener(OnNodeDestroyed);
+            cable.nodeMoved.AddListener(OnNodeMoved);
+            
+            lineRenderer.enabled = false;
+        }
+
+        private void OnNodeMoved(CableNode node)
+        {
+            UpdateCableSegment(node);
         }
 
         // protected override void OnDisable()
@@ -32,75 +40,41 @@ namespace Cables
         //     cable.nodeDestroyed.RemoveListener(OnNodeDestroyed);
         // }
 
-        private void Update()
+        private void OnNodeCreated(CableNode node)
         {
-            if (cable.state == CableController.CableState.InProgress)
-            {
-                lineRenderer.enabled = true;
-
-                DrawPlayerSegment();
-            }
-            else
-                lineRenderer.enabled = false;
-        }
-
-        private void DrawPlayerSegment()
-        {
-            if (nodes.Count < 1) return;
-            
-            var points = new List<Vector2>();
-            
-            points.AddRange(PlayerSegmentPoints(points));
-
-            var lastNode = nodes[nodes.Count - 1];
-            List<Vector3> points3D = new List<Vector3>();
-
-            if (cableSegments.Count > 0)
-            {
-                var lastCableSegment = cableSegments[nodes[nodes.Count - 1]];
-                var lastPoint = lastCableSegment.GetPosition(lastCableSegment.positionCount - 1);
-                
-                points3D.Add(new Vector3(lastPoint.x - joinCoverUpLength, lastPoint.y, lastPoint.z));
-            }
-            
-            points3D = SetZPositions(points, lastNode.poleSide == CableNode.PoleSide.Over ? 1 : -1).ToList();
-            
-
-            lineRenderer.positionCount = points3D.Count;
-            lineRenderer.SetPositions(points3D.ToArray());
-        }
-
-        private void OnNodeCreated(int nodeIndex)
-        {
-            CreateNodeSegment(nodeIndex);
+            CreateCableSegment(node);
         }
 
         private void OnNodeDestroyed(CableNode node)
         {
-            DestroyNodeSegment(node);
+            DestroyCableSegment(node);
         }
 
-        private void CreateNodeSegment(int nodeIndex)
+        private void CreateCableSegment(CableNode node)
         {
-            if (cable.nodes.Count < 2) return;
+            if (Nodes.FindIndex(n => n == node) < 1) return;
 
             var cableSegmentObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var cableSegment = cableSegmentObject.GetComponent<LineRenderer>();
             
             SetLineWidth(cableSegment);
             cableSegment.material.mainTexture = cableSprite.texture; 
-
-            var node = cable.nodes[nodeIndex];
-            var prevNode = nodes[nodes.Count - 2];
-
+            
             cableSegments.Add(node, cableSegment);
 
+            UpdateCableSegment(node);
+        }
+
+        private void UpdateCableSegment(CableNode node)
+        {
+            if (!cableSegments.ContainsKey(node)) return;
+
+            var nodeIndex = Nodes.FindIndex(n => n == node);
+            var prevNode = Nodes[nodeIndex - 1];
+
+            var cableSegment = cableSegments[node];
+            
             var points2D = new List<Vector2>();
-
-            var a = prevNode.transform.position;
-            var b = node.transform.position;
-
-            points2D.Add(a);
 
             // if (node.Orientation == prevNode.Orientation)
             // {
@@ -108,21 +82,18 @@ namespace Cables
             // }
             // else
             // {
-                points2D.AddRange(PointsBetweenPositions(a, b, CurveFunctions.CurveFunction.Sine, CurveFunctions.CurveFunction.Bezier));
+                // points2D.AddRange(PointsBetweenPositions(a, b, CurveFunctions.CurveFunction.Sine, CurveFunctions.CurveFunction.Bezier));
             // }
-            
-            points2D.Add(b);
-            
-            // TODO Orient
-            points2D.Add(new Vector2(b.x + joinCoverUpLength, b.y));
 
-            var points3D = SetZPositions(points2D, node.poleSide == CableNode.PoleSide.Over ? -1 : 1).ToList();
+            points2D.AddRange(PointsBetweenPositions(prevNode, node));
+            
+            var points3D = SetZPositions(points2D, nodeIndex % 2 == 0 ? -1 : 1).ToList();
             
             cableSegment.positionCount = points3D.Count;
             cableSegment.SetPositions(points3D.ToArray());
         }
 
-        private void DestroyNodeSegment(CableNode node)
+        private void DestroyCableSegment(CableNode node)
         {
             Destroy(cableSegments[node].gameObject);
 
@@ -132,6 +103,16 @@ namespace Cables
         private static IEnumerable<Vector3> SetZPositions(IEnumerable<Vector2> points, float zPos)
         {
             return points.Select(p => new Vector3(p.x, p.y, zPos));
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            
+            foreach (var node in Nodes)
+            {
+                UpdateCableSegment(node);
+            }
         }
     }
 }

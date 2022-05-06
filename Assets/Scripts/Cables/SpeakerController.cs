@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace Cables
@@ -48,8 +49,10 @@ namespace Cables
             if (cable == null) return;
 
             amp = cable.amp;
+            
+            cable.nodes.Last().MoveNode(transform.position);
 
-            cable.Complete(transform.position);
+            cable.Complete();
 
             if (connectedCable)
             {

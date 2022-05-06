@@ -13,7 +13,7 @@ namespace Cables
         
         public int AmpID { get => ampID; }
         
-        private List<CableController> cables = new List<CableController>();
+        private readonly List<CableController> cables = new List<CableController>();
 
         private void OnEnable()
         {
