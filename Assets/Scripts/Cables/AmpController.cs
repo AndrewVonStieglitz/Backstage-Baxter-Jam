@@ -6,13 +6,14 @@ namespace Cables
     public class AmpController : MonoBehaviour
     {
         [SerializeField] private int ampID;
-        [SerializeField] private Material cableMaterial;
         [SerializeField] private GameObject cablePrefab;
         [SerializeField] private CableHead cableHead;
 
+        public Sprite cableSprite;
+        
         public int AmpID { get => ampID; }
         
-        private List<CableController> cables = new List<CableController>();
+        private readonly List<CableController> cables = new List<CableController>();
 
         private void OnEnable()
         {
@@ -37,7 +38,7 @@ namespace Cables
             
             cableHead.NewCable(cable);
 
-            cable.Initialise(this, cableMaterial);
+            cable.Initialise(this);
         }
         
         // TODO: This should be listening for the cable getting destroyed, not disconnected.

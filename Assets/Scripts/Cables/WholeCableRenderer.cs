@@ -17,19 +17,17 @@ namespace Cables
             var points = new List<Vector2>();
 
             // Connections between nodes
-            for (var nodeIndex = 0; nodeIndex < nodes.Count - 1; nodeIndex++)
+            for (var nodeIndex = 0; nodeIndex < Nodes.Count - 1; nodeIndex++)
             {
-                var a = (Vector2) nodes[nodeIndex].transform.position;
-                var b = (Vector2) nodes[nodeIndex + 1].transform.position;
-                var o = nodes[nodeIndex].Orientation;
-                
-                points.AddRange(PointsBetweenPositions(a, b, o));
+                points.AddRange(PointsBetweenPositions(Nodes[nodeIndex], Nodes[nodeIndex + 1]));
             }
 
             // Connection between the last node and the player
-            points.AddRange(PlayerSegmentPoints(points));
+            // points.AddRange(PlayerSegmentPoints());
 
-            var points3D = SetZPositionsWithSlope(points).ToList();
+            // var points3D = SetZPositionsWithSlope(points).ToList();
+
+            var points3D = SetZPositionsWithTriangleWave(points).ToList();
             
             lineRenderer.positionCount = points3D.Count;
             lineRenderer.SetPositions(points3D.ToArray());
@@ -46,20 +44,22 @@ namespace Cables
                 var point = points[pointIndex];
                 var nextPoint = points[pointIndex + 1];
 
-                var node = nodes[Mathf.FloorToInt(pointIndex / (float) pointsBetweenPins)];
+                var node = Nodes[Mathf.FloorToInt(pointIndex / (float) pointsBetweenNodes)];
 
                 OrientationUtil.OrientedVector2 vector = new OrientationUtil.OrientedVector2(nextPoint - point);
             
                 float vectorSlope;
 
                 // Prevent division by zero
-                if (vector.X(node.Orientation) == 0)
+                var nodeOrientation = NodeOrientation(node).Inverse();
+                
+                if (vector.X(nodeOrientation) == 0)
                 {
                     vectorSlope = 20;
                 }
                 else
                 {
-                    vectorSlope = vector.Y(node.Orientation) / vector.X(node.Orientation);
+                    vectorSlope = vector.Y(nodeOrientation) / vector.X(nodeOrientation);
                 }
 
                 points3D.Add(new Vector3(point.x, point.y, (Sigmoid(vectorSlope) - 0.5f) * 30));
@@ -67,7 +67,39 @@ namespace Cables
 
             return points3D;
         }
-        
+
+        private IEnumerable<Vector3> SetZPositionsWithTriangleWave(List<Vector2> points)
+        {
+            var points3D = new List<Vector3>();
+            
+            
+            for (var pointIndex = 0; pointIndex < points.Count - 1; pointIndex++)
+            {
+                var point = points[pointIndex];
+
+                var indexInSegment = pointIndex % pointsBetweenNodes;
+
+                var evenSegment = Mathf.FloorToInt(pointIndex / (float)pointsBetweenNodes) == 0;
+
+                var t = (float) indexInSegment / pointsBetweenNodes;
+
+                float zPos = 0;
+
+                if (evenSegment)
+                {
+                    zPos = Mathf.Abs(2 * t - 1) - 1;
+                }
+                else
+                {
+                    zPos = -1 * (Mathf.Abs(2 * t - 1) - 1);
+                }
+                
+                points3D.Add(new Vector3(point.x, point.y, zPos));
+            }
+
+            return points3D;
+        }
+
         private static float Sigmoid(double value) { return 1.0f / (1.0f + (float) Math.Exp(-value)); }
     }
 }

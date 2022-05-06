@@ -26,5 +26,15 @@ namespace Cables
             public float Y(Orientation orientation) =>
                 orientation == Orientation.Horizontal ? value.y : value.x;
         }
+
+        public static Orientation VectorToOrientation(Vector2 vector)
+        {
+            return vector.x > vector.y ? Orientation.Horizontal : Orientation.Vertical;
+        }
+
+        public static Orientation Inverse(this Orientation orientation)
+        {
+            return orientation == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
+        }
     }
 }
