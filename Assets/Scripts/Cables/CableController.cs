@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -85,12 +86,12 @@ namespace Cables
             
             node.nodeMoved.AddListener(OnNodeMoved);
 
-            node.Normal = normal;
+            if (nodes.Count > 0)
+            {
+                nodes.Last().Normal = normal;
+            }
             
-            if (nodes.Count < 1)
-                nodes.Add(node);
-            else
-                nodes.Insert(nodes.Count - 1, node);
+            nodes.Add(node);
 
             nodeCreated.Invoke(node);
             

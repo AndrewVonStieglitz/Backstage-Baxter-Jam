@@ -52,7 +52,11 @@ namespace Cables
 
         private void CreateCableSegment(CableNode node)
         {
-            if (Nodes.FindIndex(n => n == node) < 1) return;
+            var nodeIndex = Nodes.FindIndex(n => n == node);
+            
+            if (nodeIndex < 1) return;
+
+            var prevNode = Nodes[nodeIndex - 1];
 
             var cableSegmentObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var cableSegment = cableSegmentObject.GetComponent<LineRenderer>();
@@ -62,6 +66,7 @@ namespace Cables
             
             cableSegments.Add(node, cableSegment);
 
+            UpdateCableSegment(prevNode);
             UpdateCableSegment(node);
         }
 
