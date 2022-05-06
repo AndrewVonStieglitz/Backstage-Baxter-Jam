@@ -69,7 +69,7 @@ namespace Cables
 
         public void PipeExit(Vector2 normal)
         {
-            if (nodes.Count <= 1) return;
+            if (nodes.Count <= 2) return;
 
             if (Vector2.Dot(pipeEntryNormal, normal) < 0) return;
             
@@ -89,6 +89,7 @@ namespace Cables
             if (nodes.Count > 0)
             {
                 nodes.Last().Normal = normal;
+                nodes.Last().MoveNode(nodePos);
             }
             
             nodes.Add(node);

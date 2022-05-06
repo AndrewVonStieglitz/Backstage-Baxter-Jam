@@ -105,8 +105,6 @@ namespace Cables
             
             if (nodeIndex < 1) return;
 
-            var prevNode = Nodes[nodeIndex - 1];
-
             var cableSegmentObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var cableSegment = cableSegmentObject.GetComponent<LineRenderer>();
             
@@ -116,7 +114,6 @@ namespace Cables
             cableSegments.Add(node, cableSegment);
             cableSegmentTargetPoints.Add(node, new List<Vector3>());
 
-            UpdateCableSegmentTargetPoints(prevNode);
             UpdateCableSegmentTargetPoints(node);
             
             UpdateCableSegment(node, GetTargetPoints(node));
