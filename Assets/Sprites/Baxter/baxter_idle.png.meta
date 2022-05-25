@@ -1,43 +1,37 @@
 fileFormatVersion: 2
-guid: 22ee039526ecb4641866e4e8b4c2d5c5
+guid: b7ce3a159ef32bb4c92d5d830ff38669
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1081752571714394622
-    second: baxter_jump_0
+      213: -3963325564708684310
+    second: baxter_idle_0
   - first:
-      213: -6515781948454863683
-    second: baxter_jump_1
+      213: -7367414239825692113
+    second: baxter_idle_1
   - first:
-      213: -7024103621435824700
-    second: baxter_jump_2
+      213: 1626401621965297029
+    second: baxter_idle_2
   - first:
-      213: 4954460369724107304
-    second: baxter_jump_3
+      213: -5622564094168652469
+    second: baxter_idle_3
   - first:
-      213: 3048191107134600284
-    second: baxter_jump_4
+      213: 7276246897064954980
+    second: baxter_idle_4
   - first:
-      213: 2820085518245970291
-    second: baxter_jump_5
+      213: 2178629251094754865
+    second: baxter_idle_5
   - first:
-      213: 5013214036151649591
-    second: baxter_jump_6
+      213: -6503813373544479500
+    second: baxter_idle_6
   - first:
-      213: -2402188646765174024
-    second: baxter_jump_7
+      213: 955787011700175336
+    second: baxter_idle_7
   - first:
-      213: 4435180278234710314
-    second: baxter_jump_8
+      213: 1345985646361794174
+    second: baxter_idle_8
   - first:
-      213: -6644830594086279873
-    second: baxter_jump_9
-  - first:
-      213: -8398628339793407873
-    second: baxter_jump_10
-  - first:
-      213: -7454779360497643211
-    second: baxter_jump_11
+      213: -8081615631270801810
+    second: baxter_idle_9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -139,7 +133,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: baxter_jump_0
+      name: baxter_idle_0
       rect:
         serializedVersion: 2
         x: 0
@@ -153,14 +147,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 206291474c7dcf0f0800000000000000
-      internalID: -1081752571714394622
+      spriteID: aed7052c5607ff8c0800000000000000
+      internalID: -3963325564708684310
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_1
+      name: baxter_idle_1
       rect:
         serializedVersion: 2
         x: 500
@@ -174,14 +168,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dbcf17807da4395a0800000000000000
-      internalID: -6515781948454863683
+      spriteID: f2af80a78cfa1c990800000000000000
+      internalID: -7367414239825692113
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_2
+      name: baxter_idle_2
       rect:
         serializedVersion: 2
         x: 1000
@@ -195,14 +189,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4c568cab8fe558e90800000000000000
-      internalID: -7024103621435824700
+      spriteID: 5855c5b78a3229610800000000000000
+      internalID: 1626401621965297029
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_3
+      name: baxter_idle_3
       rect:
         serializedVersion: 2
         x: 0
@@ -216,14 +210,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82ae727d477c1c440800000000000000
-      internalID: 4954460369724107304
+      spriteID: b452638feb3a8f1b0800000000000000
+      internalID: -5622564094168652469
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_4
+      name: baxter_idle_4
       rect:
         serializedVersion: 2
         x: 500
@@ -237,14 +231,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c54334479a95d4a20800000000000000
-      internalID: 3048191107134600284
+      spriteID: 46c489d600c6af460800000000000000
+      internalID: 7276246897064954980
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_5
+      name: baxter_idle_5
       rect:
         serializedVersion: 2
         x: 1000
@@ -258,14 +252,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 371464f56d4f22720800000000000000
-      internalID: 2820085518245970291
+      spriteID: 13637c0d2cb0c3e10800000000000000
+      internalID: 2178629251094754865
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_6
+      name: baxter_idle_6
       rect:
         serializedVersion: 2
         x: 0
@@ -279,14 +273,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73542dfca93829540800000000000000
-      internalID: 5013214036151649591
+      spriteID: 4f442780230ddb5a0800000000000000
+      internalID: -6503813373544479500
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_7
+      name: baxter_idle_7
       rect:
         serializedVersion: 2
         x: 500
@@ -300,14 +294,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f2e5123726b9aed0800000000000000
-      internalID: -2402188646765174024
+      spriteID: 8e132512933a34d00800000000000000
+      internalID: 955787011700175336
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_8
+      name: baxter_idle_8
       rect:
         serializedVersion: 2
         x: 1000
@@ -321,14 +315,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a218ff6e6fcec8d30800000000000000
-      internalID: 4435180278234710314
+      spriteID: e765b2460d6eda210800000000000000
+      internalID: 1345985646361794174
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: baxter_jump_9
+      name: baxter_idle_9
       rect:
         serializedVersion: 2
         x: 0
@@ -342,50 +336,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f35e6dec7c1d8c3a0800000000000000
-      internalID: -6644830594086279873
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: baxter_jump_10
-      rect:
-        serializedVersion: 2
-        x: 500
-        y: 0
-        width: 500
-        height: 500
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f70d516d504127b80800000000000000
-      internalID: -8398628339793407873
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: baxter_jump_11
-      rect:
-        serializedVersion: 2
-        x: 1000
-        y: 0
-        width: 500
-        height: 500
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 531df923bad4b8890800000000000000
-      internalID: -7454779360497643211
+      spriteID: e6e0cdec66558df80800000000000000
+      internalID: -8081615631270801810
       vertices: []
       indices: 
       edges: []

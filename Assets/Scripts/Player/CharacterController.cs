@@ -90,6 +90,8 @@ public class CharacterController : MonoBehaviour
         //baxterRigidBody.AddForce(Vector2.right * moveSpeed * moveAxis, ForceMode2D.Impulse);
         baxterRigidBody.velocity = new Vector2( moveSpeed * moveAxis, baxterRigidBody.velocity.y);
         debugIsGrouned = isGrounded;
+        animator.SetFloat("xVelo", Mathf.Abs(baxterRigidBody.velocity.x));
+        //animator.ResetTrigger("Landed");
     }
 
     public void StartJump(InputAction.CallbackContext context)
@@ -101,6 +103,7 @@ public class CharacterController : MonoBehaviour
             baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             coyoteTimer = -1;
             jumpBuffer = 0f;
+            animator.ResetTrigger("Landed");
             animator.SetTrigger("JumpCommand");
         }
         
@@ -154,7 +157,7 @@ public class CharacterController : MonoBehaviour
     {
         ContactPoint2D[] contactPoints = new ContactPoint2D[10];
         collision.GetContacts(contactPoints);
-
+        
         isGrounded = false;
         coyoteTimer = coyoteTime;
 
@@ -163,11 +166,12 @@ public class CharacterController : MonoBehaviour
             if (contact.point.y < transform.position.y - distToGround)
                 isGrounded = true;
         }
-        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isGrounded", isGrounded); 
     }
 
     private bool GetIsGroundedRayCast()
     {
+        bool oldIsGrounded = isGrounded;
         isGrounded = false;
         Vector2 rayOrigin = transform.position; // upgrade to array of raycasts soon
         RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, 50f, groundedLayerMask);
@@ -175,8 +179,10 @@ public class CharacterController : MonoBehaviour
         {
             if (hit.distance < distToGround)
                 isGrounded = true;
+            //print("raycast distance: " + hit.distance + "\t, dist to ground: " + distToGround + "\t, bool: " + (hit.distance < distToGround));
         }
         animator.SetBool("isGrounded", isGrounded);
+        if (isGrounded && !oldIsGrounded) { animator.SetTrigger("Landed"); print("Landed at: " + Time.time); }
         return isGrounded;
     }
 }

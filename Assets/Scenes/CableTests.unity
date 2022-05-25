@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 425813952}
   - component: {fileID: 425813951}
   - component: {fileID: 425813950}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425813949}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0154, y: -4.53, z: 0}
+  m_LocalPosition: {x: -0.0154, y: -4.53, z: 1}
   m_LocalScale: {x: 16.549608, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -588,7 +588,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864863911}
   m_LocalRotation: {x: -0, y: -0, z: 0.8123733, w: -0.5831378}
-  m_LocalPosition: {x: 0.8, y: -1.21, z: 0}
+  m_LocalPosition: {x: 0.8, y: -1.21, z: 1}
   m_LocalScale: {x: 0.9255869, y: 9.132013, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -732,7 +732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982633944}
   m_LocalRotation: {x: -0, y: -0, z: 0.7229534, w: -0.6908968}
-  m_LocalPosition: {x: 0.88, y: 2.86, z: 0}
+  m_LocalPosition: {x: 0.88, y: 2.86, z: 1}
   m_LocalScale: {x: 0.9255869, y: 9.132013, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -984,17 +984,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Baxter
       objectReference: {fileID: 0}
+    - target: {fileID: 598958075835846355, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 598958075835846356, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 598958075835846356, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 598958075835846356, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 598958075835846356, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1100,6 +1104,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8664289654330694373, guid: 1f4815adf2e13a44db87a917f343fd48, type: 3}
   m_PrefabInstance: {fileID: 1721369396}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1729204883 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 598958075835846352, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
+  m_PrefabInstance: {fileID: 1658014619}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1729204890
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729204883}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ce3e1358faff8bb4886fcd933b95a1ae, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &1952689154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 544789550738435324, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
