@@ -121,4 +121,13 @@ public static class GameEvents
         }
     }
 
+    public static Action onNextSong;
+    public static void NextSong()
+    {
+        if (onNextSong != null)
+        {
+            onNextSong();
+        }
+    }
+
 }
