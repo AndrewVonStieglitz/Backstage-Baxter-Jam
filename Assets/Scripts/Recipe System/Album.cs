@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "RecipeSystemScriptableObjects/New Album")]
 public class Album : ScriptableObject
 {
-    [SerializeField] List<SongData> songDataList = new List<SongData>();
+    [SerializeField] public List<SongData> songDataList = new List<SongData>();
 }

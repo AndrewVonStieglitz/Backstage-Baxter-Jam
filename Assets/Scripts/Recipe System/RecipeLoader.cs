@@ -5,16 +5,39 @@ using UnityEngine;
 public class RecipeLoader : MonoBehaviour
 {
     [SerializeField] Album album;
+    int currentSong = 0;
     // Start is called before the first frame update
-    void Start()
+
+    void PlaySong()
     {
-        
+        if (currentSong < album.songDataList.Count)
+        {
+            GameEvents.StartSong(album.songDataList[currentSong].Song);
+            currentSong++;
+        }
+        else
+        {
+            GameEvents.EndAlbum();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void StartAlbum()
     {
-        
+        currentSong = 0;
+        PlaySong();
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.onNextSong += PlaySong;
+        GameEvents.onStartAlbum += StartAlbum; 
+
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.onNextSong -= PlaySong;
+        GameEvents.onStartAlbum -= StartAlbum;
     }
 }
 

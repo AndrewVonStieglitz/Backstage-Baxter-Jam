@@ -79,7 +79,7 @@ public static class GameEvents
     public static Action<AmpController, CableController> onCableSpawn;
     public static void CableSpawn(AmpController amp, CableController cable)
     {
-        if (onCableSpawn !=null)
+        if (onCableSpawn != null)
         {
             onCableSpawn(amp, cable);
         }
@@ -130,4 +130,30 @@ public static class GameEvents
         }
     }
 
+    public static Action<song> onStartSong;
+    public static void StartSong(song song)
+    {
+        if (onStartSong != null)
+        {
+            onStartSong(song);
+        }
+    }
+
+    public static Action onEndAlbum;
+    public static void EndAlbum()
+    {
+        if (onEndAlbum != null)
+        {
+            onEndAlbum();
+        }
+    }
+
+    public static Action onStartAlbum;
+    public static void StartAlbum()
+    {
+        if (onStartAlbum != null)
+        {
+            onStartAlbum();
+        }
+    }
 }
