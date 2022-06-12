@@ -42,7 +42,10 @@ namespace Cables
 
         protected virtual void OnInitialised()
         {
-            cableSprite = cable.amp.cableSprite;
+            if (cable.amp) 
+                cableSprite = cable.amp.cableSprite;
+            else if (cable.pluggableStart)
+                cableSprite = cable.pluggableStart.cableSprite;
             lineRenderer.material.mainTexture = cableSprite.texture; 
         }
 

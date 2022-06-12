@@ -510,6 +510,7 @@ GameObject:
   m_Component:
   - component: {fileID: 553483257}
   - component: {fileID: 553483256}
+  - component: {fileID: 553483259}
   - component: {fileID: 553483255}
   - component: {fileID: 553483254}
   - component: {fileID: 553483258}
@@ -560,15 +561,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 3b08d5b98be90d54e814eaad384d4ee3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.25, y: 2.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!82 &553483255
@@ -712,16 +713,32 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.25, y: 2.25}
+    newSize: {x: 2.25, y: 2.25}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &553483259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553483253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
+  cableHead: {fileID: 1770650476}
+  cableSprite: {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
+  pluggableType: 0
 --- !u!4 &655218954 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 544789550738435324, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
@@ -830,11 +847,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8664289654330694373, guid: 1f4815adf2e13a44db87a917f343fd48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.96
+      value: -0.73
       objectReference: {fileID: 0}
     - target: {fileID: 8664289654330694373, guid: 1f4815adf2e13a44db87a917f343fd48, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.63
+      value: -3.9
       objectReference: {fileID: 0}
     - target: {fileID: 8664289654330694373, guid: 1f4815adf2e13a44db87a917f343fd48, type: 3}
       propertyPath: m_LocalPosition.z
@@ -967,6 +984,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1007585094}
   - component: {fileID: 1007585093}
+  - component: {fileID: 1007585095}
   - component: {fileID: 1007585092}
   - component: {fileID: 1007585091}
   m_Layer: 0
@@ -1066,6 +1084,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   identifierSO: {fileID: 11400000, guid: d8150fa488b5cd9438a9d285efeadde6, type: 2}
+  cablePrefab: {fileID: 0}
+  cableHead: {fileID: 0}
 --- !u!4 &1007585094
 Transform:
   m_ObjectHideFlags: 0
@@ -1080,6 +1100,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1007585095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007585090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
+  cableHead: {fileID: 1770650476}
+  cableSprite: {fileID: 0}
+  pluggableType: 1
 --- !u!1001 &1082093815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1164,6 +1200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438287920}
   - component: {fileID: 1438287919}
+  - component: {fileID: 1438287921}
   - component: {fileID: 1438287918}
   - component: {fileID: 1438287917}
   m_Layer: 0
@@ -1263,6 +1300,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   identifierSO: {fileID: 11400000, guid: 1bf43ad69fffa0f4d8ebab9be337affa, type: 2}
+  cablePrefab: {fileID: 0}
+  cableHead: {fileID: 0}
 --- !u!4 &1438287920
 Transform:
   m_ObjectHideFlags: 0
@@ -1277,6 +1316,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1438287921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438287916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
+  cableHead: {fileID: 1770650476}
+  cableSprite: {fileID: 0}
+  pluggableType: 2
 --- !u!1 &1564174797
 GameObject:
   m_ObjectHideFlags: 0
@@ -1645,11 +1700,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 544789550738435324, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.36
+      value: -2.67
       objectReference: {fileID: 0}
     - target: {fileID: 544789550738435324, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.36
+      value: 1.64
       objectReference: {fileID: 0}
     - target: {fileID: 544789550738435324, guid: 8b40a1a79ffc67a4f8710838a03e7c25, type: 3}
       propertyPath: m_LocalPosition.z
