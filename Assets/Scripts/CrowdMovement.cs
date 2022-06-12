@@ -4,44 +4,38 @@ using UnityEngine;
 
 public class CrowdMovement : MonoBehaviour
 {
-    public enum Rhythm
-    {
-        Common,
-        Half,
-        SixEight
-    }
+    [SerializeField] float bpm; //possible placeholder - could make a static member somewhere else to get this value?
 
-    [SerializeField] Rhythm rhythm;
-    [SerializeField] float bpm;
+    [Range(0, 1f)]
+    [SerializeField] float yTransform; //boing
+    [Range(0, 1f)]
+    [SerializeField] float xScale;
     float beat;
-    [Range(10, 200)]
-    [SerializeField] int speed;
+
     [SerializeField] float test;
-
-    Transform initialTransform;
+   
     static bool isStarted;
+    [SerializeField] bool isReversed;
 
+    Vector3 originalPos;
     // Start is called before the first frame update
     void Start()
     {
-        switch (rhythm)
-        {
-            case Rhythm.Common:
-                beat = 60 / bpm;
-                break;
-            case Rhythm.Half:
-                beat = 30 / bpm;
-                break;
+        originalPos = transform.position;
 
-        }
-        initialTransform = transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float y = Mathf.Cos((360 * Time.time) / beat);
-        transform.position = initialTransform.position + new Vector3(0, y);
+
+        beat = bpm / 60; //bps
+        float scaleX = (xScale / 2) * Mathf.Cos((Mathf.PI * 2 * Time.time) * beat) + (1 + (xScale / 2));
+        float transformY = -yTransform * Mathf.Cos((Mathf.PI * 2 * Time.time) * beat);
+        if (isReversed)
+            transformY = -transformY;
         
+        transform.localPosition = new Vector3(originalPos.x, originalPos.y + transformY, originalPos.z);
+        transform.localScale = new Vector3(scaleX, 1, 1);
     }
 }
