@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2051680457450499076}
   - component: {fileID: 2051680457450499075}
+  - component: {fileID: 8684224621905177040}
   - component: {fileID: 2051680457450499074}
   - component: {fileID: 2051680457450499073}
   m_Layer: 0
@@ -45,7 +46,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e47eddad543a8bb46b0adfcb523a65e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  identifier: {fileID: 0}
+  identifierSO: {fileID: 0}
+  cablePrefab: {fileID: 0}
+  cableHead: {fileID: 0}
+--- !u!114 &8684224621905177040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051680457450499072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
+  cableHead: {fileID: 0}
+  cableSprite: {fileID: 0}
+  pluggableType: 1
 --- !u!212 &2051680457450499074
 SpriteRenderer:
   m_ObjectHideFlags: 0

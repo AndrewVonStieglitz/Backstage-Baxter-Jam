@@ -75,6 +75,7 @@ public class PlugCable : MonoBehaviour
             print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableOut, this);
         }
+        cableOut = cable;
         cables.Add(cable);
 
         cableHead.NewCable(cable);
@@ -91,6 +92,7 @@ public class PlugCable : MonoBehaviour
         if (cableStart == this) return;
         cable.nodes.Last().MoveNode(transform.position);
         cable.Complete();
+        cable.pluggableEnd = this;
         if (cableIn)
         {
             print(name + " (EndCable()) disconnecting cable to: " + cableIn.pluggableStart.name);
@@ -98,6 +100,7 @@ public class PlugCable : MonoBehaviour
         }
         cableIn = cable;
         GameEvents.CableConnectPlug(cable, this);
+        cable.pluggableEnd = this;
         cableSprite = cableStart.cableSprite;
         print("Connected cable from: " + cableStart.name + ",\t to: " + name);
         // TODO: inform game coordinator that a cable has finished here, if speaker play song. 
