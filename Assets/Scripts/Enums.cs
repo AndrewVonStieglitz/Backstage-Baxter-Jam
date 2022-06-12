@@ -13,3 +13,10 @@ public enum MidAffectorType
     Reverb,
     Delay
 }
+
+public enum PluggableType
+{
+    Instrument, // only wire out
+    Mid,        // wire out and in (amp & mid-affector)
+    Speaker     // only wire in
+}

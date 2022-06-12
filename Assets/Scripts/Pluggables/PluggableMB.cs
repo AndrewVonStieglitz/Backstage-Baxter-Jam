@@ -6,8 +6,12 @@ using UnityEngine;
 public class PluggableMB : MonoBehaviour
 {
     [SerializeField] protected PluggablesSO identifierSO;
-    protected SpriteRenderer sr;
+    protected SpriteRenderer spriteRenderer;
     protected BoxCollider2D boxCol;
+    protected Color wireColor;
+
+    [SerializeField] private GameObject cablePrefab;
+    [SerializeField] private Cables.CableHead cableHead;
 
     public void Init()
     {
@@ -15,7 +19,7 @@ public class PluggableMB : MonoBehaviour
         //print(name + " initialising");
         if (identifierSO != null)
         {
-            sr.sprite = identifierSO.sprite;
+            spriteRenderer.sprite = identifierSO.sprite;
             boxCol.size = identifierSO.colliderDimensions;
             boxCol.offset = identifierSO.colliderOffset;
         }
@@ -25,7 +29,7 @@ public class PluggableMB : MonoBehaviour
 
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         boxCol = GetComponent<BoxCollider2D>();
         boxCol.isTrigger = true;
     }
