@@ -18,6 +18,11 @@ using Cables;
  * onCableDisconnect(CableController cable, SpeakerController speaker)
  * onCableReset(CableController cable)
  * onCableWind(CableController cable, pole orientation, location)
+ * onNextSong()
+ * onReadySong(song song)
+ * onStartSong()
+ * onEndAlbum()
+ * onStartAlbum()
  */
 
 public static class GameEvents
@@ -130,12 +135,30 @@ public static class GameEvents
         }
     }
 
-    public static Action<song> onStartSong;
-    public static void StartSong(song song)
+    public static Action<song> onReadySong;
+    public static void ReadySong(song song)
+    {
+        if (onReadySong != null)
+        {
+            onReadySong(song);
+        }
+    }
+
+    public static Action onStartSong;
+    public static void StartSong()
     {
         if (onStartSong != null)
         {
-            onStartSong(song);
+            onStartSong();
+        }
+    }
+
+    public static Action onEndSong;
+    public static void EndSong()
+    {
+        if (onEndSong != null)
+        {
+            onEndSong();
         }
     }
 
@@ -154,6 +177,24 @@ public static class GameEvents
         if (onStartAlbum != null)
         {
             onStartAlbum();
+        }
+    }
+
+    public static Action<recipe> onRecipeCompleted;
+    public static void RecipeCompleted(recipe recipe)
+    {
+        if (onRecipeCompleted != null)
+        {
+            onRecipeCompleted(recipe);
+        }
+    }
+
+    public static Action<recipe> onRecipeBroken;
+    public static void RecipeBroken(recipe recipe)
+    {
+        if (onRecipeBroken != null)
+        {
+            onRecipeBroken(recipe);
         }
     }
 }
