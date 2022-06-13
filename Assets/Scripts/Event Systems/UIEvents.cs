@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public static class UIEvents
 {
+    static PluggablesSO pluggables;
     private static void UpdateHappinessMeter()
     {
 
