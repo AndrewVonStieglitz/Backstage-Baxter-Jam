@@ -1,3 +1,3 @@
 # Backstage-Baxter-Jam
 
-UNITY LTS 2020.3.32f1
+UNITY LTS 2020.3.33f1
