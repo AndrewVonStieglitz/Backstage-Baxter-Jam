@@ -26,4 +26,9 @@ public static class UIEvents
     {
 
     }
+
+    private static void ClearRecipe()
+    {
+
+    }
 }
