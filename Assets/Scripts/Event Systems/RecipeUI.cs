@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RecipeUI : MonoBehaviour
 {
     [SerializeField]
-    RecipeData Recipe;
+    recipe Recipe;
 
     [SerializeField]
     public Image Input_1;
@@ -35,7 +35,7 @@ public class RecipeUI : MonoBehaviour
         Input_3.sprite = Recipe.speaker.sprite;
     }
 
-    public void RemoveRecipe()
+    public void CloseRecipe(recipe recipe)
     {
 
     }
