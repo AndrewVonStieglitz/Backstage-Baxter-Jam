@@ -31,15 +31,17 @@ namespace Cables
 
         public void DropCable()
         {
-            Destroy(cable.gameObject);
+            if (cable)
+                Destroy(cable.gameObject);
         }
 
-        public bool TryInteractCable()
+        public bool TryInteract()
         {
-            if (lastOverlappedTrigCollider)
+            if (lastOverlappedTrigCollider != null)
             {
                 try
                 {
+                    print("Cable head attempting to interact with PlugCable on: " + lastOverlappedTrigCollider.name);
                     PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
                     plugCableInto.Interact();
                     return true;
@@ -56,6 +58,7 @@ namespace Cables
         private void OnTriggerEnter2D(Collider2D col)
         {
             // TODO: Duplicate code. See OnTriggerExit2D.
+            lastOverlappedTrigCollider = col;
             if (cable == null) return;
             
             if (!col.CompareTag("Pipe")) return;
@@ -68,7 +71,6 @@ namespace Cables
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
             
             cable.PipeEnter(nodePosition, hit.normal);
-            lastOverlappedTrigCollider = col;
         }
 
         private void OnTriggerExit2D(Collider2D col)

@@ -22,26 +22,26 @@ public class PlugCable : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // comment out to replace into Interact()
-        if (!collision.CompareTag("CableHead")) return;
-        bool hasCable = cableHead.cable != null;
+        //if (!collision.CompareTag("CableHead")) return;
+        //bool hasCable = cableHead.cable != null;
 
-        switch (pluggableType)
-        {
-            case PluggableType.Instrument:
-                if (!hasCable)
-                    StartCable();
-                break;
-            case PluggableType.Mid:
-                if (hasCable)
-                    EndCable();
-                else
-                    StartCable();
-                break;
-            case PluggableType.Speaker:
-                if (hasCable)
-                    EndCable();
-                break;
-        }
+        //switch (pluggableType)
+        //{
+        //    case PluggableType.Instrument:
+        //        if (!hasCable)
+        //            StartCable();
+        //        break;
+        //    case PluggableType.Mid:
+        //        if (hasCable)
+        //            EndCable();
+        //        else
+        //            StartCable();
+        //        break;
+        //    case PluggableType.Speaker:
+        //        if (hasCable)
+        //            EndCable();
+        //        break;
+        //}
     }
 
     public void Interact()

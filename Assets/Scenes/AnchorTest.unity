@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 553483255}
   - component: {fileID: 553483254}
   - component: {fileID: 553483258}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: IMB Guitar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -987,7 +987,7 @@ GameObject:
   - component: {fileID: 1007585095}
   - component: {fileID: 1007585092}
   - component: {fileID: 1007585091}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PMB Amp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1203,7 +1203,7 @@ GameObject:
   - component: {fileID: 1438287921}
   - component: {fileID: 1438287918}
   - component: {fileID: 1438287917}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PMB Loud Speaker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 598958075835846354, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: maxHoldPickup
-      value: 0.08
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 598958075835846356, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: m_RootOrder
