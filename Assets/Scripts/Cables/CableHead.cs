@@ -10,6 +10,7 @@ namespace Cables
         private Vector3 lastPosition;
         public Vector3 velocity;
         private BoxCollider2D boxCollider2D;
+        private Collider2D lastOverlappedTrigCollider;
         
         public void NewCable(CableController cable)
         {
@@ -28,9 +29,36 @@ namespace Cables
             cable = null;
         }
 
+        public void DropCable()
+        {
+            if (cable)
+                Destroy(cable.gameObject);
+        }
+
+        public bool TryInteract()
+        {
+            if (lastOverlappedTrigCollider != null)
+            {
+                try
+                {
+                    print("Cable head attempting to interact with PlugCable on: " + lastOverlappedTrigCollider.name);
+                    PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
+                    plugCableInto.Interact();
+                    return true;
+                }
+                catch
+                {
+                    print("Cable head Could not find Plugcable on most recent trigger contact");
+                    return false;
+                }
+            }
+            return false;
+        }
+
         private void OnTriggerEnter2D(Collider2D col)
         {
             // TODO: Duplicate code. See OnTriggerExit2D.
+            lastOverlappedTrigCollider = col;
             if (cable == null) return;
             
             if (!col.CompareTag("Pipe")) return;

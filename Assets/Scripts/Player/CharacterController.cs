@@ -8,10 +8,10 @@ public class CharacterController : MonoBehaviour
     private Rigidbody2D baxterRigidBody;
     private SpriteRenderer baxterSpriteRenderer;
     private CircleCollider2D baxterCollider;
-
+    private Cables.CableHead cableHead;
 
     [SerializeField] private float jumpForce;
-    private float jumpHoldTimer = -1;
+    private float jumpBuffer = -1;
     [SerializeField] private float jumpHoldMaxTime;
     private bool isGrounded;
     [SerializeField] private float coyoteTime;
@@ -22,8 +22,23 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private float movementAxisGravity;
     [SerializeField] private float movementAxisSensitivity;
     private float moveAxis;
+    [SerializeField] private float quadraticThreshold = 0.2f;
+    [SerializeField] private float linearDrag = 0.05f;
+    [SerializeField] private float quadDrag = 0.05f;
 
     PlayerControls playerControls;
+
+    private float halfHeight;
+    private int groundedLayerMask;
+    private int platformLayer = 6;
+
+    private Animator animator;
+
+    private float pickupHeldTime = 0f;
+    private bool pickupBeingHeld = false;
+    [SerializeField] private float maxHoldPickup;
+
+    public bool debugIsGrouned = false; // shows the state of this variable in inspector. 
 
     //private PlayerInput baxterInput;
 
@@ -33,17 +48,23 @@ public class CharacterController : MonoBehaviour
         baxterRigidBody = GetComponent<Rigidbody2D>();
         baxterSpriteRenderer = GetComponent<SpriteRenderer>();
         baxterCollider = GetComponent<CircleCollider2D>();
+        animator = GetComponent<Animator>();
         //baxterInput = GetComponent<PlayerInput>();
+        cableHead = transform.GetChild(0).GetComponent<Cables.CableHead>();// requires cable head be first child!!
 
         playerControls = new PlayerControls();
 
-        distToGround = baxterCollider.radius - baxterCollider.radius*0.05f;
+        distToGround = baxterCollider.radius*1.05f;
+        print("Distance to ground: " + distToGround);
 
         playerControls.Baxter.Enable();
         playerControls.Baxter.Jump.performed += StartJump;
         playerControls.Baxter.Jump.canceled += EndJump;
         playerControls.Baxter.Move.performed += PlayerMove;
-
+        playerControls.Baxter.PickupRelease.performed += PickupPressDown;
+        playerControls.Baxter.PickupRelease.canceled += PickupPressUp;
+        
+        groundedLayerMask = (1 << platformLayer);
     }
 
     void Start()
@@ -57,34 +78,88 @@ public class CharacterController : MonoBehaviour
         setMoveAxis();
 
         if (coyoteTimer > 0) coyoteTimer -= Time.deltaTime;
+        animator.SetFloat("yVelo", baxterRigidBody.velocity.y);
     }
 
     private void FixedUpdate()
     {
-        if (jumpHoldTimer > 0)
+        float xVelo = baxterRigidBody.velocity.x;
+        float drag = (xVelo < quadraticThreshold) ? linearDrag * xVelo : (xVelo * xVelo * Mathf.Sign(xVelo)) * quadDrag;
+        baxterRigidBody.AddForce(Vector2.right * drag);
+        GetIsGroundedRayCast();
+        if (jumpBuffer > 0)
         {
-            jumpHoldTimer -= Time.fixedDeltaTime;
+            jumpBuffer -= Time.fixedDeltaTime;
             baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             coyoteTimer = -1;
         }
 
         //baxterRigidBody.AddForce(Vector2.right * moveSpeed * moveAxis, ForceMode2D.Impulse);
         baxterRigidBody.velocity = new Vector2( moveSpeed * moveAxis, baxterRigidBody.velocity.y);
+        debugIsGrouned = isGrounded;
+        animator.SetFloat("xVelo", Mathf.Abs(baxterRigidBody.velocity.x));
+        //animator.ResetTrigger("Landed");
     }
 
     public void StartJump(InputAction.CallbackContext context)
     {
-        if (isGrounded || coyoteTimer > 0)
+        if (isGrounded || (coyoteTimer > 0f && jumpBuffer > 0f))
         {
-            jumpHoldTimer = jumpHoldMaxTime;
+            print("Jump executing");
+            jumpBuffer = jumpHoldMaxTime;
             baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             coyoteTimer = -1;
+            jumpBuffer = 0f;
+            animator.ResetTrigger("Landed");
+            animator.SetTrigger("JumpCommand");
         }
+        
     }
 
     public void EndJump(InputAction.CallbackContext context)
     {
-        jumpHoldTimer = -1;
+        jumpBuffer = -1;
+    }
+
+    public void PickupPressDown(InputAction.CallbackContext context)
+    {
+        print("Baxter pickup/release key down");
+        pickupHeldTime = Time.time;
+        pickupBeingHeld = true;
+        StartCoroutine(countdownPickupHold());
+    }
+
+    public void PickupPressUp(InputAction.CallbackContext context)
+    {
+        pickupHeldTime = Time.time - pickupHeldTime;
+        print("Baxter pickup/release key up. Held for: " + pickupHeldTime);
+        if (pickupBeingHeld)
+        {
+            pickupBeingHeld = false;
+            StopCoroutine(countdownPickupHold());
+            if (pickupHeldTime < maxHoldPickup)
+            {
+                // pick up the cable
+                cableHead.TryInteract();
+            }
+            else
+            {
+                // release the cable
+                cableHead.DropCable();
+            }
+        }
+    }
+
+    private IEnumerator countdownPickupHold()
+    {
+        yield return new WaitForSeconds(maxHoldPickup);
+        if (pickupBeingHeld)
+        {
+            // release cable
+            print("Coroutine force releasing cable");
+            cableHead.DropCable();
+            pickupBeingHeld = false;
+        }
     }
 
     public void PlayerMove(InputAction.CallbackContext context)
@@ -118,19 +193,19 @@ public class CharacterController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        CheckIsGrounded(collision);    
+        //CheckIsGrounded(collision);    
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        CheckIsGrounded(collision);
+        //CheckIsGrounded(collision);
     }
 
-    private void CheckIsGrounded(Collision2D collision)
+    private void CheckIsGrounded(Collision2D collision) // doesn't work 
     {
         ContactPoint2D[] contactPoints = new ContactPoint2D[10];
         collision.GetContacts(contactPoints);
-
+        
         isGrounded = false;
         coyoteTimer = coyoteTime;
 
@@ -139,5 +214,23 @@ public class CharacterController : MonoBehaviour
             if (contact.point.y < transform.position.y - distToGround)
                 isGrounded = true;
         }
+        animator.SetBool("isGrounded", isGrounded); 
+    }
+
+    private bool GetIsGroundedRayCast()
+    {
+        bool oldIsGrounded = isGrounded;
+        isGrounded = false;
+        Vector2 rayOrigin = transform.position; // upgrade to array of raycasts soon
+        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, 50f, groundedLayerMask);
+        if (hit.collider != null)
+        {
+            if (hit.distance < distToGround)
+                isGrounded = true;
+            //print("raycast distance: " + hit.distance + "\t, dist to ground: " + distToGround + "\t, bool: " + (hit.distance < distToGround));
+        }
+        animator.SetBool("isGrounded", isGrounded);
+        if (isGrounded && !oldIsGrounded) { animator.SetTrigger("Landed"); print("Landed at: " + Time.time); }
+        return isGrounded;
     }
 }
