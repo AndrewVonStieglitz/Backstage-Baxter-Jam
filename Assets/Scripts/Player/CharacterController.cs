@@ -140,7 +140,7 @@ public class CharacterController : MonoBehaviour
             if (pickupHeldTime < maxHoldPickup)
             {
                 // pick up the cable
-                //cableHead.TryInteractCable();
+                cableHead.TryInteract();
             }
             else
             {

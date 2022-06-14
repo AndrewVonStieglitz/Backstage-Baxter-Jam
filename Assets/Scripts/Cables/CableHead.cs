@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections;
 using UnityEngine;
 
 namespace Cables
@@ -31,24 +32,31 @@ namespace Cables
 
         public void DropCable()
         {
-            Destroy(cable.gameObject);
+            if (cable)
+                Destroy(cable.gameObject);
         }
 
-        public bool TryInteractCable()
+        public bool TryInteract()
         {
-            if (lastOverlappedTrigCollider)
+            //print(lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>());
+            if (lastOverlappedTrigCollider != null)
             {
-                try
-                {
-                    PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
+                if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
                     plugCableInto.Interact();
                     return true;
                 }
-                catch
-                {
-                    print("Cable head Could not find Plugcable on most recent trigger contact");
-                    return false;
-                }
+                //try
+                //{
+                //    print("Cable head attempting to interact with PlugCable on: " + lastOverlappedTrigCollider.name);
+                //    PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
+                //    plugCableInto.Interact();
+                //    return true;
+                //}
+                //catch
+                //{
+                //    print("Cable head Could not find Plugcable on most recent trigger contact");
+                //    return false;
+                //}
             }
             return false;
         }
@@ -56,6 +64,7 @@ namespace Cables
         private void OnTriggerEnter2D(Collider2D col)
         {
             // TODO: Duplicate code. See OnTriggerExit2D.
+            lastOverlappedTrigCollider = col;
             if (cable == null) return;
             
             if (!col.CompareTag("Pipe")) return;
@@ -68,7 +77,6 @@ namespace Cables
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
             
             cable.PipeEnter(nodePosition, hit.normal);
-            lastOverlappedTrigCollider = col;
         }
 
         private void OnTriggerExit2D(Collider2D col)

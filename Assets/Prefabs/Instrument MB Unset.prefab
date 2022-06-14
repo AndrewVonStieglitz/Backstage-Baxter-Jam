@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 2297323526243354688}
   - component: {fileID: 6370269843447629874}
   - component: {fileID: 8411398368575679647}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Instrument MB Unset
-  m_TagString: Untagged
+  m_TagString: Instrument
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,6 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pluggable: {fileID: 0}
+  instrument: {fileID: 0}
   cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
   cableHead: {fileID: 0}
   cableSprite: {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
