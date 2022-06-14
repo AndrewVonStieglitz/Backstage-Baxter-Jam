@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1822564715129059160}
   - component: {fileID: 7628914418189600821}
+  - component: {fileID: 5490760618005058308}
   - component: {fileID: 2297323526243354688}
   - component: {fileID: 6370269843447629874}
   - component: {fileID: 8411398368575679647}
@@ -49,6 +50,22 @@ MonoBehaviour:
   identifierSO: {fileID: 0}
   songParts: []
   cableCol: {r: 0, g: 1, b: 0, a: 0}
+--- !u!114 &5490760618005058308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3511712390416758920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
+  cableHead: {fileID: 0}
+  cableSprite: {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
+  pluggableType: 0
 --- !u!82 &2297323526243354688
 AudioSource:
   m_ObjectHideFlags: 0

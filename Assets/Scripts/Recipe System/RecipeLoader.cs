@@ -6,13 +6,12 @@ public class RecipeLoader : MonoBehaviour
 {
     [SerializeField] Album album;
     int currentSong = 0;
-    // Start is called before the first frame update
 
     void PlaySong()
     {
         if (currentSong < album.songDataList.Count)
         {
-            GameEvents.StartSong(album.songDataList[currentSong].Song);
+            GameEvents.ReadySong(album.songDataList[currentSong].Song);
             currentSong++;
         }
         else

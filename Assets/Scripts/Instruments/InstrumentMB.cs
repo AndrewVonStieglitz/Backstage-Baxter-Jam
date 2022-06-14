@@ -40,7 +40,7 @@ public class InstrumentMB : MonoBehaviour
 
     void Start()
     {
-        Init();
+        
         trackNum = 0;
         if (isDrum) audioSource.volume = 0.5f; // drums are quieter until mic'd
     }
@@ -50,11 +50,8 @@ public class InstrumentMB : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
         boxCol = GetComponent<BoxCollider2D>();
+        Init();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public InstrumentSO GetIdentifierSO() { return identifierSO; }
 }

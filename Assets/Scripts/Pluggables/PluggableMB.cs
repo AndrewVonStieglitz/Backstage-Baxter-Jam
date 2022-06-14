@@ -10,6 +10,9 @@ public class PluggableMB : MonoBehaviour
     protected BoxCollider2D boxCol;
     protected Color wireColor;
 
+    [SerializeField] private GameObject cablePrefab;
+    [SerializeField] private Cables.CableHead cableHead;
+
     public void Init()
     {
         // Should be called when the identifier is set. Not sure how to do this at current ;(
