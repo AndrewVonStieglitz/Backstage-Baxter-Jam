@@ -6,22 +6,22 @@ using UnityEngine.UI;
 public class RecipeUI : MonoBehaviour
 {
     [SerializeField]
-    PluggablesSO PluggablesRecpie_1;
+    RecipeData Recipe;
 
     [SerializeField]
-    Image Recipe_1;
+    public Image Input_1;
 
     [SerializeField]
-    Image Recipe_2;
+    public Image Input_2;
 
     [SerializeField]
-    Image Recipe_3;
+    public Image Input_3;
 
     [SerializeField]
-    Image Recipe_4;
+    public Image Input_4;
 
     [SerializeField]
-    Image Recipe_5;
+    public Image Input_5;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +42,9 @@ public class RecipeUI : MonoBehaviour
 
     public void AddRecipe()
     {
-        Recipe_1.sprite = PluggablesRecpie_1.sprite;
+        Input_1.sprite = Recipe.instrument.sprite;
+        Input_2.sprite = Recipe.amp.sprite;
+        Input_3.sprite = Recipe.speaker.sprite;
     }
 
     public void RemoveRecipe()
@@ -57,6 +59,6 @@ public class RecipeUI : MonoBehaviour
 
     public void ClearRecipe()
     {
-
+        
     }
 }

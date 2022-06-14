@@ -13,9 +13,11 @@ public static class UIEvents
 
     }
 
-    private static void AddRecipe()
+    public static void AddRecipe(RecipeData Recipe)
     {
-        recipeUI.AddRecipe();
+        recipeUI.Input_1.sprite = Recipe.instrument.sprite;
+        recipeUI.Input_2.sprite = Recipe.amp.sprite;
+        recipeUI.Input_3.sprite = Recipe.speaker.sprite;
     }
 
     private static void RemoveRecipe()
