@@ -44,6 +44,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PickupRelease"",
+                    ""type"": ""Button"",
+                    ""id"": ""a11db024-8bce-4674-8914-b26fdadc9a9c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -90,6 +99,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4ed32a4-e965-44e2-baef-2185257c98ba"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PickupRelease"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -100,6 +120,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Baxter = asset.FindActionMap("Baxter", throwIfNotFound: true);
         m_Baxter_Jump = m_Baxter.FindAction("Jump", throwIfNotFound: true);
         m_Baxter_Move = m_Baxter.FindAction("Move", throwIfNotFound: true);
+        m_Baxter_PickupRelease = m_Baxter.FindAction("PickupRelease", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -161,12 +182,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private IBaxterActions m_BaxterActionsCallbackInterface;
     private readonly InputAction m_Baxter_Jump;
     private readonly InputAction m_Baxter_Move;
+    private readonly InputAction m_Baxter_PickupRelease;
     public struct BaxterActions
     {
         private @PlayerControls m_Wrapper;
         public BaxterActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump => m_Wrapper.m_Baxter_Jump;
         public InputAction @Move => m_Wrapper.m_Baxter_Move;
+        public InputAction @PickupRelease => m_Wrapper.m_Baxter_PickupRelease;
         public InputActionMap Get() { return m_Wrapper.m_Baxter; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -182,6 +205,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_BaxterActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_BaxterActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_BaxterActionsCallbackInterface.OnMove;
+                @PickupRelease.started -= m_Wrapper.m_BaxterActionsCallbackInterface.OnPickupRelease;
+                @PickupRelease.performed -= m_Wrapper.m_BaxterActionsCallbackInterface.OnPickupRelease;
+                @PickupRelease.canceled -= m_Wrapper.m_BaxterActionsCallbackInterface.OnPickupRelease;
             }
             m_Wrapper.m_BaxterActionsCallbackInterface = instance;
             if (instance != null)
@@ -192,6 +218,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @PickupRelease.started += instance.OnPickupRelease;
+                @PickupRelease.performed += instance.OnPickupRelease;
+                @PickupRelease.canceled += instance.OnPickupRelease;
             }
         }
     }
@@ -200,5 +229,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnJump(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnPickupRelease(InputAction.CallbackContext context);
     }
 }
