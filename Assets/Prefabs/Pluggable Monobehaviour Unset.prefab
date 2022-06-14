@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8684224621905177040}
   - component: {fileID: 2051680457450499074}
   - component: {fileID: 2051680457450499073}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pluggable Monobehaviour Unset
-  m_TagString: Untagged
+  m_TagString: Pluggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,9 +61,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pluggable: {fileID: 0}
+  instrument: {fileID: 0}
   cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
   cableHead: {fileID: 0}
-  cableSprite: {fileID: 0}
+  cableSprite: {fileID: 21300000, guid: 9cd646b3660094a4ab034f4e212ada66, type: 3}
   pluggableType: 1
 --- !u!212 &2051680457450499074
 SpriteRenderer:

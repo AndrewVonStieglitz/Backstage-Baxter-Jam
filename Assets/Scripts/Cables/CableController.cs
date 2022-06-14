@@ -28,6 +28,9 @@ namespace Cables
         public PlugCable pluggableEnd;
         public float cableWidth;
         public List<CableNode> nodes = new List<CableNode>();
+
+        public InstrumentSO instrument;
+        public List<PluggablesSO> pluggablesList;
         
         private Vector2 pipeEntryNormal;
 
@@ -56,7 +59,16 @@ namespace Cables
         public void Initialise(PlugCable startObj)
         {
             this.pluggableStart = startObj;
-
+            if (startObj.tag == "Instrument")
+            {
+                instrument = startObj.instrument;
+            }
+            if (startObj.tag == "Pluggable")
+            {
+                pluggablesList.Add(startObj.pluggable);
+                instrument = startObj.GetPathsInstrument();
+            }
+            
             CreateNode(pluggableStart.transform.position, Vector2.zero);
             CreateNode(pluggableStart.transform.position, Vector2.zero);
 

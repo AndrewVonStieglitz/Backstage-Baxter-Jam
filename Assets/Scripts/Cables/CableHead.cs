@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections;
 using UnityEngine;
 
 namespace Cables
@@ -37,20 +38,25 @@ namespace Cables
 
         public bool TryInteract()
         {
+            //print(lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>());
             if (lastOverlappedTrigCollider != null)
             {
-                try
-                {
-                    print("Cable head attempting to interact with PlugCable on: " + lastOverlappedTrigCollider.name);
-                    PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
+                if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
                     plugCableInto.Interact();
                     return true;
                 }
-                catch
-                {
-                    print("Cable head Could not find Plugcable on most recent trigger contact");
-                    return false;
-                }
+                //try
+                //{
+                //    print("Cable head attempting to interact with PlugCable on: " + lastOverlappedTrigCollider.name);
+                //    PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
+                //    plugCableInto.Interact();
+                //    return true;
+                //}
+                //catch
+                //{
+                //    print("Cable head Could not find Plugcable on most recent trigger contact");
+                //    return false;
+                //}
             }
             return false;
         }

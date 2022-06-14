@@ -8,8 +8,8 @@ public class PlugCable : MonoBehaviour
 {
     private PluggableMB PMB;
     private InstrumentMB IMB;
-    private PluggablesSO pluggable;
-    private InstrumentSO instrument;
+    public PluggablesSO pluggable;
+    public InstrumentSO instrument;
     private BoxCollider2D boxCol;
 
     [SerializeField] private GameObject cablePrefab;
@@ -116,6 +116,7 @@ public class PlugCable : MonoBehaviour
         PlugCable cableStart = cable.pluggableStart;
         if (cableStart == this) return;
         cable.nodes.Last().MoveNode(transform.position);
+        cable.pluggablesList.Add(pluggable);
         cable.Complete();
         cable.pluggableEnd = this;
         if (cableIn)
@@ -129,5 +130,11 @@ public class PlugCable : MonoBehaviour
         cableSprite = cableStart.cableSprite;
         print("Connected cable from: " + cableStart.name + ",\t to: " + name);
         // TODO: inform game coordinator that a cable has finished here, if speaker play song. 
+    }
+
+    public InstrumentSO GetPathsInstrument() {
+        if (instrument != null)
+            return instrument;
+        return cableIn != null ? cableIn.instrument : null;
     }
 }

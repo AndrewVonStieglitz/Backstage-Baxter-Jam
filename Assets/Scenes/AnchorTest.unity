@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 553483258}
   m_Layer: 7
   m_Name: IMB Guitar
-  m_TagString: Untagged
+  m_TagString: Instrument
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -735,6 +735,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pluggable: {fileID: 0}
+  instrument: {fileID: 0}
   cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
   cableHead: {fileID: 1770650476}
   cableSprite: {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
@@ -989,7 +991,7 @@ GameObject:
   - component: {fileID: 1007585091}
   m_Layer: 7
   m_Name: PMB Amp
-  m_TagString: Untagged
+  m_TagString: Pluggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1112,9 +1114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pluggable: {fileID: 0}
+  instrument: {fileID: 0}
   cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
   cableHead: {fileID: 1770650476}
-  cableSprite: {fileID: 0}
+  cableSprite: {fileID: 21300000, guid: 9cd646b3660094a4ab034f4e212ada66, type: 3}
   pluggableType: 1
 --- !u!1001 &1082093815
 PrefabInstance:
@@ -1205,7 +1209,7 @@ GameObject:
   - component: {fileID: 1438287917}
   m_Layer: 7
   m_Name: PMB Loud Speaker
-  m_TagString: Untagged
+  m_TagString: Pluggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1328,9 +1332,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f3aaaa5e1b0849af079e55e298174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pluggable: {fileID: 0}
+  instrument: {fileID: 0}
   cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
   cableHead: {fileID: 1770650476}
-  cableSprite: {fileID: 0}
+  cableSprite: {fileID: 21300000, guid: 9cd646b3660094a4ab034f4e212ada66, type: 3}
   pluggableType: 2
 --- !u!1 &1564174797
 GameObject:
