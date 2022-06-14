@@ -40,7 +40,7 @@ public class RecipeUI : MonoBehaviour
 
     }
 
-    public void AddRecipe()
+    public void AddRecipe(RecipeData Recipe)
     {
         Input_1.sprite = Recipe.instrument.sprite;
         Input_2.sprite = Recipe.amp.sprite;
