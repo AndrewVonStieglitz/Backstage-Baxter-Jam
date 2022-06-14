@@ -92,6 +92,7 @@ public static class GameEvents
         }
     }
 
+    //Legacy: Should delete
     public static Action<CableController, SpeakerController> onCableConnect;
     public static void CableConnect(CableController cable, SpeakerController speaker)
     {
@@ -111,6 +112,7 @@ public static class GameEvents
         }
     }
 
+    //Legacy: Should delete
     public static Action<CableController, SpeakerController> onCableDisconnect;
     public static void CableDisconnect(CableController cable, SpeakerController speaker)
     {
@@ -127,6 +129,16 @@ public static class GameEvents
         if (onCableDisconnectPlug != null)
         {
             onCableDisconnectPlug(cable, endObj);
+        }
+    }
+
+    //When a cable is first pulled from an instrument
+    public static Action<CableController, InstrumentSO> onCableIntrumentStart;
+    public static void CableIntrumentStart(CableController cable, InstrumentSO instrument)
+    {
+        if (onCableIntrumentStart != null)
+        {
+            onCableIntrumentStart(cable, instrument);
         }
     }
 

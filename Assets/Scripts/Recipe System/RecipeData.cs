@@ -12,9 +12,9 @@ public class RecipeData : ScriptableObject
         }
     }
 
-    public PluggablesSO instrument;
-    public PluggablesSO amp;
-    public PluggablesSO speaker;
-    public PluggablesSO[] midAffectors;
+    public InstrumentSO instrument;
+    public MidAffectorSuper amp;
+    public SpeakerSuper speaker;
+    public MidAffectorSuper[] midAffectors;
     public AudioClip musicPart;
 }

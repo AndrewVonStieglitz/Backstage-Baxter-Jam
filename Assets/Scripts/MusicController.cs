@@ -16,6 +16,7 @@ public class MusicController : MonoBehaviour
         StartTimer();
         GameEvents.onGameStart += StartTimer;
         GameEvents.onCableConnect += PlayMusic;
+        GameEvents.onStartSong += ResetTimer;
         //GameEvents.onCableDisconnect += StopMusic;
     }
 
@@ -23,6 +24,7 @@ public class MusicController : MonoBehaviour
     {
         GameEvents.onGameStart -= StartTimer;
         GameEvents.onCableConnect -= PlayMusic;
+        GameEvents.onStartSong -= ResetTimer;
         //GameEvents.onCableDisconnect -= StopMusic;
     }
 
@@ -49,6 +51,12 @@ public class MusicController : MonoBehaviour
     private void StopMusic(CableController cable, SpeakerController speaker)
     {
         speaker.StopMusic();
+    }
+
+    public void ResetTimer()
+    {
+        timer = 0;
+        StartTimer();
     }
 
     [ContextMenu("Start Timer")]

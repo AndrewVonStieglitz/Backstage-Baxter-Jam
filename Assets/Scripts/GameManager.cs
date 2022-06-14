@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cables;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class GameManager : MonoBehaviour
 
     static public float happiness { get => happiness; private set { happiness = Mathf.Clamp(value, 0, 100); } }
 
+    IDictionary<InstrumentSO, recipe> recipeDictionary;
+    IDictionary<CableController, InstrumentSO> connectionsDictionary;
+
     // Update is called once per frame
     void Update()
     {
@@ -34,10 +38,10 @@ public class GameManager : MonoBehaviour
 
         if (currentGameState == GameState.playing)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
+            timer += Time.deltaTime;
+            if (timer >= currentSong.duration)
             {
-                //When song duration is up, call time up
+                //When song duration is up, call time up. Timer counts up instead of down to act as timer for song
                 GameEvents.TimeUp();
             }
         }
@@ -55,9 +59,11 @@ public class GameManager : MonoBehaviour
     //When RecipeLoader annoucnes the next song
     private void OnReadySong(song song)
     {
+        UIEvents.ClearRecipes();
         currentSong = song;
         foreach (recipe recipe in currentSong.componentRecipes)
         {
+            recipeDictionary.Add(recipe.instrument, recipe);
             UIEvents.DisplayRecipe(recipe);
         }
     }
@@ -66,7 +72,7 @@ public class GameManager : MonoBehaviour
     private void OnStartSong()
     {
         currentGameState = GameState.playing;
-        timer = currentSong.duration;
+        timer = 0;
     }
 
     //When player wins/fails
@@ -91,11 +97,55 @@ public class GameManager : MonoBehaviour
     {
         //Todo: transition to game over
         Debug.LogWarning("Album ended currently not implemented");
+        Invoke("EndGame", 5);
     }
 
-    private void OnCableConnected()
+    private void OnCableConnected(CableController cable, PlugCable plug)
     {
+        InstrumentSO instrument = cable.instrument;
+        if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
+        {
+            //If matching recipe found with correct instrument
+            int totalPluggables = recipe.midAffectors.Length + 3;
+            if (cable.pluggablesList.Count == totalPluggables)
+            {//First checks if size of list matches
+                if (cable.pluggablesList[1] == recipe.amp && cable.pluggablesList[cable.pluggablesList.Count - 1] == recipe.speaker) //Checks if amp and speaker are correct
+                {
+                    List<PluggablesSO> pluggables = new List<PluggablesSO>(cable.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
+                    foreach(MidAffectorSuper midAffector in recipe.midAffectors)
+                    {
+                        if (!pluggables.Contains(midAffector))
+                        {
+                            GameEvents.RecipeBroken(recipe); //If does not contain, it must be a broken recipe
+                            return;
+                        }
+                        else
+                        {
+                            //removes item if it does contain so it can't represent duplicates
+                            pluggables.Remove(midAffector);
+                        }
+                    }
+                    //If it hasn't been stopped, recipe must be complete.
+                    GameEvents.RecipeCompleted(recipe);
+                    return;
+                }
+            }
+            //If no conditions are met, recipe must be broken
+            GameEvents.RecipeBroken(recipe);
+            
+        }
+        else
+        {
+            Debug.LogError("No recipe found matching instrument");
+        }
+        //cable.pluggablesList;
+        //plug.pluggable
 
+    }
+
+    private void EndGame()
+    {
+        GameEvents.GameOver();
     }
 
     private void OnEnable()
@@ -106,6 +156,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onEndAlbum += OnAlbumEnded;
         GameEvents.onReadySong += OnReadySong;
         GameEvents.onStartSong += OnStartSong;
+        GameEvents.onCableConnectPlug += OnCableConnected;
+        GameEvents.onCableDisconnectPlug += OnCableConnected;
     }
 
     private void OnDisable()
@@ -116,6 +168,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onEndAlbum -= OnAlbumEnded;
         GameEvents.onReadySong -= OnReadySong;
         GameEvents.onStartSong -= OnStartSong;
+        GameEvents.onCableConnectPlug -= OnCableConnected;
+        GameEvents.onCableDisconnectPlug -= OnCableConnected;
     }
 
 

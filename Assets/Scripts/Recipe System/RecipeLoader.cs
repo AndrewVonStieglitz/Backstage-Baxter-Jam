@@ -54,13 +54,13 @@ public struct song
 
 public struct recipe
 {
-    public PluggablesSO instrument;
-    public PluggablesSO amp;
-    public PluggablesSO speaker;
-    public PluggablesSO[] midAffectors;
+    public InstrumentSO instrument;
+    public MidAffectorSuper amp;
+    public SpeakerSuper speaker;
+    public MidAffectorSuper[] midAffectors;
     public AudioClip songPart;
 
-    public recipe(PluggablesSO instrumentSO, PluggablesSO ampSO, PluggablesSO speakerSO, PluggablesSO[] midAffectorsSO, AudioClip songPartSO)
+    public recipe(InstrumentSO instrumentSO, MidAffectorSuper ampSO, SpeakerSuper speakerSO, MidAffectorSuper[] midAffectorsSO, AudioClip songPartSO)
     {
         instrument = instrumentSO;
         amp = ampSO;
