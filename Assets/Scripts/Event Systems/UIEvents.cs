@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public static class UIEvents
 {
     static PluggablesSO pluggables;
+    static RecipeUI recipeUI;
     private static void UpdateHappinessMeter()
     {
 
@@ -14,7 +15,7 @@ public static class UIEvents
 
     private static void AddRecipe()
     {
-
+        recipeUI.AddRecipe();
     }
 
     private static void RemoveRecipe()
