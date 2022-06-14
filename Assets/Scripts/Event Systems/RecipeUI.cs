@@ -23,18 +23,6 @@ public class RecipeUI : MonoBehaviour
     [SerializeField]
     public Image Input_5;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void UpdateHappinessMeter()
     {
 
@@ -59,6 +47,8 @@ public class RecipeUI : MonoBehaviour
 
     public void ClearRecipe()
     {
-        
+        Input_1.sprite = null;
+        Input_2.sprite = null;
+        Input_3.sprite = null;
     }
 }
