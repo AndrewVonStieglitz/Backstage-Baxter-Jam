@@ -10,12 +10,28 @@ namespace Cables
         private enum ZPosFunctionID { None, Triangle, Slope }
 
         [SerializeField] private ZPosFunctionID zPosFunctionID;
+
+        private LineRenderer lineRenderer;
+
+        private void Awake()
+        {
+            lineRenderer = GetComponent<LineRenderer>();
+
+            SetLineWidth(lineRenderer);
+        }
         
         private void Update()
         {
             DrawLine();
         }
-        
+
+        protected override void OnInitialised()
+        {
+            base.OnInitialised();
+            
+            lineRenderer.material.mainTexture = cableSprite.texture; 
+        }
+
         private void DrawLine()
         {
             var points = new List<Vector2>();

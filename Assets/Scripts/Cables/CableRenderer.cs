@@ -9,29 +9,16 @@ namespace Cables
     {
         [FormerlySerializedAs("pointsBetweenPins")] [SerializeField] protected int pointsBetweenNodes;
         [SerializeField] protected CableController cable;
-        // TODO: Move to CableSegmentsRenderer.
-        [SerializeField] protected float joinCoverUpLength;
-
         [FormerlySerializedAs("startCurveFunction")]
         [Header("Player Section")]
         [SerializeField] private CurveFunctions.CurveFunction startCurveFunctionID;
         [FormerlySerializedAs("endCurveFunction")] [SerializeField] private CurveFunctions.CurveFunction endCurveFunctionID;
         [SerializeField] private AnimationCurve curveInterpolation;
-        [SerializeField] private bool lerpToSine;
         [SerializeField] private float caternaryLength;
 
         protected List<CableNode> Nodes => cable.nodes;
-        protected LineRenderer lineRenderer;
         protected Sprite cableSprite;
 
-        protected virtual void Awake()
-        {
-            // TODO: Move lineRenderer to WholeCableRenderer. CableSegmentsRenderer doesn't use it.
-            lineRenderer = GetComponent<LineRenderer>();
-
-            SetLineWidth(lineRenderer);
-        }
-        
         protected virtual void OnEnable()
         {
             cable.initialised.AddListener(OnInitialised);
@@ -48,7 +35,6 @@ namespace Cables
                 cableSprite = cable.amp.cableSprite;
             else if (cable.pluggableStart)
                 cableSprite = cable.pluggableStart.cableSprite;
-            lineRenderer.material.mainTexture = cableSprite.texture; 
         }
 
         protected void SetLineWidth(LineRenderer lineRenderer)
@@ -87,25 +73,12 @@ namespace Cables
             
             for (int i = 0; i < pointsBetweenNodes; i++)
             {
-                // TODO: How will this work if the orientations of the two nodes are different?
-
                 var t = i / (float)pointsBetweenNodes;
 
                 var startPoint = startCurveFunction(a, b, t);
                 var endPoint = endCurveFunction(a, b, t);
 
                 var point = Vector2.Lerp(startPoint, endPoint, curveInterpolation.Evaluate(t));
-            
-                // TODO: Better way of finding the edge of the pipe?
-                // if (nodes.Count > 2 && lerpToSine)
-                // {
-                //     // Interpolate towards a sine curve as we get closer to the pipe to prevent snapping when a new node is placed.
-                //     var distanceToPipe = (b - nodes[nodes.Count - 2].transform.position).y;
-                //
-                //     var sinPoint = SinLerp(a, b, t);
-                //
-                //     point = Vector2.Lerp(sinPoint, point, Mathf.Clamp(distanceToPipe, 0, 1));
-                // }
                 
                 points.Add(point);
             }
