@@ -5,13 +5,12 @@ using UnityEngine;
 public class InstrumentMB : MonoBehaviour
 {
     [SerializeField] protected InstrumentSO identifierSO;
-    [SerializeField] protected AudioClip[] songParts;// the audio associated with each song for this instrument
+    [SerializeField] protected AudioClip songParts;// the audio associated with each song for this instrument
     [SerializeField] protected Color cableCol;
     private AudioSource audioSource;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCol;
     protected bool isDrum; // we have this because drums are loud and produce sound without a speaker
-    protected int trackNum { get; set; }
 
     public void Init()
     {
@@ -26,22 +25,24 @@ public class InstrumentMB : MonoBehaviour
 
     public void StartPlaying(float startPoint)// Event system call this
     {
-        audioSource.clip = songParts[trackNum];
+        audioSource.clip = songParts;
         audioSource.time = startPoint;
         audioSource.Play();
     }
 
-    public void NextSong() // Event system call this
+    private void StopPlaying()
     {
-        trackNum++;
+        audioSource.Stop();
+    }
+
+    public void StartSong() // Event system call this
+    {
         if (isDrum)
             StartPlaying(0f);
     }
 
     void Start()
     {
-        
-        trackNum = 0;
         if (isDrum) audioSource.volume = 0.5f; // drums are quieter until mic'd
     }
 
@@ -51,6 +52,70 @@ public class InstrumentMB : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         boxCol = GetComponent<BoxCollider2D>();
         Init();
+    }
+
+    private void ReadyInstrument(song song) //Sets caudio clip to play when song is readied
+    {
+        foreach (recipe recipe in song.componentRecipes)
+        {
+            if (recipe.instrument == identifierSO)
+            {
+                this.songParts = recipe.songPart;
+                return;
+            }
+        }
+    }
+
+    private void OnRecipeCompleted(recipe recipe) //Uses GameManager timer to get time. If recipe's instrument = this, start playing
+    {
+        if (recipe.instrument == this)
+        {
+            StartPlaying(GameManager.timer);
+        }
+    }
+
+    private void OnRecipeBroken(recipe recipe) //Likewise, stops playing of recipe's isntrument is not this
+    {
+        if (recipe.instrument == this)
+        {
+            StopPlaying();
+        }
+    }
+
+
+    protected float GetVolume(SpeakerSuper speaker) // Currently unused
+    {
+        switch (speaker.volume)
+        {
+            case SpeakerVolume.Loud:
+                {
+                    return 0.8f;
+                }
+            case SpeakerVolume.Mid:
+                {
+                    return 0.5f;
+                }
+            default:
+                {
+                    return 0.3f;
+                }
+        }
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.onReadySong += ReadyInstrument;
+        GameEvents.onRecipeCompleted += OnRecipeCompleted;
+        GameEvents.onRecipeBroken += OnRecipeBroken;
+        GameEvents.onTimeUp += StopPlaying;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.onReadySong -= ReadyInstrument;
+        GameEvents.onRecipeCompleted -= OnRecipeCompleted;
+        GameEvents.onRecipeBroken -= OnRecipeBroken;
+        GameEvents.onTimeUp -= StopPlaying;
     }
 
     public InstrumentSO GetIdentifierSO() { return identifierSO; }
