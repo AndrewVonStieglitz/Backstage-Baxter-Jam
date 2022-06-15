@@ -78,8 +78,8 @@ MonoBehaviour:
   pointsBetweenNodes: 20
   cable: {fileID: 4879019852954964372}
   joinCoverUpLength: 0
-  startCurveFunctionID: 4
-  endCurveFunctionID: 4
+  startCurveFunctionID: 0
+  endCurveFunctionID: 0
   curveInterpolation:
     serializedVersion: 2
     m_Curve:

@@ -50,7 +50,7 @@ public class CharacterController : MonoBehaviour
         playerControls = new PlayerControls();
 
         distToGround = baxterCollider.radius*1.05f;
-        print("Distance to ground: " + distToGround);
+        // print("Distance to ground: " + distToGround);
 
         playerControls.Baxter.Enable();
         playerControls.Baxter.Jump.performed += StartJump;
@@ -98,7 +98,7 @@ public class CharacterController : MonoBehaviour
     {
         if (isGrounded || (coyoteTimer > 0f && jumpBuffer > 0f))
         {
-            print("Jump executing");
+            // print("Jump executing");
             jumpBuffer = jumpHoldMaxTime;
             baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             coyoteTimer = -1;
@@ -182,7 +182,11 @@ public class CharacterController : MonoBehaviour
             //print("raycast distance: " + hit.distance + "\t, dist to ground: " + distToGround + "\t, bool: " + (hit.distance < distToGround));
         }
         animator.SetBool("isGrounded", isGrounded);
-        if (isGrounded && !oldIsGrounded) { animator.SetTrigger("Landed"); print("Landed at: " + Time.time); }
+        if (isGrounded && !oldIsGrounded)
+        {
+            animator.SetTrigger("Landed");
+            // print("Landed at: " + Time.time);
+        }
         return isGrounded;
     }
 }

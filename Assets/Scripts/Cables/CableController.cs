@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -78,21 +77,23 @@ namespace Cables
 
         private void CreateNode(Vector3 nodePos, Vector2 normal)
         {
+            CreateNodeAtIndex(nodePos, normal, nodes.Count);
+        }
+
+        private void CreateNodeAtIndex(Vector3 nodePos, Vector2 normal, int index)
+        {
             var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity, nodeParent);
 
             var node = nodeObject.GetComponent<CableNode>();
 
             if (node == null) throw new Exception("No node component on node prefab.");
+
+            node.Normal = normal;
+            node.MoveNode(nodePos);
             
             node.nodeMoved.AddListener(OnNodeMoved);
 
-            if (nodes.Count > 0)
-            {
-                nodes.Last().Normal = normal;
-                nodes.Last().MoveNode(nodePos);
-            }
-            
-            nodes.Add(node);
+            nodes.Insert(index, node);
 
             nodeCreated.Invoke(node);
             
@@ -101,6 +102,8 @@ namespace Cables
 
         private void OnNodeMoved(CableNode node)
         {
+            UpdateZAxis(node);
+            
             nodeMoved.Invoke(node);
         }
 
@@ -118,6 +121,80 @@ namespace Cables
             state = CableState.Completed;
             
             cableCompleted.Invoke();
+        }
+        
+        // TODO: Needs a better name, and refactoring
+        private void UpdateZAxis(CableNode cableNode)
+        {
+            CreateZAxisNode();
+
+            DestroyZAxisNode();
+        }
+
+        private void CreateZAxisNode()
+        {
+            if (nodes.Count < 2) return;
+
+            var hit = RaycastBetweenNodes(nodes[nodes.Count - 1], nodes[nodes.Count - 2], 1 << 6);
+
+            if (hit.collider == null) return;
+
+            // Find the nearest vertex
+            var polyCollider = hit.collider as PolygonCollider2D;
+
+            if (polyCollider == null) return;
+
+            float minDistance = 100000;
+            Vector2 closestVertex = new Vector2();
+
+            // TODO: Replace with MinBy from MoreLINQ
+            foreach (var vertex in polyCollider.points)
+            {
+                var vertexWorldSpace = polyCollider.transform.TransformPoint(vertex);
+
+                var distance = Vector2.Distance(hit.point, vertexWorldSpace);
+
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestVertex = vertexWorldSpace;
+                }
+            }
+
+            if (closestVertex == Vector2.zero) return;
+
+            // Offset the closest point by the width.
+            // TODO: This is only an approximation of the normal
+            var normalish = closestVertex - (Vector2)polyCollider.bounds.center;
+
+            var nodePos = closestVertex + normalish.normalized * cableWidth / 2;
+
+            Debug.DrawRay(closestVertex, normalish, Color.blue, 20);
+
+
+            CreateNodeAtIndex(nodePos, normalish, nodes.Count - 1);
+        }
+
+        private void DestroyZAxisNode()
+        {
+            if (nodes.Count < 3) return;
+
+            var hit2 = RaycastBetweenNodes(nodes[nodes.Count - 1], nodes[nodes.Count - 3], 1 << 6);
+
+            if (hit2.collider != null) return;
+
+            // TODO: I'm not sure there's any point specifiying which node to remove, sine I'm pretty sure anything but hte last node isn't supported anyway
+            DestroyNode(nodes[nodes.Count - 1]);
+        }
+
+        private RaycastHit2D RaycastBetweenNodes(CableNode fromNode, CableNode toNode, int layerMask)
+        {
+            Vector2 fromNodePos = fromNode.transform.position;
+            Vector2 toNodePos = toNode.transform.position;
+
+            var difference = toNodePos - fromNodePos;
+
+            return Physics2D.Raycast(fromNodePos, difference, difference.magnitude, layerMask);
         }
     }
 }
