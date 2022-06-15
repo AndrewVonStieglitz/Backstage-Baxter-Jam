@@ -25,19 +25,26 @@ namespace Cables
 
         public CableState state;
         public AmpController amp;
+        public PlugCable pluggableStart;
+        public PlugCable pluggableEnd;
         public float cableWidth;
         public List<CableNode> nodes = new List<CableNode>();
+
+        public InstrumentSO instrument;
+        public List<PluggablesSO> pluggablesList;
         
         private Vector2 pipeEntryNormal;
 
         private void OnEnable()
         {
             GameEvents.onCableDisconnect += OnCableDisconnect;
+            GameEvents.onCableDisconnectPlug += OnCableDisconnectPlug;
         }
         
         private void OnDisable()
         {
             GameEvents.onCableDisconnect -= OnCableDisconnect;
+            GameEvents.onCableDisconnectPlug -= OnCableDisconnectPlug;
         }
 
         public void Initialise(AmpController amp)
@@ -50,12 +57,35 @@ namespace Cables
             initialised.Invoke();
         }
 
+        public void Initialise(PlugCable startObj)
+        {
+            this.pluggableStart = startObj;
+            if (startObj.tag == "Instrument")
+            {
+                instrument = startObj.instrument;
+            }
+            if (startObj.tag == "Pluggable")
+            {
+                pluggablesList.Add(startObj.pluggable);
+                instrument = startObj.GetPathsInstrument();
+            }
+            
+            CreateNode(pluggableStart.transform.position, Vector2.zero);
+            CreateNode(pluggableStart.transform.position, Vector2.zero);
+
+            initialised.Invoke();
+        }
+
         // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.
         private void OnCableDisconnect(CableController cable, SpeakerController speaker)
         {
             if (cable != this) return;
             
             Destroy(gameObject);
+        }
+        private void OnCableDisconnectPlug(CableController cable, PlugCable endObj)
+        {
+            OnCableDisconnect(cable, null);
         }
 
         public void PipeEnter(Vector2 nodePos, Vector2 normal)
