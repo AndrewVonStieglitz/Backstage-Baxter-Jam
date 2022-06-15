@@ -8,6 +8,7 @@ TagManager:
   - CableHead
   - Pluggable
   - Instrument
+  - Platform
   layers:
   - Default
   - TransparentFX
