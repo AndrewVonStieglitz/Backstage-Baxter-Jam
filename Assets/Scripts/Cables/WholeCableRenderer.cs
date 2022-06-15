@@ -7,6 +7,10 @@ namespace Cables
 {
     public class WholeCableRenderer : CableRenderer
     {
+        private enum ZPosFunctionID { None, Triangle, Slope }
+
+        [SerializeField] private ZPosFunctionID zPosFunctionID;
+        
         private void Update()
         {
             DrawLine();
@@ -21,13 +25,10 @@ namespace Cables
             {
                 points.AddRange(PointsBetweenPositions(Nodes[nodeIndex], Nodes[nodeIndex + 1]));
             }
+            
+            points.Add(Nodes.Last().transform.position);
 
-            // Connection between the last node and the player
-            // points.AddRange(PlayerSegmentPoints());
-
-            // var points3D = SetZPositionsWithSlope(points).ToList();
-
-            var points3D = SetZPositionsWithTriangleWave(points).ToList();
+            var points3D = GetZPosFunction(zPosFunctionID)(points).ToList();
             
             lineRenderer.positionCount = points3D.Count;
             lineRenderer.SetPositions(points3D.ToArray());
@@ -72,7 +73,6 @@ namespace Cables
         {
             var points3D = new List<Vector3>();
             
-            
             for (var pointIndex = 0; pointIndex < points.Count - 1; pointIndex++)
             {
                 var point = points[pointIndex];
@@ -98,6 +98,17 @@ namespace Cables
             }
 
             return points3D;
+        }
+
+        private Func<List<Vector2>, IEnumerable<Vector3>> GetZPosFunction(ZPosFunctionID zPosFunctionID)
+        {
+            return zPosFunctionID switch
+            {
+                ZPosFunctionID.None => points => points.Select(p => (Vector3)p),
+                ZPosFunctionID.Triangle => SetZPositionsWithTriangleWave,
+                ZPosFunctionID.Slope => SetZPositionsWithSlope,
+                _ => throw new ArgumentOutOfRangeException(nameof(zPosFunctionID), zPosFunctionID, null)
+            };
         }
 
         private static float Sigmoid(double value) { return 1.0f / (1.0f + (float) Math.Exp(-value)); }

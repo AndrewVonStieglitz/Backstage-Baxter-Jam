@@ -9,6 +9,7 @@ namespace Cables
     {
         [FormerlySerializedAs("pointsBetweenPins")] [SerializeField] protected int pointsBetweenNodes;
         [SerializeField] protected CableController cable;
+        // TODO: Move to CableSegmentsRenderer.
         [SerializeField] protected float joinCoverUpLength;
 
         [FormerlySerializedAs("startCurveFunction")]
@@ -25,6 +26,7 @@ namespace Cables
 
         protected virtual void Awake()
         {
+            // TODO: Move lineRenderer to WholeCableRenderer. CableSegmentsRenderer doesn't use it.
             lineRenderer = GetComponent<LineRenderer>();
 
             SetLineWidth(lineRenderer);
@@ -80,7 +82,7 @@ namespace Cables
             var startCurveFunction = GetCurveFunction(startCurveID);
             var endCurveFunction = GetCurveFunction(endCurveID);
             
-            for (int i = 0; i <= pointsBetweenNodes; i++)
+            for (int i = 0; i < pointsBetweenNodes; i++)
             {
                 // TODO: How will this work if the orientations of the two nodes are different?
 
