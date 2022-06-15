@@ -106,10 +106,10 @@ public class GameManager : MonoBehaviour
         if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
         {
             //If matching recipe found with correct instrument
-            int totalPluggables = recipe.midAffectors.Length + 3;
+            int totalPluggables = recipe.midAffectors.Length + 2;
             if (cable.pluggablesList.Count == totalPluggables)
             {//First checks if size of list matches
-                if (cable.pluggablesList[1] == recipe.amp && cable.pluggablesList[cable.pluggablesList.Count - 1] == recipe.speaker) //Checks if amp and speaker are correct
+                if (cable.pluggablesList[0] == recipe.amp && cable.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
                 {
                     List<PluggablesSO> pluggables = new List<PluggablesSO>(cable.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
                     foreach(MidAffectorSuper midAffector in recipe.midAffectors)
