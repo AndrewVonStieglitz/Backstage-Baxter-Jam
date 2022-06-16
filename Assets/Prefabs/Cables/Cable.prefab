@@ -70,16 +70,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6616848933217270517}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2024f58df77c4301aed8c5c062c73bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pointsBetweenNodes: 20
   cable: {fileID: 4879019852954964372}
-  joinCoverUpLength: 0
-  startCurveFunctionID: 4
-  endCurveFunctionID: 4
+  startCurveFunctionID: 0
+  endCurveFunctionID: 0
   curveInterpolation:
     serializedVersion: 2
     m_Curve:
@@ -108,6 +107,7 @@ MonoBehaviour:
   caternaryLength: 0
   cableSegmentPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
   cableSegmentParent: {fileID: 6057763080080546153}
+  joinCoverUpLength: 0
 --- !u!120 &4397329105592864675
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -213,16 +213,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6616848933217270517}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71da785b0088406882a8bd97ed73930d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsBetweenNodes: 20
+  pointsBetweenNodes: 1
   cable: {fileID: 4879019852954964372}
-  joinCoverUpLength: 0
-  startCurveFunctionID: 1
-  endCurveFunctionID: 1
+  startCurveFunctionID: 0
+  endCurveFunctionID: 0
   curveInterpolation:
     serializedVersion: 2
     m_Curve:
@@ -249,6 +248,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   lerpToSine: 0
   caternaryLength: 0
+  zPosFunctionID: 0
 --- !u!1 &8120014663964540498
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,6 +298,10 @@ MonoBehaviour:
   nodePrefab: {fileID: 495582835792472946, guid: daf39b3dbcc5f8a4a81b36d1ff6997db, type: 3}
   friction: 0
   nodeParent: {fileID: 7596408147818375610}
+  cableRaycastSize: 0.5
+  zAxisLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   initialised:
     m_PersistentCalls:
       m_Calls: []
@@ -315,5 +319,9 @@ MonoBehaviour:
       m_Calls: []
   state: 0
   amp: {fileID: 0}
+  pluggableStart: {fileID: 0}
+  pluggableEnd: {fileID: 0}
   cableWidth: 0.5
   nodes: []
+  instrument: {fileID: 0}
+  pluggablesList: []

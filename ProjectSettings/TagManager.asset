@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Pipe
   - CableHead
+  - Pluggable
+  - Instrument
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - Water
   - UI
   - Platform
-  - 
+  - PlugCable
   - 
   - 
   - 

@@ -15,9 +15,16 @@ using Cables;
  * onCableDrop(CableController cable)
  * onCableSpawn(AmpController amp, CableController cable)
  * onCableConnect(CableController cable, SpeakerController speaker)
+ * onCableConnectPlug(CableController cable, PlugCable endObj)
  * onCableDisconnect(CableController cable, SpeakerController speaker)
+ * onCableDisconnectPlug(CableController cable, PlugCable endObj)
  * onCableReset(CableController cable)
  * onCableWind(CableController cable, pole orientation, location)
+ * onNextSong()
+ * onReadySong(song song)
+ * onStartSong()
+ * onEndAlbum()
+ * onStartAlbum()
  */
 
 public static class GameEvents
@@ -79,12 +86,13 @@ public static class GameEvents
     public static Action<AmpController, CableController> onCableSpawn;
     public static void CableSpawn(AmpController amp, CableController cable)
     {
-        if (onCableSpawn !=null)
+        if (onCableSpawn != null)
         {
             onCableSpawn(amp, cable);
         }
     }
 
+    //Legacy: Should delete
     public static Action<CableController, SpeakerController> onCableConnect;
     public static void CableConnect(CableController cable, SpeakerController speaker)
     {
@@ -94,12 +102,43 @@ public static class GameEvents
         }
     }
 
+    // pluggables compatible
+    public static Action<CableController, PlugCable> onCableConnectPlug;
+    public static void CableConnectPlug(CableController cable, PlugCable endObj)
+    {
+        if (onCableConnectPlug != null)
+        {
+            onCableConnectPlug(cable, endObj);
+        }
+    }
+
+    //Legacy: Should delete
     public static Action<CableController, SpeakerController> onCableDisconnect;
     public static void CableDisconnect(CableController cable, SpeakerController speaker)
     {
         if (onCableDisconnect != null)
         {
             onCableDisconnect(cable, speaker);
+        }
+    }
+
+    // pluggables compatible
+    public static Action<CableController, PlugCable> onCableDisconnectPlug;
+    public static void CableDisconnectPlug(CableController cable, PlugCable endObj)
+    {
+        if (onCableDisconnectPlug != null)
+        {
+            onCableDisconnectPlug(cable, endObj);
+        }
+    }
+
+    //When a cable is first pulled from an instrument
+    public static Action<CableController, InstrumentSO> onCableIntrumentStart;
+    public static void CableIntrumentStart(CableController cable, InstrumentSO instrument)
+    {
+        if (onCableIntrumentStart != null)
+        {
+            onCableIntrumentStart(cable, instrument);
         }
     }
 
@@ -121,4 +160,75 @@ public static class GameEvents
         }
     }
 
+    public static Action onNextSong;
+    public static void NextSong()
+    {
+        if (onNextSong != null)
+        {
+            onNextSong();
+        }
+    }
+
+    public static Action<song> onReadySong;
+    public static void ReadySong(song song)
+    {
+        if (onReadySong != null)
+        {
+            onReadySong(song);
+        }
+    }
+
+    public static Action onStartSong;
+    public static void StartSong()
+    {
+        if (onStartSong != null)
+        {
+            onStartSong();
+        }
+    }
+
+    public static Action onEndSong;
+    public static void EndSong()
+    {
+        if (onEndSong != null)
+        {
+            onEndSong();
+        }
+    }
+
+    public static Action onEndAlbum;
+    public static void EndAlbum()
+    {
+        if (onEndAlbum != null)
+        {
+            onEndAlbum();
+        }
+    }
+
+    public static Action onStartAlbum;
+    public static void StartAlbum()
+    {
+        if (onStartAlbum != null)
+        {
+            onStartAlbum();
+        }
+    }
+
+    public static Action<recipe> onRecipeCompleted;
+    public static void RecipeCompleted(recipe recipe)
+    {
+        if (onRecipeCompleted != null)
+        {
+            onRecipeCompleted(recipe);
+        }
+    }
+
+    public static Action<recipe> onRecipeBroken;
+    public static void RecipeBroken(recipe recipe)
+    {
+        if (onRecipeBroken != null)
+        {
+            onRecipeBroken(recipe);
+        }
+    }
 }

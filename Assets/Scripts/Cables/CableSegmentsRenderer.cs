@@ -8,8 +8,23 @@ namespace Cables
     {
         [SerializeField] private GameObject cableSegmentPrefab;
         [SerializeField] private Transform cableSegmentParent;
+        [SerializeField] protected float joinCoverUpLength;
 
-        private Dictionary<CableNode, LineRenderer> cableSegments = new Dictionary<CableNode, LineRenderer>();
+        private readonly Dictionary<CableNode, LineRenderer> cableSegments = new Dictionary<CableNode, LineRenderer>();
+
+        private readonly Dictionary<CableNode, List<Vector3>> cableSegmentTargetPoints =
+            new Dictionary<CableNode, List<Vector3>>();
+
+        #region MonoBehaviour
+
+        private void Update()
+        {
+            UpdateCableSegments();
+        }
+
+        #endregion
+
+        #region CableRenderer
 
         protected override void OnInitialised()
         {
@@ -20,29 +35,62 @@ namespace Cables
                 OnNodeCreated(node);
             }
 
+            // TODO: Unlisten
             cable.nodeCreated.AddListener(OnNodeCreated);
             cable.nodeDestroyed.AddListener(OnNodeDestroyed);
             cable.nodeMoved.AddListener(OnNodeMoved);
-            
-            lineRenderer.enabled = false;
         }
 
-        private void OnNodeMoved(CableNode node)
+        protected override void OnValidate()
         {
-            UpdateCableSegment(node);
+            base.OnValidate();
+            
+            foreach (var node in Nodes)
+            {
+                UpdateCableSegmentTargetPoints(node);
+            }
         }
 
-        // protected override void OnDisable()
-        // {
-        //     base.OnDisable();
-        //     
-        //     cable.nodeCreated.RemoveListener(OnNodeCreated);
-        //     cable.nodeDestroyed.RemoveListener(OnNodeDestroyed);
-        // }
+        #endregion
+
+        private void UpdateCableSegments()
+        {
+            foreach (var node in cableSegments.Keys)
+            {
+                UpdateCableSegment(node, LerpTowardTargetPositions(node));
+            }
+        }
+
+        private void UpdateCableSegment(CableNode node, List<Vector3> points)
+        {
+            cableSegments[node].positionCount = points.Count;
+            cableSegments[node].SetPositions(points.ToArray());
+        }
+
+        private List<Vector3> LerpTowardTargetPositions(CableNode node)
+        {
+            var targetPoints = cableSegmentTargetPoints[node];
+            var pointsArray = new Vector3[cableSegments[node].positionCount];
+            cableSegments[node].GetPositions(pointsArray);
+
+            var currentPoints = pointsArray.ToList();
+
+            for (int i = 0; i < currentPoints.Count; i++)
+            {
+                currentPoints[i] = Vector3.Lerp(currentPoints[i], targetPoints[i], 0.1f);
+            }
+
+            return currentPoints;
+        }
 
         private void OnNodeCreated(CableNode node)
         {
             CreateCableSegment(node);
+        }
+
+        private void OnNodeMoved(CableNode node)
+        {
+            UpdateCableSegmentTargetPoints(node);
         }
 
         private void OnNodeDestroyed(CableNode node)
@@ -52,7 +100,9 @@ namespace Cables
 
         private void CreateCableSegment(CableNode node)
         {
-            if (Nodes.FindIndex(n => n == node) < 1) return;
+            var nodeIndex = Nodes.FindIndex(n => n == node);
+            
+            if (nodeIndex < 1) return;
 
             var cableSegmentObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var cableSegment = cableSegmentObject.GetComponent<LineRenderer>();
@@ -61,19 +111,29 @@ namespace Cables
             cableSegment.material.mainTexture = cableSprite.texture; 
             
             cableSegments.Add(node, cableSegment);
+            cableSegmentTargetPoints.Add(node, new List<Vector3>());
 
-            UpdateCableSegment(node);
+            UpdateCableSegmentTargetPoints(node);
+            
+            UpdateCableSegment(node, GetTargetPoints(node));
         }
 
-        private void UpdateCableSegment(CableNode node)
+        private void UpdateCableSegmentTargetPoints(CableNode node)
         {
-            if (!cableSegments.ContainsKey(node)) return;
+            var targetPoints = GetTargetPoints(node);
+
+            if (targetPoints == null) return;
+
+            cableSegmentTargetPoints[node] = targetPoints;
+        }
+
+        private List<Vector3> GetTargetPoints(CableNode node)
+        {
+            if (!cableSegments.ContainsKey(node)) return null;
 
             var nodeIndex = Nodes.FindIndex(n => n == node);
             var prevNode = Nodes[nodeIndex - 1];
 
-            var cableSegment = cableSegments[node];
-            
             var points2D = new List<Vector2>();
 
             // if (node.Orientation == prevNode.Orientation)
@@ -87,10 +147,7 @@ namespace Cables
 
             points2D.AddRange(PointsBetweenPositions(prevNode, node));
             
-            var points3D = SetZPositions(points2D, nodeIndex % 2 == 0 ? -1 : 1).ToList();
-            
-            cableSegment.positionCount = points3D.Count;
-            cableSegment.SetPositions(points3D.ToArray());
+            return SetZPositions(points2D, nodeIndex % 2 == 0 ? -1 : 1).ToList();
         }
 
         private void DestroyCableSegment(CableNode node)
@@ -103,16 +160,6 @@ namespace Cables
         private static IEnumerable<Vector3> SetZPositions(IEnumerable<Vector2> points, float zPos)
         {
             return points.Select(p => new Vector3(p.x, p.y, zPos));
-        }
-
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            
-            foreach (var node in Nodes)
-            {
-                UpdateCableSegment(node);
-            }
         }
     }
 }
