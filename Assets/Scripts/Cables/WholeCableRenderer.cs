@@ -16,6 +16,7 @@ namespace Cables
         private void Awake()
         {
             lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.sortingLayerName = "Cable";
 
             SetLineWidth(lineRenderer);
         }
