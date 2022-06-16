@@ -54,6 +54,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -352,6 +353,17 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      baxter_idle_3: -5622564094168652469
+      baxter_idle_7: 955787011700175336
+      baxter_idle_0: -3963325564708684310
+      baxter_idle_6: -6503813373544479500
+      baxter_idle_1: -7367414239825692113
+      baxter_idle_2: 1626401621965297029
+      baxter_idle_5: 2178629251094754865
+      baxter_idle_9: -8081615631270801810
+      baxter_idle_4: 7276246897064954980
+      baxter_idle_8: 1345985646361794174
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
