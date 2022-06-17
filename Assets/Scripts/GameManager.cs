@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float intermissionTime;
     public float IntermissionTime { get => intermissionTime; }
 
+    [SerializeField] private float startingHappiness;
+    public float StartingHappiness { get => startingHappiness; }
+
     public song currentSong { get; set; }
 
     static public float timer { get; set; }
@@ -17,7 +20,8 @@ public class GameManager : MonoBehaviour
 
     static public GameState currentGameState { get; set; }
 
-    static public float happiness { get; set; }
+    static private float m_happiness;
+    static public float happiness { get { return m_happiness; } set { happiness = Mathf.Clamp(value, 0, 100); }}
 
     IDictionary<InstrumentSO, recipe> recipeDictionary;
     IDictionary<CableController, InstrumentSO> connectionsDictionary;
@@ -43,6 +47,15 @@ public class GameManager : MonoBehaviour
             {
                 //When song duration is up, call time up. Timer counts up instead of down to act as timer for song
                 GameEvents.TimeUp();
+                return;
+            }
+
+            happiness -= timer.deltaTime;
+            if (happiness <= 0)
+            {
+                //When happiness reaches 0, we lose
+                GameEvents.GameOver();
+
             }
         }
     }
@@ -52,6 +65,7 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = GameState.intermission;
         timer = intermissionTime;
+        happiness = startingHappiness;
         GameEvents.StartAlbum();
         Debug.Log("Game Started");
     }
@@ -143,6 +157,16 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void OnRecipeCompleted()
+    {
+        happiness += 50;
+    }
+
+    private void OnRecipeBroken()
+    {
+        happiness -= 50;
+    }
+
     private void EndGame()
     {
         GameEvents.GameOver();
@@ -158,6 +182,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onStartSong += OnStartSong;
         GameEvents.onCableConnectPlug += OnCableConnected;
         GameEvents.onCableDisconnectPlug += OnCableConnected;
+        GameEvents.onRecipeCompleted += OnRecipeCompleted;
+        GameEvents.onRecipeBroken += OnRecipeBroken;
     }
 
     private void OnDisable()
