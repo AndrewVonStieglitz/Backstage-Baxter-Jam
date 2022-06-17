@@ -6,6 +6,7 @@ namespace Cables
 {
     public class WholeCableRenderer : CableRenderer
     {
+        [Header("Whole Cable Renderer")]
         [SerializeField] private LineRenderer lineRenderer;
 
         #region CableRenderer
@@ -19,7 +20,7 @@ namespace Cables
 
         protected override void UpdateLineRenderers()
         {
-            UpdateLineRenderer(lineRenderer, GetPoints());
+            UpdateLineRendererLerp(lineRenderer, GetPoints());
         }
         
         #endregion

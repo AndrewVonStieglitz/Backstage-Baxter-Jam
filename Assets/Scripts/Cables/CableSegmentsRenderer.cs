@@ -6,6 +6,7 @@ namespace Cables
 {
     public class CableSegmentsRenderer : CableRenderer
     {
+        [Header("Cable Segments Renderer")]
         [SerializeField] private GameObject cableSegmentPrefab;
         [SerializeField] private Transform cableSegmentParent;
 
@@ -31,32 +32,11 @@ namespace Cables
         {
             foreach (var segment in lineRenderers.Keys)
             {
-                UpdateLineRenderer(segment, LerpTowardTargetPositions(segment));
+                UpdateLineRendererLerp(lineRenderers[segment], GetTargetPoints(segment));
             }
         }
 
         #endregion
-
-        private void UpdateLineRenderer(CableSegment segment, List<Vector3> points)
-        {
-            UpdateLineRenderer(lineRenderers[segment], points);
-        }
-        
-        private List<Vector3> LerpTowardTargetPositions(CableSegment segment)
-        {
-            var pointsArray = new Vector3[lineRenderers[segment].positionCount];
-            lineRenderers[segment].GetPositions(pointsArray);
-        
-            var currentPoints = pointsArray.ToList();
-            var targetPoints = GetTargetPoints(segment);
-        
-            for (int i = 0; i < currentPoints.Count; i++)
-            {
-                currentPoints[i] = Vector3.Lerp(currentPoints[i], targetPoints[i], 0.1f);
-            }
-        
-            return currentPoints;
-        }
         
         private void OnSegmentCreated(CableSegment segment)
         {
@@ -77,7 +57,7 @@ namespace Cables
             
             lineRenderers.Add(segment, lineRenderer);
             
-            UpdateLineRenderer(segment, GetTargetPoints(segment));
+            UpdateLineRendererInstant(lineRenderers[segment], GetTargetPoints(segment));
         }
         
         private void DestroyCableSegmentRenderer(CableSegment segment)
