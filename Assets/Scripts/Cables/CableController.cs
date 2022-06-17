@@ -253,8 +253,7 @@ namespace Cables
 
             if (hit2.collider != null) return;
 
-            // TODO: I'm not sure there's any point specifying which node to remove, since I'm pretty sure anything but the last node isn't supported anyway
-            DestroyNode(nodes[nodes.Count - 1]);
+            DestroyNode(nodes[nodes.Count - 2]);
         }
 
         private RaycastHit2D RaycastBetweenNodes(CableNode fromNode, CableNode toNode)

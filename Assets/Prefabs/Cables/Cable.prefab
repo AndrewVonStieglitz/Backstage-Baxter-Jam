@@ -75,35 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2024f58df77c4301aed8c5c062c73bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsBetweenNodes: 20
   cable: {fileID: 4879019852954964372}
-  startCurveFunctionID: 0
-  endCurveFunctionID: 0
-  curveInterpolation:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  catenaryLength: 0
+  cableSegments: {fileID: 0}
   cableSegmentPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
   cableSegmentParent: {fileID: 6057763080080546153}
   joinCoverUpLength: 0
@@ -217,37 +190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71da785b0088406882a8bd97ed73930d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsBetweenNodes: 1
   cable: {fileID: 4879019852954964372}
-  startCurveFunctionID: 0
-  endCurveFunctionID: 0
-  curveInterpolation:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  catenaryLength: 0.15
+  cableSegments: {fileID: 8511436087669080055}
   zPosFunctionID: 0
-  hangUnsupportedCables: 0
 --- !u!1 &8120014663964540498
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,6 +203,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8120014663964540500}
   - component: {fileID: 4879019852954964372}
+  - component: {fileID: 8511436087669080055}
   m_Layer: 0
   m_Name: Cable
   m_TagString: Untagged
@@ -323,3 +269,45 @@ MonoBehaviour:
   nodes: []
   instrument: {fileID: 0}
   pluggablesList: []
+--- !u!114 &8511436087669080055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120014663964540498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 833f29033d81483bbaf59b0b3e9de955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cable: {fileID: 4879019852954964372}
+  pointsBetweenNodes: 1
+  startCurveFunctionID: 0
+  endCurveFunctionID: 0
+  curveInterpolation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  catenaryLength: 0.15
+  hangUnsupportedCables: 0
