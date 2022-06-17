@@ -6,9 +6,9 @@ namespace Cables
     public abstract class CableRenderer : MonoBehaviour
     {
         [SerializeField] protected CableController cable;
-        [SerializeField] protected CableSegmentsController cableSegments;
+        [SerializeField] protected CableSegmentsController cableSegmentsController;
 
-        protected List<CableSegment> Segments => cableSegments.Segments;
+        protected List<CableSegment> Segments => cableSegmentsController.Segments;
         protected Sprite cableSprite;
 
         protected virtual void OnEnable()
@@ -33,7 +33,5 @@ namespace Cables
         {
             lineRenderer.widthCurve = AnimationCurve.Constant(1, 1, cable.cableWidth);
         }
-
-        protected virtual void OnValidate() { }
     }
 }

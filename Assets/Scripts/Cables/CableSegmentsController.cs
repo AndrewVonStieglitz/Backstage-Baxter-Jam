@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cables
 {
@@ -19,6 +20,10 @@ namespace Cables
         public List<CableSegment> Segments = new List<CableSegment>();
 
         private Dictionary<CableNode, CableSegment> nodeSegments = new Dictionary<CableNode, CableSegment>();
+
+        public UnityEvent<CableSegment> cableSegmentCreated = new UnityEvent<CableSegment>();
+        public UnityEvent<CableSegment> cableSegmentUpdated = new UnityEvent<CableSegment>();
+        public UnityEvent<CableSegment> cableSegmentDestroyed = new UnityEvent<CableSegment>();
 
         private void OnEnable()
         {
@@ -83,6 +88,8 @@ namespace Cables
             nodeSegments.Add(node, segment);
             
             SetPreviousNodeOfNextSegment(segment, node);
+            
+            cableSegmentCreated.Invoke(segment);
         }
 
         private void SetPreviousNodeOfNextSegment(CableSegment segment, CableNode node)
@@ -95,7 +102,7 @@ namespace Cables
 
                 nextSegment.previousNode = node;
 
-                nextSegment.GeneratePoints();
+                UpdateCableSegment(nextSegment);
             }
         }
 
@@ -105,7 +112,14 @@ namespace Cables
 
             if (segment == null) return;
             
+            UpdateCableSegment(segment);
+        }
+
+        private void UpdateCableSegment(CableSegment segment)
+        {
             segment.GeneratePoints();
+            
+            cableSegmentUpdated.Invoke(segment);
         }
 
         private void DestroyCableSegment(CableNode node)
@@ -116,6 +130,8 @@ namespace Cables
 
             Segments.Remove(segment);
             nodeSegments.Remove(node);
+            
+            cableSegmentDestroyed.Invoke(segment);
         }
     }
 }

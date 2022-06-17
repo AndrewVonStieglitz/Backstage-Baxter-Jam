@@ -76,10 +76,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
-  cableSegments: {fileID: 0}
+  cableSegmentsController: {fileID: 8511436087669080055}
   cableSegmentPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
   cableSegmentParent: {fileID: 6057763080080546153}
-  joinCoverUpLength: 0
 --- !u!120 &4397329105592864675
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -191,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
-  cableSegments: {fileID: 8511436087669080055}
+  cableSegmentsController: {fileID: 8511436087669080055}
   zPosFunctionID: 0
 --- !u!1 &8120014663964540498
 GameObject:
@@ -311,3 +310,12 @@ MonoBehaviour:
     m_RotationOrder: 4
   catenaryLength: 0.15
   hangUnsupportedCables: 0
+  cableSegmentCreated:
+    m_PersistentCalls:
+      m_Calls: []
+  cableSegmentUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  cableSegmentDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
