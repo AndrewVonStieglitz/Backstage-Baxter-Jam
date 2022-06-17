@@ -11,9 +11,9 @@ namespace Cables
 
         [SerializeField] private int cableID;
         [SerializeField] private GameObject nodePrefab;
-        [SerializeField] private float friction;
         [SerializeField] private Transform nodeParent;
         [SerializeField] private float cableRaycastSize;
+        [SerializeField] private LayerMask zAxisLayerMask;
         
         public int CableID { get => cableID; }
 
@@ -117,7 +117,7 @@ namespace Cables
 
             var node = nodeObject.GetComponent<CableNode>();
 
-            if (node == null) throw new Exception("No node component on node prefab.");
+            if (node == null) throw new Exception($"No {nameof(CableNode)} component on node prefab.");
 
             node.Normal = normal;
             node.MoveNode(nodePos);
@@ -133,7 +133,7 @@ namespace Cables
 
         private void OnNodeMoved(CableNode node)
         {
-            UpdateZAxis(node);
+            UpdateZAxisNodes(node);
             
             nodeMoved.Invoke(node);
         }
@@ -154,19 +154,19 @@ namespace Cables
             cableCompleted.Invoke();
         }
         
-        // TODO: Needs a better name, and refactoring
-        private void UpdateZAxis(CableNode cableNode)
+        private void UpdateZAxisNodes(CableNode cableNode)
         {
-            CreateZAxisNode();
+            CheckForZAxisNodeToCreate();
 
-            DestroyZAxisNode();
+            CheckForZAxisNodeToDestroy();
         }
 
-        private void CreateZAxisNode()
+        // TODO: Should take the cableNode that was modified. Currently only supports the last cableNode.
+        private void CheckForZAxisNodeToCreate()
         {
             if (nodes.Count < 2) return;
 
-            var hit = RaycastBetweenNodes(nodes[nodes.Count - 1], nodes[nodes.Count - 2], 1 << 6);
+            var hit = RaycastBetweenNodes(nodes[nodes.Count - 1], nodes[nodes.Count - 2]);
 
             if (hit.collider == null) return;
             
@@ -212,10 +212,9 @@ namespace Cables
 
         private static int ClosestVertexIndex(PolygonCollider2D polyCollider, Vector2 point)
         {
-            float minDistance = 100000;
+            float minDistance = float.MaxValue;
             int closestVertexIndex = -1;
 
-            // TODO: Replace with MinBy from MoreLINQ
             for (var vertexIndex = 0; vertexIndex < polyCollider.points.Length; vertexIndex++)
             {
                 Vector2 vertex = WorldSpaceVertex(polyCollider, vertexIndex);
@@ -238,20 +237,21 @@ namespace Cables
             
             return polyCollider.transform.TransformPoint(vertexLocalSpace);
         }
-
-        private void DestroyZAxisNode()
+        
+        // TODO: Should take the cableNode that was modified. Currently only supports the last cableNode.
+        private void CheckForZAxisNodeToDestroy()
         {
             if (nodes.Count < 3) return;
 
-            var hit2 = RaycastBetweenNodes(nodes[nodes.Count - 1], nodes[nodes.Count - 3], 1 << 6);
+            var hit2 = RaycastBetweenNodes(nodes[nodes.Count - 1], nodes[nodes.Count - 3]);
 
             if (hit2.collider != null) return;
 
-            // TODO: I'm not sure there's any point specifiying which node to remove, sine I'm pretty sure anything but hte last node isn't supported anyway
+            // TODO: I'm not sure there's any point specifying which node to remove, since I'm pretty sure anything but the last node isn't supported anyway
             DestroyNode(nodes[nodes.Count - 1]);
         }
 
-        private RaycastHit2D RaycastBetweenNodes(CableNode fromNode, CableNode toNode, int layerMask)
+        private RaycastHit2D RaycastBetweenNodes(CableNode fromNode, CableNode toNode)
         {
             Vector2 fromNodePos = fromNode.transform.position;
             Vector2 toNodePos = toNode.transform.position;
@@ -262,14 +262,14 @@ namespace Cables
 
             var cableSideA = fromNodePos + perpendicular * cableWidth / 2 * cableRaycastSize;
             
-            var cableSideAHit = Physics2D.Raycast(cableSideA, difference, difference.magnitude, layerMask);
+            var cableSideAHit = Physics2D.Raycast(cableSideA, difference, difference.magnitude, zAxisLayerMask);
 
             if (cableSideAHit.collider != null)
                 return cableSideAHit;
             
             var cableSideB = fromNodePos + perpendicular * cableWidth / -2 * cableRaycastSize;
 
-            return Physics2D.Raycast(cableSideB, difference, difference.magnitude, layerMask);
+            return Physics2D.Raycast(cableSideB, difference, difference.magnitude, zAxisLayerMask);
         }
     }
 }

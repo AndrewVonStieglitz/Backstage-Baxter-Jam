@@ -77,7 +77,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsBetweenNodes: 20
   cable: {fileID: 4879019852954964372}
-  joinCoverUpLength: 0
   startCurveFunctionID: 0
   endCurveFunctionID: 0
   curveInterpolation:
@@ -108,6 +107,7 @@ MonoBehaviour:
   caternaryLength: 0
   cableSegmentPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
   cableSegmentParent: {fileID: 6057763080080546153}
+  joinCoverUpLength: 0
 --- !u!120 &4397329105592864675
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -220,7 +220,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsBetweenNodes: 1
   cable: {fileID: 4879019852954964372}
-  joinCoverUpLength: 0
   startCurveFunctionID: 0
   endCurveFunctionID: 0
   curveInterpolation:
@@ -300,6 +299,9 @@ MonoBehaviour:
   friction: 0
   nodeParent: {fileID: 7596408147818375610}
   cableRaycastSize: 0.5
+  zAxisLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   initialised:
     m_PersistentCalls:
       m_Calls: []
@@ -317,5 +319,9 @@ MonoBehaviour:
       m_Calls: []
   state: 0
   amp: {fileID: 0}
+  pluggableStart: {fileID: 0}
+  pluggableEnd: {fileID: 0}
   cableWidth: 0.5
   nodes: []
+  instrument: {fileID: 0}
+  pluggablesList: []

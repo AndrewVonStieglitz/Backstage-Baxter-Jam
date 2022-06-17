@@ -8,10 +8,11 @@ namespace Cables
     {
         [SerializeField] private GameObject cableSegmentPrefab;
         [SerializeField] private Transform cableSegmentParent;
+        [SerializeField] protected float joinCoverUpLength;
 
-        private Dictionary<CableNode, LineRenderer> cableSegments = new Dictionary<CableNode, LineRenderer>();
+        private readonly Dictionary<CableNode, LineRenderer> cableSegments = new Dictionary<CableNode, LineRenderer>();
 
-        private Dictionary<CableNode, List<Vector3>> cableSegmentTargetPoints =
+        private readonly Dictionary<CableNode, List<Vector3>> cableSegmentTargetPoints =
             new Dictionary<CableNode, List<Vector3>>();
 
         #region MonoBehaviour
@@ -38,8 +39,6 @@ namespace Cables
             cable.nodeCreated.AddListener(OnNodeCreated);
             cable.nodeDestroyed.AddListener(OnNodeDestroyed);
             cable.nodeMoved.AddListener(OnNodeMoved);
-            
-            lineRenderer.enabled = false;
         }
 
         protected override void OnValidate()
