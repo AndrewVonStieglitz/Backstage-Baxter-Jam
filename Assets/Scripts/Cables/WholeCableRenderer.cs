@@ -10,6 +10,10 @@ namespace Cables
         private enum ZPosFunctionID { None, Triangle, Slope }
 
         [SerializeField] private ZPosFunctionID zPosFunctionID;
+        
+        [Header("Experimental Features")]
+        // TODO: Move to CableRenderer and implement on CableSegmentsRenderer.
+        [SerializeField] private bool hangUnsupportedCables;
 
         private LineRenderer lineRenderer;
 
@@ -39,7 +43,23 @@ namespace Cables
             // Connections between nodes
             for (var nodeIndex = 0; nodeIndex < Nodes.Count - 1; nodeIndex++)
             {
-                points.AddRange(PointsBetweenPositions(Nodes[nodeIndex], Nodes[nodeIndex + 1]));
+                if (SegmentIsSupported(nodeIndex) || !hangUnsupportedCables)
+                {
+                    points.AddRange(PointsBetweenPositions(Nodes[nodeIndex], Nodes[nodeIndex + 1]));
+                }
+                else
+                {
+                    var pointsBetweenPositions = PointsBetweenPositions(Nodes[nodeIndex], Nodes[nodeIndex + 1], CurveFunctions.CurveFunction.Catenary, 20);
+                    
+                    // Duplicate points to prevent tearing
+                    if (nodeIndex > 0)
+                    {
+                        points.Add(pointsBetweenPositions.First());
+                        points.Add(pointsBetweenPositions.First());
+                    }
+
+                    points.AddRange(pointsBetweenPositions);
+                }
             }
             
             points.Add(Nodes.Last().transform.position);
@@ -128,5 +148,35 @@ namespace Cables
         }
 
         private static float Sigmoid(double value) { return 1.0f / (1.0f + (float) Math.Exp(-value)); }
+
+        private bool SegmentIsSupported(int nodeIndex)
+        {
+            if (nodeIndex < 0 || nodeIndex >= Nodes.Count - 1) throw new IndexOutOfRangeException();
+            
+            var node = Nodes[nodeIndex];
+            var nextNode = Nodes[nodeIndex + 1];
+
+            if (node.PolyCollider == null || nextNode.PolyCollider == null) return false;
+            
+            if (node.PolyCollider != nextNode.PolyCollider) return false;
+            
+            if (!CyclicPointsAreAdjacent(node.VertexIndex, nextNode.VertexIndex, node.PolyCollider.points.Length)) return false;
+            
+            if (!VectorPointsUp(node.ZAxisNormal.normalized + nextNode.ZAxisNormal.normalized)) return false;
+
+            return true;
+        }
+
+        private static bool CyclicPointsAreAdjacent(int indexA, int indexB, int cycleLength)
+        {
+            var absDiff = Mathf.Abs(indexA - indexB);
+
+            return absDiff == 1 || absDiff == cycleLength - 1;
+        }
+
+        private static bool VectorPointsUp(Vector2 vector)
+        {
+            return Vector2.Dot(vector, Vector2.up) > 0;
+        }
     }
 }

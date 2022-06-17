@@ -14,7 +14,7 @@ namespace Cables
         [SerializeField] private CurveFunctions.CurveFunction startCurveFunctionID;
         [FormerlySerializedAs("endCurveFunction")] [SerializeField] private CurveFunctions.CurveFunction endCurveFunctionID;
         [SerializeField] private AnimationCurve curveInterpolation;
-        [SerializeField] private float caternaryLength;
+        [SerializeField] private float catenaryLength;
 
         protected List<CableNode> Nodes => cable.nodes;
         protected Sprite cableSprite;
@@ -42,30 +42,43 @@ namespace Cables
             lineRenderer.widthCurve = AnimationCurve.Constant(1, 1, cable.cableWidth);
         }
 
-        private Func<CableNode, CableNode, float, Vector2> GetCurveFunction(CurveFunctions.CurveFunction curveFunction) =>
-            curveFunction switch
-            {
-                CurveFunctions.CurveFunction.Straight => (a, b, t) => Vector2.Lerp(a.transform.position, b.transform.position, t),
-                CurveFunctions.CurveFunction.Sine => (a, b, t) => CurveFunctions.SinLerp(a.transform.position, b.transform.position, t, NodeOrientation(Nodes[Nodes.Count - 1])),
-                CurveFunctions.CurveFunction.Catenary => (a, b, t) => CurveFunctions.CatenaryLerp(a.transform.position, b.transform.position, t, caternaryLength),
-                CurveFunctions.CurveFunction.RightAngleCubic => (a, b, t) => CurveFunctions.BezierLerp(a.transform.position, b.transform.position, t),
-                CurveFunctions.CurveFunction.TangentQuartic => PointWithQuartic,
-                _ => throw new ArgumentOutOfRangeException(nameof(curveFunction), curveFunction, null)
-            };
-
-        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b)
+        private Func<CableNode, CableNode, float, Vector2> GetCurveFunction(CurveFunctions.CurveFunction curveFunction)
         {
-            return PointsBetweenPositions(a, b, startCurveFunctionID, endCurveFunctionID);
+            switch (curveFunction)
+            {
+                case CurveFunctions.CurveFunction.Straight:
+                    return (a, b, t) => Vector2.Lerp(a.transform.position, b.transform.position, t);
+                case CurveFunctions.CurveFunction.Sine:
+                    return (a, b, t) => CurveFunctions.SinLerp(a.transform.position, b.transform.position, t,
+                        NodeOrientation(Nodes[Nodes.Count - 1]));
+                case CurveFunctions.CurveFunction.Catenary:
+                    return (a, b, t) =>
+                        CurveFunctions.CatenaryLerp(a.transform.position, b.transform.position, t, catenaryLength);
+                case CurveFunctions.CurveFunction.RightAngleCubic:
+                    return (a, b, t) => CurveFunctions.BezierLerp(a.transform.position, b.transform.position, t);
+                case CurveFunctions.CurveFunction.TangentQuartic:
+                    return PointWithQuartic;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(curveFunction), curveFunction, null);
+            }
         }
 
-        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b, CurveFunctions.CurveFunction curveFunctionID)
+        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b, int pointsBetweenNodes = 0)
         {
-            return PointsBetweenPositions(a, b, curveFunctionID, curveFunctionID);
+            return PointsBetweenPositions(a, b, startCurveFunctionID, endCurveFunctionID, pointsBetweenNodes);
+        }
+
+        protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b, CurveFunctions.CurveFunction curveFunctionID, int pointsBetweenNodes = 0)
+        {
+            return PointsBetweenPositions(a, b, curveFunctionID, curveFunctionID, pointsBetweenNodes);
         }
 
         protected IEnumerable<Vector2> PointsBetweenPositions(CableNode a, CableNode b,
-            CurveFunctions.CurveFunction startCurveID, CurveFunctions.CurveFunction endCurveID)
+            CurveFunctions.CurveFunction startCurveID, CurveFunctions.CurveFunction endCurveID, int pointsBetweenNodes = 0)
         {
+            if (pointsBetweenNodes == 0)
+                pointsBetweenNodes = this.pointsBetweenNodes;
+            
             var points = new List<Vector2>();
             
             var startCurveFunction = GetCurveFunction(startCurveID);

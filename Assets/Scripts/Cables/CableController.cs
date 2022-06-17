@@ -111,7 +111,7 @@ namespace Cables
             CreateNodeAtIndex(nodePos, normal, nodes.Count);
         }
 
-        private void CreateNodeAtIndex(Vector3 nodePos, Vector2 normal, int index)
+        private CableNode CreateNodeAtIndex(Vector3 nodePos, Vector2 normal, int index)
         {
             var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity, nodeParent);
 
@@ -129,6 +129,8 @@ namespace Cables
             nodeCreated.Invoke(node);
             
             GameEvents.CableWind(this, nodePos);
+
+            return node;
         }
 
         private void OnNodeMoved(CableNode node)
@@ -184,7 +186,11 @@ namespace Cables
 
             var nodePos = closestVertex + normal.normalized * cableWidth / 2;
             
-            CreateNodeAtIndex(nodePos, normal, nodes.Count - 1);
+            var node = CreateNodeAtIndex(nodePos, normal, nodes.Count - 1);
+
+            node.PolyCollider = polyCollider;
+            node.VertexIndex = closestVertexIndex;
+            node.ZAxisNormal = normal;
         }
 
         private static Vector2 VertexNormal(PolygonCollider2D polyCollider, int closestVertexIndex)
