@@ -20,6 +20,19 @@ namespace Cables
         {
             cable.initialised.RemoveListener(OnInitialised);
         }
+        
+        protected virtual void Update()
+        {
+            UpdateLineRenderers();
+        }
+
+        protected abstract void UpdateLineRenderers();
+
+        protected static void UpdateLineRenderer(LineRenderer lineRenderer, List<Vector3> points)
+        {
+            lineRenderer.positionCount = points.Count;
+            lineRenderer.SetPositions(points.ToArray());
+        }
 
         protected virtual void OnInitialised()
         {
@@ -29,9 +42,10 @@ namespace Cables
                 cableSprite = cable.pluggableStart.cableSprite;
         }
 
-        protected void SetLineWidth(LineRenderer lineRenderer)
+        protected void InitialiseLineRenderer(LineRenderer lineRenderer)
         {
             lineRenderer.widthCurve = AnimationCurve.Constant(1, 1, cable.cableWidth);
+            lineRenderer.material.mainTexture = cableSprite.texture; 
         }
     }
 }

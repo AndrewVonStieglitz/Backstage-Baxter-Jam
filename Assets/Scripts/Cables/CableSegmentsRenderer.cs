@@ -10,15 +10,6 @@ namespace Cables
         [SerializeField] private Transform cableSegmentParent;
 
         private readonly Dictionary<CableSegment, LineRenderer> lineRenderers = new Dictionary<CableSegment, LineRenderer>();
-
-        #region MonoBehaviour
-        
-        private void Update()
-        {
-            UpdateCableSegmentRenderers();
-        }
-        
-        #endregion
         
         #region CableRenderer
         
@@ -35,21 +26,20 @@ namespace Cables
             cableSegmentsController.cableSegmentCreated.AddListener(OnSegmentCreated);
             cableSegmentsController.cableSegmentDestroyed.AddListener(OnSegmentDestroyed);
         }
-        
-        #endregion
-        
-        private void UpdateCableSegmentRenderers()
+
+        protected override void UpdateLineRenderers()
         {
             foreach (var segment in lineRenderers.Keys)
             {
-                UpdateCableSegmentRenderer(segment, LerpTowardTargetPositions(segment));
+                UpdateLineRenderer(segment, LerpTowardTargetPositions(segment));
             }
         }
-        
-        private void UpdateCableSegmentRenderer(CableSegment segment, List<Vector3> points)
+
+        #endregion
+
+        private void UpdateLineRenderer(CableSegment segment, List<Vector3> points)
         {
-            lineRenderers[segment].positionCount = points.Count;
-            lineRenderers[segment].SetPositions(points.ToArray());
+            UpdateLineRenderer(lineRenderers[segment], points);
         }
         
         private List<Vector3> LerpTowardTargetPositions(CableSegment segment)
@@ -83,12 +73,11 @@ namespace Cables
             var lineRendererObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var lineRenderer = lineRendererObject.GetComponent<LineRenderer>();
             
-            SetLineWidth(lineRenderer);
-            lineRenderer.material.mainTexture = cableSprite.texture; 
+            InitialiseLineRenderer(lineRenderer);
             
             lineRenderers.Add(segment, lineRenderer);
             
-            UpdateCableSegmentRenderer(segment, GetTargetPoints(segment));
+            UpdateLineRenderer(segment, GetTargetPoints(segment));
         }
         
         private void DestroyCableSegmentRenderer(CableSegment segment)
@@ -100,11 +89,23 @@ namespace Cables
 
         private List<Vector3> GetTargetPoints(CableSegment segment)
         {
-            var points = segment.points.Select(p => (Vector3)p).ToList();
+            var points = segment.points;
             
             points.Add(segment.node.transform.position);
+
+            var points3D = SetZPositions(segment, points).ToList();
             
-            return points;
+            return points3D;
+        }
+
+        // TODO: Needs to be tested. Need to get XYNodes working again first.
+        private IEnumerable<Vector3> SetZPositions(CableSegment segment, List<Vector2> points)
+        {
+            var segmentIndex = Segments.IndexOf(segment);
+            
+            var zPos = segmentIndex % 2 == 0 ? -1 : 1;
+            
+            return points.Select(p => new Vector3(p.x, p.y, zPos));
         }
     }
 }

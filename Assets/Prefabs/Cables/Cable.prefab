@@ -191,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
   cableSegmentsController: {fileID: 8511436087669080055}
-  zPosFunctionID: 0
+  lineRenderer: {fileID: 4397329105592864675}
 --- !u!1 &8120014663964540498
 GameObject:
   m_ObjectHideFlags: 0

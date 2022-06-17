@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,127 +6,70 @@ namespace Cables
 {
     public class WholeCableRenderer : CableRenderer
     {
-        private enum ZPosFunctionID { None, Triangle, Slope }
+        [SerializeField] private LineRenderer lineRenderer;
 
-        [Header("Experimental Features")]
-        [SerializeField] private ZPosFunctionID zPosFunctionID;
-
-        private LineRenderer lineRenderer;
-
-        private void Awake()
-        {
-            lineRenderer = GetComponent<LineRenderer>();
-
-            SetLineWidth(lineRenderer);
-        }
+        #region CableRenderer
         
-        private void Update()
-        {
-            DrawLine();
-        }
-
         protected override void OnInitialised()
         {
             base.OnInitialised();
             
-            lineRenderer.material.mainTexture = cableSprite.texture; 
+            InitialiseLineRenderer(lineRenderer);
         }
 
-        private void DrawLine()
+        protected override void UpdateLineRenderers()
         {
-            var points = new List<Vector2>();
+            UpdateLineRenderer(lineRenderer, GetPoints());
+        }
+        
+        #endregion
 
-            foreach (var segment in Segments)
+        private List<Vector3> GetPoints()
+        {
+            var points = new List<Vector3>();
+
+            for (var segmentIndex = 0; segmentIndex < Segments.Count; segmentIndex++)
             {
-                points.AddRange(segment.points);
+                var segment = Segments[segmentIndex];
+                
+                var segmentPoints = segment.points;
+
+                points.AddRange(SetZPositions(segmentIndex, segmentPoints));
             }
-            
+
+            // TODO: This is going to have a really off zPos
             points.Add(Segments.Last().node.transform.position);
 
-            var points3D = GetZPosFunction(zPosFunctionID)(points).ToList();
-            
-            lineRenderer.positionCount = points3D.Count;
-            lineRenderer.SetPositions(points3D.ToArray());
+            return points;
         }
 
-        // TODO: Needs to be reworked. Commented out for now since it's not in use on WholeCableRenderer.
-        // TODO: Convert to a pure static function and move to base class
-        // For every pair of points, use the slope to set the Z position
-        private IEnumerable<Vector3> SetZPositionsWithSlope(List<Vector2> points)
+        // TODO: Needs to be tested. Need to get XYNodes working again first.
+        // Sets Z positions according to a triangle wave.
+        private IEnumerable<Vector3> SetZPositions(int segmentIndex, List<Vector2> points)
         {
+            var segment = Segments[segmentIndex];
+
+            var pointsBetweenNodes = segment.pointsBetweenNodes;
+
+            var evenSegment = segmentIndex % 2 == 0;
+            
             var points3D = new List<Vector3>();
-            
-            // for (var pointIndex = 0; pointIndex < points.Count - 1; pointIndex++)
-            // {
-            //     var point = points[pointIndex];
-            //     var nextPoint = points[pointIndex + 1];
-            //
-            //     var node = Nodes[Mathf.FloorToInt(pointIndex / (float) pointsBetweenNodes)];
-            //
-            //     OrientationUtil.OrientedVector2 vector = new OrientationUtil.OrientedVector2(nextPoint - point);
-            //
-            //     float vectorSlope;
-            //
-            //     // Prevent division by zero
-            //     var nodeOrientation = NodeOrientation(node).Inverse();
-            //     
-            //     if (vector.X(nodeOrientation) == 0)
-            //     {
-            //         vectorSlope = 20;
-            //     }
-            //     else
-            //     {
-            //         vectorSlope = vector.Y(nodeOrientation) / vector.X(nodeOrientation);
-            //     }
-            //
-            //     points3D.Add(new Vector3(point.x, point.y, (Sigmoid(vectorSlope) - 0.5f) * 30));
-            // }
 
-            return points3D;
-        }
-
-        private IEnumerable<Vector3> SetZPositionsWithTriangleWave(List<Vector2> points)
-        {
-            var points3D = new List<Vector3>();
-            
-            // for (var pointIndex = 0; pointIndex < points.Count - 1; pointIndex++)
-            // {
-            //     var point = points[pointIndex];
-            //
-            //     var indexInSegment = pointIndex % pointsBetweenNodes;
-            //
-            //     var evenSegment = Mathf.FloorToInt(pointIndex / (float)pointsBetweenNodes) == 0;
-            //
-            //     var t = (float) indexInSegment / pointsBetweenNodes;
-            //
-            //     float zPos = 0;
-            //
-            //     if (evenSegment)
-            //     {
-            //         zPos = Mathf.Abs(2 * t - 1) - 1;
-            //     }
-            //     else
-            //     {
-            //         zPos = -1 * (Mathf.Abs(2 * t - 1) - 1);
-            //     }
-            //     
-            //     points3D.Add(new Vector3(point.x, point.y, zPos));
-            // }
-
-            return points3D;
-        }
-
-        private Func<List<Vector2>, IEnumerable<Vector3>> GetZPosFunction(ZPosFunctionID zPosFunctionID)
-        {
-            return zPosFunctionID switch
+            for (var pointIndex = 0; pointIndex < points.Count; pointIndex++)
             {
-                ZPosFunctionID.None => points => points.Select(p => (Vector3)p),
-                ZPosFunctionID.Triangle => SetZPositionsWithTriangleWave,
-                ZPosFunctionID.Slope => SetZPositionsWithSlope,
-                _ => throw new ArgumentOutOfRangeException(nameof(zPosFunctionID), zPosFunctionID, null)
-            };
-        }
+                var point = points[pointIndex];
+            
+                var t = (float) pointIndex / pointsBetweenNodes;
+            
+                float zPos = Mathf.Abs(1 * t - 1) - 1;
+            
+                if (!evenSegment)
+                    zPos *= -1;
+                
+                points3D.Add(new Vector3(point.x, point.y, zPos));
+            }
 
-        private static float Sigmoid(double value) { return 1.0f / (1.0f + (float) Math.Exp(-value)); }
+            return points3D;
+        }
     }
 }
