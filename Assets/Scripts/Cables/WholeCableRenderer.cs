@@ -38,8 +38,8 @@ namespace Cables
                 points.AddRange(SetZPositions(segmentIndex, segmentPoints));
             }
 
-            // TODO: This is going to have a really off zPos
-            points.Add(Segments.Last().node.transform.position);
+            // Double cast to set zPos to zero
+            points.Add((Vector2) Segments.Last().node.transform.position);
 
             return points;
         }
