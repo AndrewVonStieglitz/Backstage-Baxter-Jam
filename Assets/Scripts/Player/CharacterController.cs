@@ -8,7 +8,7 @@ public class CharacterController : MonoBehaviour
     private Rigidbody2D baxterRigidBody;
     private SpriteRenderer baxterSpriteRenderer;
     private CircleCollider2D baxterCollider;
-
+    private Cables.CableHead cableHead;
 
     [SerializeField] private float jumpForce;
     private float jumpBuffer = -1;
@@ -34,6 +34,10 @@ public class CharacterController : MonoBehaviour
 
     private Animator animator;
 
+    private float pickupHeldTime = 0f;
+    private bool pickupBeingHeld = false;
+    [SerializeField] private float maxHoldPickup;
+
     public bool debugIsGrouned = false; // shows the state of this variable in inspector. 
 
     //private PlayerInput baxterInput;
@@ -46,16 +50,19 @@ public class CharacterController : MonoBehaviour
         baxterCollider = GetComponent<CircleCollider2D>();
         animator = GetComponent<Animator>();
         //baxterInput = GetComponent<PlayerInput>();
+        cableHead = transform.GetChild(0).GetComponent<Cables.CableHead>();// requires cable head be first child!!
 
         playerControls = new PlayerControls();
 
         distToGround = baxterCollider.radius*1.05f;
-        print("Distance to ground: " + distToGround);
+        // print("Distance to ground: " + distToGround);
 
         playerControls.Baxter.Enable();
         playerControls.Baxter.Jump.performed += StartJump;
         playerControls.Baxter.Jump.canceled += EndJump;
         playerControls.Baxter.Move.performed += PlayerMove;
+        playerControls.Baxter.PickupRelease.performed += PickupPressDown;
+        playerControls.Baxter.PickupRelease.canceled += PickupPressUp;
         
         groundedLayerMask = (1 << platformLayer);
     }
@@ -98,7 +105,7 @@ public class CharacterController : MonoBehaviour
     {
         if (isGrounded || (coyoteTimer > 0f && jumpBuffer > 0f))
         {
-            print("Jump executing");
+            // print("Jump executing");
             jumpBuffer = jumpHoldMaxTime;
             baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             coyoteTimer = -1;
@@ -112,6 +119,47 @@ public class CharacterController : MonoBehaviour
     public void EndJump(InputAction.CallbackContext context)
     {
         jumpBuffer = -1;
+    }
+
+    public void PickupPressDown(InputAction.CallbackContext context)
+    {
+        print("Baxter pickup/release key down");
+        pickupHeldTime = Time.time;
+        pickupBeingHeld = true;
+        StartCoroutine(countdownPickupHold());
+    }
+
+    public void PickupPressUp(InputAction.CallbackContext context)
+    {
+        pickupHeldTime = Time.time - pickupHeldTime;
+        print("Baxter pickup/release key up. Held for: " + pickupHeldTime);
+        if (pickupBeingHeld)
+        {
+            pickupBeingHeld = false;
+            StopCoroutine(countdownPickupHold());
+            if (pickupHeldTime < maxHoldPickup)
+            {
+                // pick up the cable
+                cableHead.TryInteract();
+            }
+            else
+            {
+                // release the cable
+                cableHead.DropCable();
+            }
+        }
+    }
+
+    private IEnumerator countdownPickupHold()
+    {
+        yield return new WaitForSeconds(maxHoldPickup);
+        if (pickupBeingHeld)
+        {
+            // release cable
+            print("Coroutine force releasing cable");
+            cableHead.DropCable();
+            pickupBeingHeld = false;
+        }
     }
 
     public void PlayerMove(InputAction.CallbackContext context)
@@ -182,7 +230,11 @@ public class CharacterController : MonoBehaviour
             //print("raycast distance: " + hit.distance + "\t, dist to ground: " + distToGround + "\t, bool: " + (hit.distance < distToGround));
         }
         animator.SetBool("isGrounded", isGrounded);
-        if (isGrounded && !oldIsGrounded) { animator.SetTrigger("Landed"); print("Landed at: " + Time.time); }
+        if (isGrounded && !oldIsGrounded)
+        {
+            animator.SetTrigger("Landed");
+            // print("Landed at: " + Time.time);
+        }
         return isGrounded;
     }
 }

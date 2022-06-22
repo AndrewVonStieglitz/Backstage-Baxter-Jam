@@ -5,7 +5,7 @@ namespace Cables
 {
     public static class CurveFunctions
     {
-        public enum CurveFunction { Straight, Sine, Catenary, Bezier }
+        public enum CurveFunction { Straight, Sine, Catenary, RightAngleCubic, TangentQuartic }
 
         public static Vector2 SinLerp(Vector2 a, Vector2 b, float t, OrientationUtil.Orientation o)
         {

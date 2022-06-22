@@ -1,37 +1,151 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cables;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private float maxTime;
-    public float MaxTime { get => maxTime; }
+    //How long the intermission between songs lasts for
+    [SerializeField] private float intermissionTime;
+    public float IntermissionTime { get => intermissionTime; }
 
-    static private float timer;
-    static public float Timer { get => timer; }
+    public song currentSong { get; set; }
 
-    public enum GameState { menu, playing }
+    static public float timer { get; set; }
 
-    static private GameState currentGameState = GameState.menu;
-    static public GameState CurrentGameState { get => currentGameState; }
+    public enum GameState { menu, intermission, playing }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    static public GameState currentGameState { get; set; }
+
+    static public float happiness { get; set; }
+
+    IDictionary<InstrumentSO, recipe> recipeDictionary;
+    IDictionary<CableController, InstrumentSO> connectionsDictionary;
 
     // Update is called once per frame
     void Update()
     {
-        if (currentGameState == GameState.playing)
+        //Decrementing timer
+        if (currentGameState == GameState.intermission)
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
+                //After a delay, start playing the song
+                GameEvents.StartSong();
+            }
+        }
+
+        if (currentGameState == GameState.playing)
+        {
+            timer += Time.deltaTime;
+            if (timer >= currentSong.duration)
+            {
+                //When song duration is up, call time up. Timer counts up instead of down to act as timer for song
                 GameEvents.TimeUp();
             }
         }
+    }
+
+    //Called when game scene is loaded. Initialize level
+    private void OnGameStart()
+    {
+        currentGameState = GameState.intermission;
+        timer = intermissionTime;
+        GameEvents.StartAlbum();
+        Debug.Log("Game Started");
+    }
+
+    //When RecipeLoader annoucnes the next song
+    private void OnReadySong(song song)
+    {
+        UIEvents.ClearRecipes();
+        currentSong = song;
+        foreach (recipe recipe in currentSong.componentRecipes)
+        {
+            recipeDictionary.Add(recipe.instrument, recipe);
+            UIEvents.DisplayRecipe(recipe);
+        }
+    }
+
+    //When the song starts playing
+    private void OnStartSong()
+    {
+        currentGameState = GameState.playing;
+        timer = 0;
+    }
+
+    //When player wins/fails
+    private static void OnGameOver()
+    {
+        currentGameState = GameState.menu;
+        MenuEvents.onGameEnded();
+    }
+
+    //When time is up for a song
+    private void OnTimeUp()
+    {
+        //Queue up next song and start intermission timer.
+        GameEvents.NextSong();
+        GameEvents.EndSong();
+        timer = IntermissionTime;
+        currentGameState = GameState.intermission;
+    }
+
+    //When every song for level is finished
+    private void OnAlbumEnded()
+    {
+        //Todo: transition to game over
+        Debug.LogWarning("Album ended currently not implemented");
+        Invoke("EndGame", 5);
+    }
+
+    private void OnCableConnected(CableController cable, PlugCable plug)
+    {
+        InstrumentSO instrument = cable.instrument;
+        if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
+        {
+            //If matching recipe found with correct instrument
+            int totalPluggables = recipe.midAffectors.Length + 2;
+            if (cable.pluggablesList.Count == totalPluggables)
+            {//First checks if size of list matches
+                if (cable.pluggablesList[0] == recipe.amp && cable.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
+                {
+                    List<PluggablesSO> pluggables = new List<PluggablesSO>(cable.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
+                    foreach(MidAffectorSuper midAffector in recipe.midAffectors)
+                    {
+                        if (!pluggables.Contains(midAffector))
+                        {
+                            GameEvents.RecipeBroken(recipe); //If does not contain, it must be a broken recipe
+                            return;
+                        }
+                        else
+                        {
+                            //removes item if it does contain so it can't represent duplicates
+                            pluggables.Remove(midAffector);
+                        }
+                    }
+                    //If it hasn't been stopped, recipe must be complete.
+                    GameEvents.RecipeCompleted(recipe);
+                    return;
+                }
+            }
+            //If no conditions are met, recipe must be broken
+            GameEvents.RecipeBroken(recipe);
+            
+        }
+        else
+        {
+            Debug.LogError("No recipe found matching instrument");
+        }
+        //cable.pluggablesList;
+        //plug.pluggable
+
+    }
+
+    private void EndGame()
+    {
+        GameEvents.GameOver();
     }
 
     private void OnEnable()
@@ -39,6 +153,11 @@ public class GameManager : MonoBehaviour
         GameEvents.onGameStart += OnGameStart;
         GameEvents.onGameOver += OnGameOver;
         GameEvents.onTimeUp += OnTimeUp;
+        GameEvents.onEndAlbum += OnAlbumEnded;
+        GameEvents.onReadySong += OnReadySong;
+        GameEvents.onStartSong += OnStartSong;
+        GameEvents.onCableConnectPlug += OnCableConnected;
+        GameEvents.onCableDisconnectPlug += OnCableConnected;
     }
 
     private void OnDisable()
@@ -46,24 +165,11 @@ public class GameManager : MonoBehaviour
         GameEvents.onGameStart -= OnGameStart;
         GameEvents.onGameOver -= OnGameOver;
         GameEvents.onTimeUp -= OnTimeUp;
-    }
-
-    private void OnGameStart()
-    {
-        currentGameState = GameState.playing;
-        timer = maxTime;
-        Debug.Log("Game Started");
-    }
-
-    private static void OnGameOver()
-    {
-        currentGameState = GameState.menu;
-        MenuEvents.onGameEnded();
-    }
-
-    private void OnTimeUp()
-    {
-        GameEvents.GameOver();
+        GameEvents.onEndAlbum -= OnAlbumEnded;
+        GameEvents.onReadySong -= OnReadySong;
+        GameEvents.onStartSong -= OnStartSong;
+        GameEvents.onCableConnectPlug -= OnCableConnected;
+        GameEvents.onCableDisconnectPlug -= OnCableConnected;
     }
 
 

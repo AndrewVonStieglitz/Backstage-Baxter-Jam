@@ -1,26 +1,19 @@
 using UnityEngine;
-using static Cables.OrientationUtil;
+using UnityEngine.Events;
 
 namespace Cables
 {
     public class CableNode : MonoBehaviour
     {
-        public enum PoleSide
+        public UnityEvent<CableNode> nodeMoved = new UnityEvent<CableNode>();
+
+        public Vector2 Normal { get; set; }
+
+        public void MoveNode(Vector3 newPosition)
         {
-            Over,
-            Under
+            transform.position = newPosition;
+            
+            nodeMoved.Invoke(this);
         }
-
-        public PoleSide poleSide;
-
-        private Orientation nodeOrientation;
-        public Orientation NodeOrientation { get => nodeOrientation; }
-
-        public CableNode(Orientation nodeOrientation)
-        {
-            this.nodeOrientation = nodeOrientation;
-        }
-        
-        public Orientation Orientation { get; set; }
     }
 }

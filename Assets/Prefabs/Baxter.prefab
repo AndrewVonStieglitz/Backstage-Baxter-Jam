@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 598958075835846354}
   - component: {fileID: 598958075835846355}
   - component: {fileID: 598958075835846359}
+  - component: {fileID: 8051980483707947660}
   m_Layer: 0
   m_Name: Baxter
   m_TagString: Player
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -6515781948454863683, guid: 22ee039526ecb4641866e4e8b4c2d5c5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -121,7 +122,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.2}
   serializedVersion: 2
   m_Radius: 0.85
 --- !u!50 &598958075835846359
@@ -145,6 +146,25 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!95 &8051980483707947660
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598958075835846352}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ce3e1358faff8bb4886fcd933b95a1ae, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1562020492059412068
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -154,15 +174,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6278875621673640301, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
       propertyPath: m_Size.x
-      value: 2.5
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 6278875621673640301, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
       propertyPath: m_Size.y
-      value: 2.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6278875621673640301, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
       propertyPath: m_Offset.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6278875621673640301, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6278875621673640302, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
       propertyPath: m_RootOrder
