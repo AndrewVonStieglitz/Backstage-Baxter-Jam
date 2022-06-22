@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Collections;
 using UnityEngine;
 
 namespace Cables
@@ -63,19 +62,40 @@ namespace Cables
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            CheckPipeCollision(col);
+
+            CheckCableCollision(col);
+        }
+
+        private void CheckCableCollision(Collider2D col)
+        {
+            if (cable == null) return;
+            
+            if (!col.CompareTag("Cable")) return;
+
+            var hit = TriggerCollision(velocity);
+
+            // Debug.Log("Player Cable Collision");
+            // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+
+            GameEvents.PlayerCableCollision(hit.point, hit.normal);
+        }
+
+        private void CheckPipeCollision(Collider2D col)
+        {
             // TODO: Duplicate code. See OnTriggerExit2D.
             lastOverlappedTrigCollider = col;
             if (cable == null) return;
-            
+
             if (!col.CompareTag("Pipe")) return;
 
             var hit = TriggerCollision(velocity);
 
             Vector2 nodePosition = hit.point + hit.normal * cable.cableWidth / 2;
-            
+
             // Draw collision normals
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
-            
+
             cable.PipeEnter(nodePosition, hit.normal);
         }
 

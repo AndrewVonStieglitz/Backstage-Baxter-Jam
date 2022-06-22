@@ -9,6 +9,7 @@ TagManager:
   - Pluggable
   - Instrument
   - Platform
+  - Cable
   layers:
   - Default
   - TransparentFX

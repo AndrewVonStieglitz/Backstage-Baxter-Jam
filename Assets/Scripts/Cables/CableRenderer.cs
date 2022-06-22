@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cables
 {
@@ -14,8 +15,14 @@ namespace Cables
         [SerializeField] private bool lerpEnabled;
         [SerializeField] private float lerpSpeed;
 
+        public UnityEvent initialised = new UnityEvent();
+        public UnityEvent pointsUpdated = new UnityEvent();
+        
+        public List<Vector3> Points = new List<Vector3>();
+        public CableController Cable => cable;
+
         protected List<CableSegment> Segments => cableSegmentsController.Segments;
-        protected Sprite cableSprite;
+        private Sprite cableSprite;
 
         protected virtual void OnEnable()
         {
@@ -34,10 +41,14 @@ namespace Cables
 
         protected abstract void UpdateLineRenderers();
 
-        protected static void UpdateLineRendererInstant(LineRenderer lineRenderer, List<Vector3> points)
+        protected void UpdateLineRendererInstant(LineRenderer lineRenderer, List<Vector3> points)
         {
+            Points = points;
+            
             lineRenderer.positionCount = points.Count;
             lineRenderer.SetPositions(points.ToArray());
+            
+            pointsUpdated.Invoke();
         }
 
         protected void UpdateLineRendererLerp(LineRenderer lineRenderer, List<Vector3> targetPoints)
@@ -68,6 +79,8 @@ namespace Cables
                 cableSprite = cable.amp.cableSprite;
             else if (cable.pluggableStart)
                 cableSprite = cable.pluggableStart.cableSprite;
+            
+            initialised.Invoke();
         }
 
         protected void InitialiseLineRenderer(LineRenderer lineRenderer)

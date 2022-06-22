@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7596408147818375610}
   m_Layer: 0
   m_Name: Nodes
-  m_TagString: Untagged
+  m_TagString: Cable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,9 +42,11 @@ GameObject:
   - component: {fileID: 3741119792563954535}
   - component: {fileID: 4397329105592864675}
   - component: {fileID: 3196984049292078140}
+  - component: {fileID: 4690615933875131387}
+  - component: {fileID: 1027681111473932894}
   m_Layer: 0
   m_Name: Renderer
-  m_TagString: Untagged
+  m_TagString: Cable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,6 +81,13 @@ MonoBehaviour:
   cableSegmentsController: {fileID: 8511436087669080055}
   lerpEnabled: 0
   lerpSpeed: 0.01
+  Points: []
+  initialised:
+    m_PersistentCalls:
+      m_Calls: []
+  pointsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
   cableSegmentPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
   cableSegmentParent: {fileID: 6057763080080546153}
 --- !u!120 &4397329105592864675
@@ -195,7 +204,51 @@ MonoBehaviour:
   cableSegmentsController: {fileID: 8511436087669080055}
   lerpEnabled: 0
   lerpSpeed: 0.01
+  Points: []
+  initialised:
+    m_PersistentCalls:
+      m_Calls: []
+  pointsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
   lineRenderer: {fileID: 4397329105592864675}
+--- !u!114 &4690615933875131387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616848933217270517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291f856e60004950882563ca66190ee3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cableRenderer: {fileID: 3196984049292078140}
+  edgeCollider: {fileID: 1027681111473932894}
+  pointsToSkipWhenInProgress: 2
+--- !u!68 &1027681111473932894
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616848933217270517}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -0.5, y: 0}
+  - {x: 0.5, y: 0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!1 &8120014663964540498
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +262,7 @@ GameObject:
   - component: {fileID: 8511436087669080055}
   m_Layer: 0
   m_Name: Cable
-  m_TagString: Untagged
+  m_TagString: Cable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
