@@ -47,13 +47,18 @@ namespace Cables
     
         private bool SegmentIsSupported()
         {
-            if (previousNode.PolyCollider == null || node.PolyCollider == null) return false;
+            var previousZNode = previousNode as ZNode;
+            var zNode = node as ZNode;
+            
+            if (previousZNode is null || zNode is null) return false;
+
+            if (previousZNode.PolyCollider == null || zNode.PolyCollider == null) return false;
         
-            if (previousNode.PolyCollider != node.PolyCollider) return false;
+            if (previousZNode.PolyCollider != zNode.PolyCollider) return false;
         
-            if (!CyclicPointsAreAdjacent(previousNode.VertexIndex, node.VertexIndex, previousNode.PolyCollider.points.Length)) return false;
+            if (!CyclicPointsAreAdjacent(previousZNode.VertexIndex, zNode.VertexIndex, previousZNode.PolyCollider.points.Length)) return false;
         
-            if (!VectorPointsUp(previousNode.ZAxisNormal.normalized + node.ZAxisNormal.normalized)) return false;
+            if (!VectorPointsUp(previousZNode.ZAxisNormal.normalized + zNode.ZAxisNormal.normalized)) return false;
 
             return true;
         }
@@ -71,7 +76,7 @@ namespace Cables
         }
 
         // TODO: Move this to CurveFunctions
-        protected Vector2 PointWithQuartic(CableNode a, CableNode b, float t)
+        protected Vector2 PointWithQuartic(XYNode a, XYNode b, float t)
         {
             var aPos = (Vector2) a.transform.position;
             var dPos = (Vector2) b.transform.position;
@@ -109,14 +114,14 @@ namespace Cables
                     return (a, b, t) => Vector2.Lerp(a.transform.position, b.transform.position, t);
                 case CurveFunctions.CurveFunction.Sine:
                     return (a, b, t) => CurveFunctions.SinLerp(a.transform.position, b.transform.position, t,
-                        NodeOrientation(previousNode));
+                        NodeOrientation((XYNode) previousNode));
                 case CurveFunctions.CurveFunction.Catenary:
                     return (a, b, t) =>
                         CurveFunctions.CatenaryLerp(a.transform.position, b.transform.position, t, catenaryLength);
                 case CurveFunctions.CurveFunction.RightAngleCubic:
                     return (a, b, t) => CurveFunctions.BezierLerp(a.transform.position, b.transform.position, t);
                 case CurveFunctions.CurveFunction.TangentQuartic:
-                    return PointWithQuartic;
+                    return (a, b, t) => PointWithQuartic((XYNode) a, (XYNode) b, t);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(curveFunction), curveFunction, null);
             }
@@ -158,7 +163,7 @@ namespace Cables
             return points;
         }
 
-        protected static OrientationUtil.Orientation NodeOrientation(CableNode node)
+        protected static OrientationUtil.Orientation NodeOrientation(XYNode node)
         {
             return OrientationUtil.VectorToOrientation(node.Normal);
         }

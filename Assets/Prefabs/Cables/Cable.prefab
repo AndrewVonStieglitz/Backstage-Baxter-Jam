@@ -81,13 +81,13 @@ MonoBehaviour:
   cableSegmentsController: {fileID: 8511436087669080055}
   lerpEnabled: 0
   lerpSpeed: 0.01
-  Points: []
   initialised:
     m_PersistentCalls:
       m_Calls: []
   pointsUpdated:
     m_PersistentCalls:
       m_Calls: []
+  Points: []
   cableSegmentPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
   cableSegmentParent: {fileID: 6057763080080546153}
 --- !u!120 &4397329105592864675
@@ -204,13 +204,13 @@ MonoBehaviour:
   cableSegmentsController: {fileID: 8511436087669080055}
   lerpEnabled: 0
   lerpSpeed: 0.01
-  Points: []
   initialised:
     m_PersistentCalls:
       m_Calls: []
   pointsUpdated:
     m_PersistentCalls:
       m_Calls: []
+  Points: []
   lineRenderer: {fileID: 4397329105592864675}
 --- !u!114 &4690615933875131387
 MonoBehaviour:
@@ -260,6 +260,8 @@ GameObject:
   - component: {fileID: 8120014663964540500}
   - component: {fileID: 4879019852954964372}
   - component: {fileID: 8511436087669080055}
+  - component: {fileID: 6228321870821142823}
+  - component: {fileID: 5125566223370737176}
   m_Layer: 0
   m_Name: Cable
   m_TagString: Cable
@@ -298,10 +300,6 @@ MonoBehaviour:
   cableID: 0
   nodePrefab: {fileID: 495582835792472946, guid: daf39b3dbcc5f8a4a81b36d1ff6997db, type: 3}
   nodeParent: {fileID: 7596408147818375610}
-  cableRaycastSize: 0.5
-  zAxisLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
   initialised:
     m_PersistentCalls:
       m_Calls: []
@@ -376,3 +374,35 @@ MonoBehaviour:
   cableSegmentDestroyed:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6228321870821142823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120014663964540498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6ce1852cbd3438db272c648bfb6b68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cable: {fileID: 4879019852954964372}
+  xYNodePrefab: {fileID: 7562796194507247040, guid: 70427f564d5555d43afd542fb2442ea7, type: 3}
+--- !u!114 &5125566223370737176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120014663964540498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0cc15c03dba45a29b3edf005501425e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cable: {fileID: 4879019852954964372}
+  zNodePrefab: {fileID: 8902940762114793058, guid: 815d0af8c879e144a99c4819177a7e19, type: 3}
+  cableRaycastSize: 0.8
+  zAxisLayerMask:
+    serializedVersion: 2
+    m_Bits: 64

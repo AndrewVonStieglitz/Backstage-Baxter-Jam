@@ -44,7 +44,7 @@ namespace Cables
 
             if (cableHead == null) return;
 
-            var cable = cableHead.cable;
+            var cable = cableHead.Cable;
 
             if (cable == null) return;
 

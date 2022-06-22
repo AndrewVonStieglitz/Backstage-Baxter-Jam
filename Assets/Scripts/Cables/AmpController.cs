@@ -29,7 +29,7 @@ namespace Cables
         {
             if (!col.CompareTag("CableHead")) return;
 
-            if (cableHead.cable != null) return;
+            if (cableHead.Cable != null) return;
 
             var cableObject = Instantiate(cablePrefab, transform);
             var cable = cableObject.GetComponent<CableController>();
