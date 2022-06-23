@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,8 +9,6 @@ namespace Cables
         public enum CableState { InProgress, Completed, Abandoned }
 
         [SerializeField] private int cableID;
-        [SerializeField] private GameObject nodePrefab;
-        [SerializeField] private Transform nodeParent;
         
         public int CableID { get => cableID; }
 
@@ -71,8 +68,8 @@ namespace Cables
 
         private void Initialise(Transform transform)
         {
-            CreateNode(nodePrefab, transform.position);
-            CreateNode(nodePrefab, transform.position);
+            CreateNode(new CableNode(), transform.position);
+            CreateNode(new CableNode(), transform.position);
 
             initialised.Invoke();
         }
@@ -89,19 +86,13 @@ namespace Cables
             OnCableDisconnect(cable, null);
         }
 
-        public CableNode CreateNode(GameObject nodePrefab, Vector3 nodePos)
+        public void CreateNode(CableNode node, Vector3 nodePos)
         {
-            return CreateNodeAtIndex(nodePrefab, nodePos, nodes.Count);
+            CreateNodeAtIndex(node, nodePos, nodes.Count);
         }
 
-        public CableNode CreateNodeAtIndex(GameObject nodePrefab, Vector3 nodePos, int index)
+        public void CreateNodeAtIndex(CableNode node, Vector3 nodePos, int index)
         {
-            var nodeObject = Instantiate(nodePrefab, nodePos, Quaternion.identity, nodeParent);
-
-            var node = nodeObject.GetComponent<CableNode>();
-
-            if (node == null) throw new Exception($"No {nameof(CableNode)} component on node prefab.");
-
             node.MoveNode(nodePos);
             
             node.nodeMoved.AddListener(OnNodeMoved);
@@ -111,8 +102,6 @@ namespace Cables
             nodeCreated.Invoke(node);
             
             GameEvents.CableWind(this, nodePos);
-
-            return node;
         }
 
         private void OnNodeMoved(CableNode node)
@@ -122,8 +111,6 @@ namespace Cables
 
         public void DestroyNode(CableNode node)
         {
-            Destroy(node.gameObject);
-
             nodes.Remove(node);
             
             nodeDestroyed.Invoke(node);

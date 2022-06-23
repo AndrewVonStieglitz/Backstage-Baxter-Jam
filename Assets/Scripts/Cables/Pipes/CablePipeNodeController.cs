@@ -1,12 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Cables.Pipes
 {
     public class CablePipeNodeController : MonoBehaviour
     {
         [SerializeField] private CableController cable;
-        [SerializeField] private GameObject xYNodePrefab;
         
         private Vector2 pipeEntryNormal;
     
@@ -15,19 +13,15 @@ namespace Cables.Pipes
             pipeEntryNormal = normal;
 
             if (!AwayFromPreviousNode(nodePos, normal)) return;
-            
-            var node = cable.CreateNodeAtIndex(xYNodePrefab, nodePos, cable.nodes.Count - 1);
 
-            var xyNode = node as PipeNode;
+            var node = new PipeNode(normal);
             
-            if (xyNode is null) throw new Exception($"No {nameof(PipeNode)} component on node prefab.");
-            
-            xyNode.Normal = normal;
+            cable.CreateNodeAtIndex(node, nodePos, cable.nodes.Count - 1);
         }
 
         private bool AwayFromPreviousNode(Vector2 nodePos, Vector2 normal)
         {
-            return Vector2.Dot(nodePos - (Vector2) cable.nodes[cable.nodes.Count - 2].transform.position, normal) > 0;
+            return Vector2.Dot(nodePos - cable.nodes[cable.nodes.Count - 2].Position, normal) > 0;
         }
 
         public void PipeExit(Vector2 normal)

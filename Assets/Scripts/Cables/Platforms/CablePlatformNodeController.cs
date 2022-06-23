@@ -1,12 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Cables.Platforms
 {
     public class CablePlatformNodeController : MonoBehaviour
     {
         [SerializeField] private CableController cable;
-        [SerializeField] private GameObject platformNodePrefab;
         [SerializeField] private float cableRaycastSize;
         [SerializeField] private LayerMask platformLayerMask;
 
@@ -49,16 +47,10 @@ namespace Cables.Platforms
             var normal = VertexNormal(polyCollider, closestVertexIndex);
 
             var nodePos = closestVertex + normal.normalized * cable.cableWidth / 2;
-            
-            var node = cable.CreateNodeAtIndex(platformNodePrefab, nodePos, cable.nodes.Count - 1);
 
-            var platformNode = node as PlatformNode;
+            var node = new PlatformNode(polyCollider, closestVertexIndex, normal);
             
-            if (platformNode == null) throw new Exception($"No {nameof(PlatformNode)} component on node prefab.");
-
-            platformNode.PolyCollider = polyCollider;
-            platformNode.VertexIndex = closestVertexIndex;
-            platformNode.Normal = normal;
+            cable.CreateNodeAtIndex(node, nodePos, cable.nodes.Count - 1);
         }
 
         private static Vector2 VertexNormal(PolygonCollider2D polyCollider, int closestVertexIndex)
@@ -130,8 +122,8 @@ namespace Cables.Platforms
 
         private RaycastHit2D RaycastBetweenNodes(CableNode fromNode, CableNode toNode)
         {
-            Vector2 fromNodePos = fromNode.transform.position;
-            Vector2 toNodePos = toNode.transform.position;
+            var fromNodePos = fromNode.Position;
+            var toNodePos = toNode.Position;
 
             var difference = toNodePos - fromNodePos;
 

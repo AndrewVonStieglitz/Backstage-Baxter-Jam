@@ -98,8 +98,8 @@ namespace Cables
         // TODO: Move this to CurveFunctions
         protected Vector2 PointWithQuartic(PipeNode a, PipeNode b, float t)
         {
-            var aPos = (Vector2) a.transform.position;
-            var dPos = (Vector2) b.transform.position;
+            var aPos = a.Position;
+            var dPos = b.Position;
 
             var aTangent = (Vector2) Vector3.Cross(a.Normal.normalized, Vector3.forward);
             var dTangent = (Vector2) Vector3.Cross(b.Normal.normalized, Vector3.back);
@@ -131,15 +131,15 @@ namespace Cables
             switch (curveFunction)
             {
                 case CurveFunctions.CurveFunction.Straight:
-                    return (a, b, t) => Vector2.Lerp(a.transform.position, b.transform.position, t);
+                    return (a, b, t) => Vector2.Lerp(a.Position, b.Position, t);
                 case CurveFunctions.CurveFunction.Sine:
-                    return (a, b, t) => CurveFunctions.SinLerp(a.transform.position, b.transform.position, t,
+                    return (a, b, t) => CurveFunctions.SinLerp(a.Position, b.Position, t,
                         NodeOrientation((PipeNode) previousNode).Inverse());
                 case CurveFunctions.CurveFunction.Catenary:
                     return (a, b, t) =>
-                        CurveFunctions.CatenaryLerp(a.transform.position, b.transform.position, t, catenaryLength);
+                        CurveFunctions.CatenaryLerp(a.Position, b.Position, t, catenaryLength);
                 case CurveFunctions.CurveFunction.RightAngleCubic:
-                    return (a, b, t) => CurveFunctions.BezierLerp(a.transform.position, b.transform.position, t);
+                    return (a, b, t) => CurveFunctions.BezierLerp(a.Position, b.Position, t);
                 case CurveFunctions.CurveFunction.TangentQuartic:
                     return (a, b, t) => PointWithQuartic((PipeNode) a, (PipeNode) b, t);
                 default:

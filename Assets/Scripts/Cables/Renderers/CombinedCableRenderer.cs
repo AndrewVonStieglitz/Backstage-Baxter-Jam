@@ -86,8 +86,6 @@ namespace Cables
             
             segmentMultiSegments.Add(segment, multiSegment);
 
-            Debug.Log("Added CableSegment to CableMultiSegment");
-
             if (segment.node is PipeNode)
             {
                 // TODO: Get all the segments following the added segment in the multisegment
@@ -127,8 +125,6 @@ namespace Cables
             lineRenderers.Add(newMultiSegment, lineRenderer);
 
             multiSegments.Insert(index, newMultiSegment);
-
-            Debug.Log("Created CableMultiSegment");
 
             return newMultiSegment;
         }
@@ -185,7 +181,7 @@ namespace Cables
                 points.AddRange(segment.points);
             }
             
-            points.Add(multiSegment.Segments.Last().node.transform.position);
+            points.Add(multiSegment.Segments.Last().node.Position);
 
             // TODO: ToList needs optimising, runs slow when lots of nodes.
             var points3D = SetZPositions(multiSegment, points).ToList();

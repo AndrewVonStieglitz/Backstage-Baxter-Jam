@@ -1,35 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6105280176744681691
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7596408147818375610}
-  m_Layer: 0
-  m_Name: Nodes
-  m_TagString: Cable
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7596408147818375610
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6105280176744681691}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8120014663964540500}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6616848933217270517
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,7 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8120014663964540500}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3741119792563954535
 MonoBehaviour:
@@ -306,7 +276,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 7596408147818375610}
   - {fileID: 6057763080080546153}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -324,8 +293,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cableID: 0
-  nodePrefab: {fileID: 495582835792472946, guid: daf39b3dbcc5f8a4a81b36d1ff6997db, type: 3}
-  nodeParent: {fileID: 7596408147818375610}
   initialised:
     m_PersistentCalls:
       m_Calls: []
@@ -346,7 +313,6 @@ MonoBehaviour:
   pluggableStart: {fileID: 0}
   pluggableEnd: {fileID: 0}
   cableWidth: 0.5
-  nodes: []
   instrument: {fileID: 0}
   pluggablesList: []
 --- !u!114 &8511436087669080055
@@ -413,7 +379,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
-  xYNodePrefab: {fileID: 7562796194507247040, guid: 70427f564d5555d43afd542fb2442ea7, type: 3}
 --- !u!114 &5125566223370737176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,7 +392,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
-  platformNodePrefab: {fileID: 8902940762114793058, guid: 815d0af8c879e144a99c4819177a7e19, type: 3}
   cableRaycastSize: 0.5
   platformLayerMask:
     serializedVersion: 2

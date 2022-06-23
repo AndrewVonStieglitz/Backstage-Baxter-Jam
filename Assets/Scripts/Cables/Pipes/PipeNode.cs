@@ -4,6 +4,11 @@ namespace Cables.Pipes
 {
     public class PipeNode : CableNode
     {
-        public Vector2 Normal { get; set; }
+        public Vector2 Normal { get; }
+
+        public PipeNode(Vector2 normal)
+        {
+            Normal = normal;
+        }
     }
 }
