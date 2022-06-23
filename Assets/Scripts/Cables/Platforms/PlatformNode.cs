@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Cables
+namespace Cables.Platforms
 {
-    public class ZNode : CableNode
+    public class PlatformNode : CableNode
     {
         public PolygonCollider2D PolyCollider { get; set; }
         public int VertexIndex { get; set; }

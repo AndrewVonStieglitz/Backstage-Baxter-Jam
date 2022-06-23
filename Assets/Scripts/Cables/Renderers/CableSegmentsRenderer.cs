@@ -30,6 +30,7 @@ namespace Cables
 
         protected override void UpdateLineRenderers()
         {
+            // TODO: We don't need to do this every frame if we're not lerping
             foreach (var segment in lineRenderers.Keys)
             {
                 UpdateLineRendererLerp(lineRenderers[segment], GetTargetPoints(segment));
@@ -73,12 +74,12 @@ namespace Cables
             
             points.Add(segment.node.transform.position);
 
+            // TODO: ToList needs optimising, runs slow when lots of nodes.
             var points3D = SetZPositions(segment, points).ToList();
             
             return points3D;
         }
 
-        // TODO: Needs to be tested. Need to get XYNodes working again first.
         private IEnumerable<Vector3> SetZPositions(CableSegment segment, List<Vector2> points)
         {
             var segmentIndex = Segments.IndexOf(segment);

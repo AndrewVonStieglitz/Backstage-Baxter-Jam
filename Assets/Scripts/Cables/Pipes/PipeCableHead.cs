@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Cables
+namespace Cables.Pipes
 {
-    public class XYCableHead : MonoBehaviour
+    public class PipeCableHead : MonoBehaviour
     {
         [SerializeField] private CableHead cableHead;
         
-        private CableXYNodeController xyNodeController;
+        private CablePipeNodeController pipeNodeController;
 
         private void OnEnable()
         {
@@ -20,7 +20,7 @@ namespace Cables
 
         private void OnCableChanged()
         {
-            xyNodeController = cableHead.Cable == null ? null : cableHead.Cable.GetComponent<CableXYNodeController>();
+            pipeNodeController = cableHead.Cable == null ? null : cableHead.Cable.GetComponent<CablePipeNodeController>();
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -58,7 +58,7 @@ namespace Cables
             // Draw collision normals
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
 
-            xyNodeController.PipeEnter(nodePosition, hit.normal);
+            pipeNodeController.PipeEnter(nodePosition, hit.normal);
         }
 
         private void OnTriggerExit2D(Collider2D col)
@@ -70,7 +70,7 @@ namespace Cables
 
             var hit = cableHead.TriggerCollision(-cableHead.velocity);
             
-            xyNodeController.PipeExit(hit.normal);
+            pipeNodeController.PipeExit(hit.normal);
         }
     }
 }

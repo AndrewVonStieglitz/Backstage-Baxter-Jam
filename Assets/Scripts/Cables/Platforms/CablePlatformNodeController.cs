@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Cables
+namespace Cables.Platforms
 {
-    public class CableZNodeController : MonoBehaviour
+    public class CablePlatformNodeController : MonoBehaviour
     {
         [SerializeField] private CableController cable;
         [SerializeField] private GameObject zNodePrefab;
@@ -52,9 +52,9 @@ namespace Cables
             
             var node = cable.CreateNodeAtIndex(zNodePrefab, nodePos, cable.nodes.Count - 1);
 
-            var zNode = node as ZNode;
+            var zNode = node as PlatformNode;
             
-            if (zNode == null) throw new Exception($"No {nameof(ZNode)} component on node prefab.");
+            if (zNode == null) throw new Exception($"No {nameof(PlatformNode)} component on node prefab.");
 
             zNode.PolyCollider = polyCollider;
             zNode.VertexIndex = closestVertexIndex;
@@ -117,7 +117,7 @@ namespace Cables
         {
             if (cable.nodes.Count < 3) return;
 
-            var node = cable.nodes[cable.nodes.Count - 2] as ZNode;
+            var node = cable.nodes[cable.nodes.Count - 2] as PlatformNode;
             
             if (node is null) return;
 

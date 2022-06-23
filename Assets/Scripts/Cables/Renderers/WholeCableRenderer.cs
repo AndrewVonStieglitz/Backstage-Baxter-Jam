@@ -44,6 +44,7 @@ namespace Cables
             return points;
         }
 
+        // TODO: Have tested and it doesn't work, for the same reason it always hasn't.
         // TODO: Needs to be tested. Need to get XYNodes working again first.
         // Sets Z positions according to a triangle wave.
         private IEnumerable<Vector3> SetZPositions(int segmentIndex, List<Vector2> points)

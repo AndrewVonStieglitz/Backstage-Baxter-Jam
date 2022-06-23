@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cables.Pipes;
+using Cables.Platforms;
 using UnityEngine;
 
 namespace Cables
 {
     public class CableSegment
     {
-        // TODO: Work out how these are going to be set, since the can't be serialised
+        // TODO: Work out how these are going to be set, since they can't be serialised
         public int pointsBetweenNodes;
         public CurveFunctions.CurveFunction startCurveFunctionID;
         public CurveFunctions.CurveFunction endCurveFunctionID;
@@ -15,7 +17,6 @@ namespace Cables
         public float catenaryLength;
         public bool hangUnsupportedCables;
     
-        // TODO: Change this to node and previous node
         public CableNode previousNode;
         public CableNode node;
 
@@ -27,7 +28,14 @@ namespace Cables
             
             if (SegmentIsSupported() || !hangUnsupportedCables)
             {
-                points.AddRange(PointsBetweenPositions(previousNode, node));
+                if (TestForSin())
+                {
+                    points.AddRange(PointsBetweenPositions(previousNode, node, CurveFunctions.CurveFunction.Sine, 20));
+                }
+                else
+                {
+                    points.AddRange(PointsBetweenPositions(previousNode, node));
+                }
             }
             else
             {
@@ -44,11 +52,23 @@ namespace Cables
                 points.AddRange(pointsBetweenPositions);
             }
         }
-    
+
+        private bool TestForSin()
+        {
+            var previousXYNode = previousNode as PipeNode;
+            var xyNode = node as PipeNode;
+            
+            if (previousXYNode is null || xyNode is null) return false;
+            // if (previousXYNode.Normal != xyNode.Normal * -1) return false;
+
+
+            return true;
+        }
+
         private bool SegmentIsSupported()
         {
-            var previousZNode = previousNode as ZNode;
-            var zNode = node as ZNode;
+            var previousZNode = previousNode as PlatformNode;
+            var zNode = node as PlatformNode;
             
             if (previousZNode is null || zNode is null) return false;
 
@@ -76,7 +96,7 @@ namespace Cables
         }
 
         // TODO: Move this to CurveFunctions
-        protected Vector2 PointWithQuartic(XYNode a, XYNode b, float t)
+        protected Vector2 PointWithQuartic(PipeNode a, PipeNode b, float t)
         {
             var aPos = (Vector2) a.transform.position;
             var dPos = (Vector2) b.transform.position;
@@ -114,14 +134,14 @@ namespace Cables
                     return (a, b, t) => Vector2.Lerp(a.transform.position, b.transform.position, t);
                 case CurveFunctions.CurveFunction.Sine:
                     return (a, b, t) => CurveFunctions.SinLerp(a.transform.position, b.transform.position, t,
-                        NodeOrientation((XYNode) previousNode));
+                        NodeOrientation((PipeNode) previousNode).Inverse());
                 case CurveFunctions.CurveFunction.Catenary:
                     return (a, b, t) =>
                         CurveFunctions.CatenaryLerp(a.transform.position, b.transform.position, t, catenaryLength);
                 case CurveFunctions.CurveFunction.RightAngleCubic:
                     return (a, b, t) => CurveFunctions.BezierLerp(a.transform.position, b.transform.position, t);
                 case CurveFunctions.CurveFunction.TangentQuartic:
-                    return (a, b, t) => PointWithQuartic((XYNode) a, (XYNode) b, t);
+                    return (a, b, t) => PointWithQuartic((PipeNode) a, (PipeNode) b, t);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(curveFunction), curveFunction, null);
             }
@@ -163,7 +183,7 @@ namespace Cables
             return points;
         }
 
-        protected static OrientationUtil.Orientation NodeOrientation(XYNode node)
+        protected static OrientationUtil.Orientation NodeOrientation(PipeNode node)
         {
             return OrientationUtil.VectorToOrientation(node.Normal);
         }

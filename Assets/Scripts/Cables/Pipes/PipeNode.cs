@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Cables
+namespace Cables.Pipes
 {
-    public class XYNode : CableNode
+    public class PipeNode : CableNode
     {
         public Vector2 Normal { get; set; }
     }

@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Cables
+namespace Cables.Pipes
 {
-    public class CableXYNodeController : MonoBehaviour
+    public class CablePipeNodeController : MonoBehaviour
     {
         [SerializeField] private CableController cable;
         [SerializeField] private GameObject xYNodePrefab;
@@ -16,11 +16,11 @@ namespace Cables
 
             if (!AwayFromPreviousNode(nodePos, normal)) return;
             
-            var node = cable.CreateNode(xYNodePrefab, nodePos);
+            var node = cable.CreateNodeAtIndex(xYNodePrefab, nodePos, cable.nodes.Count - 1);
 
-            var xyNode = node as XYNode;
+            var xyNode = node as PipeNode;
             
-            if (xyNode is null) throw new Exception($"No {nameof(XYNode)} component on node prefab.");
+            if (xyNode is null) throw new Exception($"No {nameof(PipeNode)} component on node prefab.");
             
             xyNode.Normal = normal;
         }

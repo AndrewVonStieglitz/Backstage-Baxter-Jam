@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3196984049292078140}
   - component: {fileID: 4690615933875131387}
   - component: {fileID: 1027681111473932894}
+  - component: {fileID: 5795314323903290841}
   m_Layer: 0
   m_Name: Renderer
   m_TagString: Cable
@@ -97,7 +98,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6616848933217270517}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -195,7 +196,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6616848933217270517}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71da785b0088406882a8bd97ed73930d, type: 3}
   m_Name: 
@@ -219,7 +220,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6616848933217270517}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 291f856e60004950882563ca66190ee3, type: 3}
   m_Name: 
@@ -249,6 +250,31 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!114 &5795314323903290841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616848933217270517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea34f38a92674b989a5e42e61407f610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cable: {fileID: 4879019852954964372}
+  cableSegmentsController: {fileID: 8511436087669080055}
+  lerpEnabled: 0
+  lerpSpeed: 0
+  initialised:
+    m_PersistentCalls:
+      m_Calls: []
+  pointsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  Points: []
+  lineRendererPrefab: {fileID: 2846456161708252220, guid: 2fabbd32043048e499a751ac665603eb, type: 3}
+  lineRendererParent: {fileID: 6057763080080546153}
 --- !u!1 &8120014663964540498
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,7 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
   zNodePrefab: {fileID: 8902940762114793058, guid: 815d0af8c879e144a99c4819177a7e19, type: 3}
-  cableRaycastSize: 0.8
+  cableRaycastSize: 0.5
   zAxisLayerMask:
     serializedVersion: 2
     m_Bits: 64
