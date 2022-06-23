@@ -6,9 +6,9 @@ namespace Cables.Platforms
     public class CablePlatformNodeController : MonoBehaviour
     {
         [SerializeField] private CableController cable;
-        [SerializeField] private GameObject zNodePrefab;
+        [SerializeField] private GameObject platformNodePrefab;
         [SerializeField] private float cableRaycastSize;
-        [SerializeField] private LayerMask zAxisLayerMask;
+        [SerializeField] private LayerMask platformLayerMask;
 
         private void OnEnable()
         {
@@ -22,13 +22,13 @@ namespace Cables.Platforms
 
         private void OnNodeMoved(CableNode cableNode)
         {
-            CheckForZAxisNodeToCreate();
+            CheckForPlatformNodeToCreate();
 
-            CheckForZAxisNodeToDestroy();
+            CheckForPlatformNodeToDestroy();
         }
 
         // TODO: Should take the cableNode that was modified. Currently only supports the last cableNode.
-        private void CheckForZAxisNodeToCreate()
+        private void CheckForPlatformNodeToCreate()
         {
             if (cable.nodes.Count < 2) return;
 
@@ -50,15 +50,15 @@ namespace Cables.Platforms
 
             var nodePos = closestVertex + normal.normalized * cable.cableWidth / 2;
             
-            var node = cable.CreateNodeAtIndex(zNodePrefab, nodePos, cable.nodes.Count - 1);
+            var node = cable.CreateNodeAtIndex(platformNodePrefab, nodePos, cable.nodes.Count - 1);
 
-            var zNode = node as PlatformNode;
+            var platformNode = node as PlatformNode;
             
-            if (zNode == null) throw new Exception($"No {nameof(PlatformNode)} component on node prefab.");
+            if (platformNode == null) throw new Exception($"No {nameof(PlatformNode)} component on node prefab.");
 
-            zNode.PolyCollider = polyCollider;
-            zNode.VertexIndex = closestVertexIndex;
-            zNode.ZAxisNormal = normal;
+            platformNode.PolyCollider = polyCollider;
+            platformNode.VertexIndex = closestVertexIndex;
+            platformNode.Normal = normal;
         }
 
         private static Vector2 VertexNormal(PolygonCollider2D polyCollider, int closestVertexIndex)
@@ -113,7 +113,7 @@ namespace Cables.Platforms
         }
         
         // TODO: Should take the cableNode that was modified. Currently only supports the last cableNode.
-        private void CheckForZAxisNodeToDestroy()
+        private void CheckForPlatformNodeToDestroy()
         {
             if (cable.nodes.Count < 3) return;
 
@@ -139,14 +139,14 @@ namespace Cables.Platforms
 
             var cableSideA = fromNodePos + perpendicular * cable.cableWidth / 2 * cableRaycastSize;
             
-            var cableSideAHit = Physics2D.Raycast(cableSideA, difference, difference.magnitude, zAxisLayerMask);
+            var cableSideAHit = Physics2D.Raycast(cableSideA, difference, difference.magnitude, platformLayerMask);
 
             if (cableSideAHit.collider != null)
                 return cableSideAHit;
             
             var cableSideB = fromNodePos + perpendicular * cable.cableWidth / -2 * cableRaycastSize;
 
-            return Physics2D.Raycast(cableSideB, difference, difference.magnitude, zAxisLayerMask);
+            return Physics2D.Raycast(cableSideB, difference, difference.magnitude, platformLayerMask);
         }
     }
 }

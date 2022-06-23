@@ -427,8 +427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cable: {fileID: 4879019852954964372}
-  zNodePrefab: {fileID: 8902940762114793058, guid: 815d0af8c879e144a99c4819177a7e19, type: 3}
+  platformNodePrefab: {fileID: 8902940762114793058, guid: 815d0af8c879e144a99c4819177a7e19, type: 3}
   cableRaycastSize: 0.5
-  zAxisLayerMask:
+  platformLayerMask:
     serializedVersion: 2
     m_Bits: 64

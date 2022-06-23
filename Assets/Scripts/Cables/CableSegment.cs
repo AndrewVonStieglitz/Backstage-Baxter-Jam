@@ -67,18 +67,18 @@ namespace Cables
 
         private bool SegmentIsSupported()
         {
-            var previousZNode = previousNode as PlatformNode;
-            var zNode = node as PlatformNode;
+            var previousPlatformNode = previousNode as PlatformNode;
+            var platformNode = node as PlatformNode;
             
-            if (previousZNode is null || zNode is null) return false;
+            if (previousPlatformNode is null || platformNode is null) return false;
 
-            if (previousZNode.PolyCollider == null || zNode.PolyCollider == null) return false;
+            if (previousPlatformNode.PolyCollider == null || platformNode.PolyCollider == null) return false;
         
-            if (previousZNode.PolyCollider != zNode.PolyCollider) return false;
+            if (previousPlatformNode.PolyCollider != platformNode.PolyCollider) return false;
         
-            if (!CyclicPointsAreAdjacent(previousZNode.VertexIndex, zNode.VertexIndex, previousZNode.PolyCollider.points.Length)) return false;
+            if (!CyclicPointsAreAdjacent(previousPlatformNode.VertexIndex, platformNode.VertexIndex, previousPlatformNode.PolyCollider.points.Length)) return false;
         
-            if (!VectorPointsUp(previousZNode.ZAxisNormal.normalized + zNode.ZAxisNormal.normalized)) return false;
+            if (!VectorPointsUp(previousPlatformNode.Normal.normalized + platformNode.Normal.normalized)) return false;
 
             return true;
         }

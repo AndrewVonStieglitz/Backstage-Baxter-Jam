@@ -6,6 +6,6 @@ namespace Cables.Platforms
     {
         public PolygonCollider2D PolyCollider { get; set; }
         public int VertexIndex { get; set; }
-        public Vector2 ZAxisNormal { get; set; }
+        public Vector2 Normal { get; set; }
     }
 }
