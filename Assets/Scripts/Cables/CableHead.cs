@@ -81,6 +81,8 @@ namespace Cables
 
         private void OnTriggerExit2D(Collider2D col)
         {
+            if (lastOverlappedTrigCollider == col)
+                lastOverlappedTrigCollider = null;
             // TODO: Duplicate code. See OnTriggerExit2D.
             if (cable == null) return;
             
