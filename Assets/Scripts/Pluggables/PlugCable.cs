@@ -18,6 +18,8 @@ public class PlugCable : MonoBehaviour
     [SerializeField] private PluggableType pluggableType;
     private readonly List<Cables.CableController> cables = new List<Cables.CableController>();
     protected Cables.CableController cableIn, cableOut;
+    [SerializeField] private Sprite defaultCableTexture;
+    private bool isInstrument;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -59,7 +61,11 @@ public class PlugCable : MonoBehaviour
                 if (hasCable)
                     EndCable();
                 else
+                {
+                    if (cableOut != null)
+                        cableOut.pluggableEnd.Unplug();
                     StartCable();
+                }
                 break;
             case PluggableType.Speaker:
                 if (hasCable)
@@ -68,10 +74,44 @@ public class PlugCable : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Unplug()
     {
-        
+        cableIn = null;
+        Refresh();
+        if (pluggableType != PluggableType.Instrument)
+        {
+            cableSprite = defaultCableTexture;
+            // apply this to the renderers
+            Cables.CableController studyCable = cableOut;
+            while (studyCable != null)
+            {
+                studyCable.transform.GetChild(1).GetComponent<LineRenderer>()
+                    .material.mainTexture = defaultCableTexture.texture;
+                studyCable = studyCable.pluggableEnd.cableOut;
+                //lineRenderer.material.mainTexture = cableSprite.texture;
+            }
+        }
+    }
+
+    public void Refresh()
+    {
+        if (cableIn != null)
+        {
+            cableIn.RecalculatePluggablesList();
+            cableSprite = cableIn.pluggableStart.cableSprite;
+            if (cableOut != null)
+            {
+                cableOut.transform.GetChild(1).GetComponent<LineRenderer>()
+                    .material.mainTexture = cableIn.pluggableStart.cableSprite.texture;
+            }
+            instrument = cableIn.pluggableStart.instrument;
+        }
+        if (cableOut != null)
+        {
+            cableOut.RecalculatePluggablesList();
+            if (cableOut.state == Cables.CableController.CableState.Completed)
+                cableOut.pluggableEnd.Refresh();
+        }
     }
 
     private void Awake()
@@ -91,8 +131,17 @@ public class PlugCable : MonoBehaviour
         boxCol = GetComponent<BoxCollider2D>();
     }
 
+    private void Start()
+    {
+        if (cableSprite == null)
+            cableSprite = defaultCableTexture;
+        isInstrument = instrument != null;
+    }
+
     private void StartCable()
     {
+        if (cableOut != null)
+            cableOut.pluggableEnd.Unplug();
         GameObject cableObject = Instantiate(cablePrefab, transform);
         Cables.CableController cable = cableObject.GetComponent<Cables.CableController>();
         if (cableOut)
@@ -106,6 +155,7 @@ public class PlugCable : MonoBehaviour
         cableHead.NewCable(cable);
 
         cable.Initialise(this);
+        Refresh();
         print("Starting cable on: " + name);
         // TODO: inform game coordinator that a cable is starting from here
     }
@@ -128,8 +178,16 @@ public class PlugCable : MonoBehaviour
         GameEvents.CableConnectPlug(cable, this);
         cable.pluggableEnd = this;
         cableSprite = cableStart.cableSprite;
+        Refresh();
         print("Connected cable from: " + cableStart.name + ",\t to: " + name);
         // TODO: inform game coordinator that a cable has finished here, if speaker play song. 
+    }
+
+    public PlugCable GetPrevPlugCable()
+    {
+        if (cableIn != null)
+            return cableIn.pluggableStart;
+        return null;
     }
 
     public InstrumentSO GetPathsInstrument() {
@@ -137,4 +195,6 @@ public class PlugCable : MonoBehaviour
             return instrument;
         return cableIn != null ? cableIn.instrument : null;
     }
+
+    public bool IsInstrument() { return isInstrument; } // if someone can make this into actually good code please DM Johnny C
 }

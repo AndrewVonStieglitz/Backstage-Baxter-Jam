@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -79,9 +80,15 @@ namespace Cables
             CheckCableCollision(col);
         }
 
+        private void OnTriggerExit2D(Collider2D col)
+        {
+            if (lastOverlappedTrigCollider == col)
+                lastOverlappedTrigCollider = null;
+        }
+
         private void CheckCableCollision(Collider2D col)
         {
-            if (Cable == null) return;
+            if (cable == null) return;
             
             if (!col.CompareTag("Cable")) return;
 

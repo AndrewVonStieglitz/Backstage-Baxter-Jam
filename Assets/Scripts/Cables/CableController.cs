@@ -74,6 +74,32 @@ namespace Cables
             initialised.Invoke();
         }
 
+        public void RecalculatePluggablesList()
+        {
+            PlugCable studyPlug = pluggableStart;
+            List<PluggablesSO> newPList = new List<PluggablesSO>();
+            InstrumentSO newInstrument = null;
+            //newPList.Add(pluggableStart.pluggable);
+            int it = 0;
+            while (studyPlug != null)
+            {
+                if (studyPlug.IsInstrument())
+                {
+                    newInstrument = studyPlug.instrument;
+                    break;
+                }
+                newPList.Add(studyPlug.pluggable);
+                studyPlug = studyPlug.GetPrevPlugCable();
+            }
+            newPList.Reverse();
+            if (pluggableEnd != null)
+                newPList.Add(pluggableEnd.pluggable);
+            instrument = newInstrument;
+            pluggablesList = newPList;
+            print("Refreshing: " + name + " to instrument: " + (newInstrument != null ? instrument.itemName : "NULL") 
+                + ",\tpluggables list contains: " + newPList.Count);
+        }
+
         // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.
         private void OnCableDisconnect(CableController cable, SpeakerController speaker)
         {
