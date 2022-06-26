@@ -49,7 +49,7 @@ public class PlugCable : MonoBehaviour
     public void Interact()
     {
         //moved functionality from on trigger enter 2D
-        bool hasCable = cableHead.cable != null;
+        bool hasCable = cableHead.Cable != null;
 
         switch (pluggableType)
         {
@@ -162,7 +162,7 @@ public class PlugCable : MonoBehaviour
 
     private void EndCable()
     {
-        Cables.CableController cable = cableHead.cable;
+        Cables.CableController cable = cableHead.Cable;
         PlugCable cableStart = cable.pluggableStart;
         if (cableStart == this) return;
         cable.nodes.Last().MoveNode(transform.position);

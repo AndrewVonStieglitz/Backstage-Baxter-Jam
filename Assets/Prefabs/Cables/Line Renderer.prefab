@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2846456161708252218}
   - component: {fileID: 2846456161708252221}
   m_Layer: 0
-  m_Name: CableSegment
+  m_Name: Line Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

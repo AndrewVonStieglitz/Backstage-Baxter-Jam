@@ -1,21 +1,33 @@
-﻿using System.Linq;
-using System.Collections;
+﻿using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cables
 {
     public class CableHead : MonoBehaviour
     {
-        public CableController cable;
+        public CableController Cable
+        {
+            get => cable;
+            private set
+            {
+                cable = value;
+                cableChanged.Invoke();
+            }
+        }
 
         private Vector3 lastPosition;
         public Vector3 velocity;
         private BoxCollider2D boxCollider2D;
         private Collider2D lastOverlappedTrigCollider;
-        
+
+        public UnityEvent cableChanged = new UnityEvent();
+        private CableController cable;
+
         public void NewCable(CableController cable)
         {
-            this.cable = cable;
+            Cable = cable;
 
             boxCollider2D = GetComponent<BoxCollider2D>();
             boxCollider2D.size = new Vector2(cable.cableWidth, cable.cableWidth);
@@ -25,15 +37,15 @@ namespace Cables
 
         private void OnCableCompleted()
         {
-            cable.cableCompleted.RemoveListener(OnCableCompleted);
+            Cable.cableCompleted.RemoveListener(OnCableCompleted);
 
-            cable = null;
+            Cable = null;
         }
 
         public void DropCable()
         {
-            if (cable)
-                Destroy(cable.gameObject);
+            if (Cable)
+                Destroy(Cable.gameObject);
         }
 
         public bool TryInteract()
@@ -63,37 +75,32 @@ namespace Cables
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            // TODO: Duplicate code. See OnTriggerExit2D.
             lastOverlappedTrigCollider = col;
-            if (cable == null) return;
             
-            if (!col.CompareTag("Pipe")) return;
-
-            var hit = TriggerCollision(velocity);
-
-            Vector2 nodePosition = hit.point + hit.normal * cable.cableWidth / 2;
-            
-            // Draw collision normals
-            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
-            
-            cable.PipeEnter(nodePosition, hit.normal);
+            CheckCableCollision(col);
         }
 
         private void OnTriggerExit2D(Collider2D col)
         {
             if (lastOverlappedTrigCollider == col)
                 lastOverlappedTrigCollider = null;
-            // TODO: Duplicate code. See OnTriggerExit2D.
-            if (cable == null) return;
-            
-            if (!col.CompareTag("Pipe")) return;
-
-            var hit = TriggerCollision(-velocity);
-            
-            cable.PipeExit(hit.normal);
         }
 
-        private RaycastHit2D TriggerCollision(Vector2 castDirection)
+        private void CheckCableCollision(Collider2D col)
+        {
+            if (cable == null) return;
+            
+            if (!col.CompareTag("Cable")) return;
+
+            var hit = TriggerCollision(velocity);
+
+            // Debug.Log("Player Cable Collision");
+            // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+
+            GameEvents.PlayerCableCollision(hit.point, hit.normal);
+        }
+
+        public RaycastHit2D TriggerCollision(Vector2 castDirection)
         {
             var hits = new RaycastHit2D[1];
             
@@ -104,12 +111,12 @@ namespace Cables
 
         private void FixedUpdate()
         {
-            if (cable == null || cable.state != CableController.CableState.InProgress) return;
+            if (Cable == null || Cable.state != CableController.CableState.InProgress) return;
 
             velocity = (transform.position - lastPosition) / Time.deltaTime;
             lastPosition = transform.position;
 
-            cable.nodes.Last().MoveNode(transform.position);
+            Cable.nodes.Last().MoveNode(transform.position);
         }
     }
 }
