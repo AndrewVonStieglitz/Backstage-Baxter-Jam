@@ -19,6 +19,12 @@ public class PlugCable : MonoBehaviour
     private readonly List<Cables.CableController> cables = new List<Cables.CableController>();
     protected Cables.CableController cableIn, cableOut;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip[] audioConnectOn;
+    [SerializeField] private AudioClip[] audioDisconnectOn;
+    [SerializeField] private AudioClip[] audioConnectOff;
+    [SerializeField] private AudioClip[] audioDisconnectOff;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // comment out to replace into Interact()
@@ -89,6 +95,8 @@ public class PlugCable : MonoBehaviour
         }
         
         boxCol = GetComponent<BoxCollider2D>();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void StartCable()
@@ -99,6 +107,9 @@ public class PlugCable : MonoBehaviour
         {
             print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableOut, this);
+
+            // Additional conditions are required to determine whether the target is on or off
+            playRandomSound(audioConnectOff);
         }
         cableOut = cable;
         cables.Add(cable);
@@ -123,6 +134,8 @@ public class PlugCable : MonoBehaviour
         {
             print(name + " (EndCable()) disconnecting cable to: " + cableIn.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableIn, this);
+
+            playRandomSound(audioConnectOn);
         }
         cableIn = cable;
         GameEvents.CableConnectPlug(cable, this);
@@ -136,5 +149,15 @@ public class PlugCable : MonoBehaviour
         if (instrument != null)
             return instrument;
         return cableIn != null ? cableIn.instrument : null;
+    }
+
+    private void playRandomSound(AudioClip[] array) {
+        // get a random AudioClip from the given array
+        int num = UnityEngine.Random.Range(0, array.Length-1);
+        AudioClip ac = array[num];
+
+        // play the sound
+        audioSource.clip = ac;
+        audioSource.Play();
     }
 }
