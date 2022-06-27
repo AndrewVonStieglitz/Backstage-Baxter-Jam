@@ -9,6 +9,7 @@ TagManager:
   - Pluggable
   - Instrument
   - Platform
+  - HUD
   layers:
   - Default
   - TransparentFX
