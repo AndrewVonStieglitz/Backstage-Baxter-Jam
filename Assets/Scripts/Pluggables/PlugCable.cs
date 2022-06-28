@@ -95,7 +95,8 @@ public class PlugCable : MonoBehaviour
         }
         
         boxCol = GetComponent<BoxCollider2D>();
-
+        if (cableHead == null)
+            cableHead = GameObject.Find("Baxter").transform.GetChild(0).GetComponent<Cables.CableHead>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -109,12 +110,13 @@ public class PlugCable : MonoBehaviour
             GameEvents.CableDisconnectPlug(cableOut, this);
 
             // Additional conditions are required to determine whether the target is on or off
-            playRandomSound(audioConnectOff);
+            cableOut.pluggableEnd.PlayRandomSound(audioDisconnectOff);
         }
         cableOut = cable;
         cables.Add(cable);
 
         cableHead.NewCable(cable);
+        PlayRandomSound(audioConnectOn);
 
         cable.Initialise(this);
         print("Starting cable on: " + name);
@@ -130,12 +132,13 @@ public class PlugCable : MonoBehaviour
         cable.pluggablesList.Add(pluggable);
         cable.Complete();
         cable.pluggableEnd = this;
+        PlayRandomSound(audioConnectOff);
         if (cableIn)
         {
             print(name + " (EndCable()) disconnecting cable to: " + cableIn.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableIn, this);
 
-            playRandomSound(audioConnectOn);
+            cableIn.pluggableStart.PlayRandomSound(audioDisconnectOn);
         }
         cableIn = cable;
         GameEvents.CableConnectPlug(cable, this);
@@ -151,13 +154,15 @@ public class PlugCable : MonoBehaviour
         return cableIn != null ? cableIn.instrument : null;
     }
 
-    private void playRandomSound(AudioClip[] array) {
+    public void PlayRandomSound(AudioClip[] array) {
         // get a random AudioClip from the given array
         int num = UnityEngine.Random.Range(0, array.Length-1);
         AudioClip ac = array[num];
-
+        print("Object: " + name + " playing random clip:" + ac.name);
         // play the sound
         audioSource.clip = ac;
         audioSource.Play();
     }
+
+    public void PlayRandomDisconnectSound() { PlayRandomSound(audioDisconnectOn); }
 }
