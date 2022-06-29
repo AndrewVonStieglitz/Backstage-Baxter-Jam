@@ -1,3 +1,4 @@
+// DEPRICATED
 using System.Linq;
 using UnityEngine;
 
@@ -48,7 +49,8 @@ namespace Cables
 
             if (cable == null) return;
 
-            amp = cable.amp;
+            // DEPRICATED
+            //amp = cable.amp;
             
             cable.nodes.Last().MoveNode(transform.position);
 

@@ -51,6 +51,7 @@ namespace Cables
         public bool TryInteract()
         {
             //print(lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>());
+            //print("cable head TryInteract, with "+lastOverlappedTrigCollider.name);
             if (lastOverlappedTrigCollider != null)
             {
                 if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {

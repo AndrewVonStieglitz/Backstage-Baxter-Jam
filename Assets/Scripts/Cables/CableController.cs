@@ -19,7 +19,7 @@ namespace Cables
         public UnityEvent<CableNode> nodeMoved = new UnityEvent<CableNode>();
 
         public CableState state;
-        public AmpController amp;
+        //public AmpController amp;
         public PlugCable pluggableStart;
         public PlugCable pluggableEnd;
         public float cableWidth;
@@ -41,12 +41,12 @@ namespace Cables
             GameEvents.onCableDisconnectPlug -= OnCableDisconnectPlug;
         }
 
-        public void Initialise(AmpController amp)
-        {
-            this.amp = amp;
+        //public void Initialise(AmpController amp)
+        //{
+        //    this.amp = amp;
             
-            Initialise(amp.transform);
-        }
+        //    Initialise(amp.transform);
+        //}
 
         public void Initialise(PlugCable startObj)
         {
@@ -78,9 +78,9 @@ namespace Cables
         {
             PlugCable studyPlug = pluggableStart;
             List<PluggablesSO> newPList = new List<PluggablesSO>();
+            //List<PlugCable> seenPlugCables = new List<PlugCable>(); // to prevent loops
             InstrumentSO newInstrument = null;
             //newPList.Add(pluggableStart.pluggable);
-            int it = 0;
             while (studyPlug != null)
             {
                 if (studyPlug.IsInstrument())
@@ -90,6 +90,9 @@ namespace Cables
                 }
                 newPList.Add(studyPlug.pluggable);
                 studyPlug = studyPlug.GetPrevPlugCable();
+                //if (seenPlugCables.Contains(studyPlug))
+                //    return false;
+                //seenPlugCables.Add(studyPlug);
             }
             newPList.Reverse();
             if (pluggableEnd != null)
@@ -98,6 +101,12 @@ namespace Cables
             pluggablesList = newPList;
             print("Refreshing: " + name + " to instrument: " + (newInstrument != null ? instrument.itemName : "NULL") 
                 + ",\tpluggables list contains: " + newPList.Count);
+            //return true;
+        }
+
+        public void SetTexture(Texture texture)
+        {
+            GetComponentInChildren<LineRenderer>().material.mainTexture = texture;
         }
 
         // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.

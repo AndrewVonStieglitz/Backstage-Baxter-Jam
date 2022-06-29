@@ -50,6 +50,7 @@ public class PlugCable : MonoBehaviour
     {
         //moved functionality from on trigger enter 2D
         bool hasCable = cableHead.Cable != null;
+        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);
 
         switch (pluggableType)
         {
@@ -85,33 +86,41 @@ public class PlugCable : MonoBehaviour
             Cables.CableController studyCable = cableOut;
             while (studyCable != null)
             {
-                studyCable.transform.GetChild(1).GetComponent<LineRenderer>()
-                    .material.mainTexture = defaultCableTexture.texture;
+                //studyCable.transform.GetChild(1).GetComponent<LineRenderer>().material.mainTexture = defaultCableTexture.texture;
+                studyCable.SetTexture(defaultCableTexture.texture);
                 studyCable = studyCable.pluggableEnd.cableOut;
                 //lineRenderer.material.mainTexture = cableSprite.texture;
             }
         }
     }
 
-    public void Refresh()
+    public bool Refresh()
     {
         if (cableIn != null)
         {
-            cableIn.RecalculatePluggablesList();
+            // This bool is false if the recalculation encounters a loop, the most terrible thing. 
+            // if it does, pass that on to know not to allow the connection. 
+            cableIn.RecalculatePluggablesList();//bool recalcOK = 
+            //if (!recalcOK)
+            //    return false;
             cableSprite = cableIn.pluggableStart.cableSprite;
             if (cableOut != null)
             {
-                cableOut.transform.GetChild(1).GetComponent<LineRenderer>()
-                    .material.mainTexture = cableIn.pluggableStart.cableSprite.texture;
+                cableOut.SetTexture(cableIn.pluggableStart.cableSprite.texture);
+                //cableOut.transform.GetChild(1).GetComponent<LineRenderer>().material.mainTexture = cableIn.pluggableStart.cableSprite.texture;
             }
             instrument = cableIn.pluggableStart.instrument;
         }
         if (cableOut != null)
         {
-            cableOut.RecalculatePluggablesList();
+            cableOut.RecalculatePluggablesList();//bool recalcOK = 
+            //if (!recalcOK) return false;
             if (cableOut.state == Cables.CableController.CableState.Completed)
-                cableOut.pluggableEnd.Refresh();
+            {
+                cableOut.pluggableEnd.Refresh();//recalcokOKOK
+            }
         }
+        return true;
     }
 
     private void Awake()
@@ -136,6 +145,8 @@ public class PlugCable : MonoBehaviour
         if (cableSprite == null)
             cableSprite = defaultCableTexture;
         isInstrument = instrument != null;
+        if (cableHead == null)
+            cableHead = GameObject.Find("Baxter").GetComponentInChildren<Cables.CableHead>();
     }
 
     private void StartCable()
@@ -165,6 +176,13 @@ public class PlugCable : MonoBehaviour
         Cables.CableController cable = cableHead.Cable;
         PlugCable cableStart = cable.pluggableStart;
         if (cableStart == this) return;
+        //bool refreshOK = Refresh();
+        //if (!refreshOK) return;
+        if (ContainsLoops(cable))
+        {
+            // play a truly grusome sound effect
+            return;
+        }
         cable.nodes.Last().MoveNode(transform.position);
         cable.pluggablesList.Add(pluggable);
         cable.Complete();
@@ -188,6 +206,23 @@ public class PlugCable : MonoBehaviour
         if (cableIn != null)
             return cableIn.pluggableStart;
         return null;
+    }
+
+    private bool ContainsLoops(Cables.CableController cable)
+    {
+        //print("Checking for loops on: " + name);
+        List<PlugCable> seenPlugCables = new List<PlugCable>();
+        seenPlugCables.Add(this);
+        PlugCable studyCable = cable.pluggableStart;
+        while (studyCable != null)
+        {
+            if (seenPlugCables.Contains(studyCable))
+                return true;
+            seenPlugCables.Add(studyCable);
+            studyCable = studyCable.GetPrevPlugCable();
+        }
+        //print("Found no loops");
+        return false;
     }
 
     public InstrumentSO GetPathsInstrument() {

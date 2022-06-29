@@ -75,9 +75,7 @@ namespace Cables
 
         protected virtual void OnInitialised()
         {
-            if (cable.amp) 
-                cableSprite = cable.amp.cableSprite;
-            else if (cable.pluggableStart)
+            if (cable.pluggableStart)
                 cableSprite = cable.pluggableStart.cableSprite;
             
             initialised.Invoke();

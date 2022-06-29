@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6278875621673640300}
   - component: {fileID: 6278875621673640301}
   - component: {fileID: 5329417229349185476}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cable Head
   m_TagString: CableHead
   m_Icon: {fileID: 0}
@@ -45,8 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a2dd49795143759376a202f38cee91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cable: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
+  cableChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &6278875621673640301
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -85,5 +87,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ccd3b7c2b2cec468e766f9ddb25a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xyNodeController: {fileID: 0}
   cableHead: {fileID: 6278875621673640300}
