@@ -10,5 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1979977bf77fd1241b8dbb94afd6796a, type: 3}
-  m_Name: TestAlbum
+  m_Name: Album
   m_EditorClassIdentifier: 
+  songDataList:
+  - {fileID: 11400000, guid: 30f8b5c7fa244664080ef4f069cca245, type: 2}

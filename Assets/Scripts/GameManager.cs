@@ -17,7 +17,13 @@ public class GameManager : MonoBehaviour
 
     static public GameState currentGameState { get; set; }
 
-    static public float happiness { get; set; }
+    static public int numOfRecipesCompleted { get; set; }
+
+    [SerializeField] private float startingHappiness;
+    public float StartingHappiness { get => startingHappiness; }
+    static public float happinessRate { get; set; } = -1f;
+    static private float m_happiness;
+    static public float happiness { get => m_happiness; set { m_happiness = Mathf.Clamp(value, 0, 100); }}
 
     IDictionary<InstrumentSO, recipe> recipeDictionary;
     IDictionary<CableController, InstrumentSO> connectionsDictionary;
@@ -43,6 +49,29 @@ public class GameManager : MonoBehaviour
             {
                 //When song duration is up, call time up. Timer counts up instead of down to act as timer for song
                 GameEvents.TimeUp();
+                return;
+            }
+
+            //Interpolate happiness rate of change depending on current happiness
+            float t = 1 - happiness / 100;
+            float interpolatedHappinessRate;
+            if (happinessRate < 0) 
+            {
+                interpolatedHappinessRate = Mathf.Lerp(happinessRate, 0, t);
+                Debug.Log(happinessRate);
+                Debug.Log(interpolatedHappinessRate);
+            }
+            else 
+            {
+                interpolatedHappinessRate = Mathf.Lerp(.2f, happinessRate, t);
+            }
+
+            happiness += interpolatedHappinessRate * Time.deltaTime;
+            if (happiness <= 0)
+            {
+                //When happiness reaches 0, we lose
+                GameEvents.GameOver();
+                return;
             }
         }
     }
@@ -52,6 +81,8 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = GameState.intermission;
         timer = intermissionTime;
+        happiness = startingHappiness;
+        numOfRecipesCompleted = 0;
         GameEvents.StartAlbum();
         Debug.Log("Game Started");
     }
@@ -143,6 +174,46 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //When we complete a recipe
+    private void OnRecipeCompleted(recipe recipe)
+    {
+        numOfRecipesCompleted++;
+
+        happinessRate = EvaluateHappinessRate(numOfRecipesCompleted);
+    }
+
+    //When we break a recipe
+    private void OnRecipeBroken(recipe recipe)
+    {
+        numOfRecipesCompleted--;
+
+        happinessRate = EvaluateHappinessRate(numOfRecipesCompleted);
+    }
+
+    private int EvaluateHappinessRate(int recipesCompleted)
+    {
+        switch (recipesCompleted)
+        {
+            case 5:
+                return 10;
+            case 4:
+                return 6;
+            case 3:
+                return 3;
+            case 2:
+                return 1;
+            case 1:
+                return 0;
+            case 0:
+                return -1;
+            case -1:
+                Debug.LogError("We have completed a negative number of recipes, that shouldn't have happened!");
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
     private void EndGame()
     {
         GameEvents.GameOver();
@@ -158,6 +229,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onStartSong += OnStartSong;
         GameEvents.onCableConnectPlug += OnCableConnected;
         GameEvents.onCableDisconnectPlug += OnCableConnected;
+        GameEvents.onRecipeCompleted += OnRecipeCompleted;
+        GameEvents.onRecipeBroken += OnRecipeBroken;
     }
 
     private void OnDisable()

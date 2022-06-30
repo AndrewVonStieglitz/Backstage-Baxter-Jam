@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21cf7a7be86ee7c4ab0b5043e1089dcc, type: 3}
-  m_Name: TestSong
+  m_Name: Song
   m_EditorClassIdentifier: 
-  duration: 0
+  duration: 30
   recipeDataList: []

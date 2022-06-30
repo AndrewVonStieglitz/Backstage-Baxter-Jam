@@ -10,10 +10,6 @@ public class GameUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(GameManager.currentGameState);
-        if (GameManager.currentGameState == GameManager.GameState.playing)
-        {
-            timerText.text = Mathf.Ceil(GameManager.timer).ToString();
-        }
+        timerText.text = GameManager.currentGameState + ": " + Mathf.Ceil(GameManager.timer).ToString() + ", " + "happiness: " + GameManager.happiness.ToString();
     }
 }
