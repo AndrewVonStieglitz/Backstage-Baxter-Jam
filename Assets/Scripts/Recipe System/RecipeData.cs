@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "RecipeSystemScriptableObjects/New Recipe")]
 public class RecipeData : ScriptableObject
 {
     public recipe Recipe

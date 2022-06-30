@@ -108,7 +108,7 @@ MonoBehaviour:
   quadraticThreshold: 0.2
   linearDrag: 0.1
   quadDrag: 1.4
-  maxHoldPickup: 0
+  maxHoldPickup: 0.85
   debugIsGrouned: 0
 --- !u!58 &598958075835846355
 CircleCollider2D:

@@ -1503,10 +1503,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Baxter
       objectReference: {fileID: 0}
-    - target: {fileID: 598958075835846354, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
-      propertyPath: maxHoldPickup
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 598958075835846356, guid: 85184282efd076643a64c8f5f26122ae, type: 3}
       propertyPath: m_RootOrder
       value: 5
