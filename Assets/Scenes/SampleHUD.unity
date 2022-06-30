@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 108063961}
+  - component: {fileID: 108063964}
   - component: {fileID: 108063963}
   - component: {fileID: 108063962}
   m_Layer: 0
@@ -168,7 +169,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 108063960}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: ec3292e002d8dc94c88bb58e7aaf86b3, type: 2}
   m_CullingMode: 0
@@ -230,6 +231,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &108063964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108063960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de3b8169dd7e09041a14f5b5d34711b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state0Sprites:
+  - {fileID: -4743542844861159320, guid: 2a39344d70319d048b250eeea0baf2cf, type: 3}
+  - {fileID: -7390626998653604746, guid: 2a39344d70319d048b250eeea0baf2cf, type: 3}
+  - {fileID: 7357297945772728672, guid: 2a39344d70319d048b250eeea0baf2cf, type: 3}
+  state1Sprites:
+  - {fileID: -5217366879266927951, guid: 95edc1e376e5bb842b2ba623131c82d9, type: 3}
+  - {fileID: -9083257946834701149, guid: 95edc1e376e5bb842b2ba623131c82d9, type: 3}
+  - {fileID: -5948402721048381317, guid: 95edc1e376e5bb842b2ba623131c82d9, type: 3}
+  state2Sprites:
+  - {fileID: -3463450654951366616, guid: 7f99fd6190619a947a1a5a379833c2ea, type: 3}
+  - {fileID: 4912955509107570170, guid: 7f99fd6190619a947a1a5a379833c2ea, type: 3}
+  - {fileID: 2554131744381736283, guid: 7f99fd6190619a947a1a5a379833c2ea, type: 3}
+  state3Sprites:
+  - {fileID: 3485775888591089916, guid: d46622b5cd0a8f04a8742469336e463b, type: 3}
+  - {fileID: 1635061953485233984, guid: d46622b5cd0a8f04a8742469336e463b, type: 3}
+  - {fileID: 4937882973315178986, guid: d46622b5cd0a8f04a8742469336e463b, type: 3}
+  state4Sprites:
+  - {fileID: -6399333609449926661, guid: 160c9bdec9e3fe14c8ab90fc96f96b21, type: 3}
+  - {fileID: 2668976969582558309, guid: 160c9bdec9e3fe14c8ab90fc96f96b21, type: 3}
+  - {fileID: 4646250840146203235, guid: 160c9bdec9e3fe14c8ab90fc96f96b21, type: 3}
+  frameRate: 24
+  trackTitle: Face Melter
+  trackLength: 10
 --- !u!1001 &358526581
 PrefabInstance:
   m_ObjectHideFlags: 0
