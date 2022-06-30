@@ -10,6 +10,7 @@ TagManager:
   - Instrument
   - Platform
   - Cable
+  - HUD
   layers:
   - Default
   - TransparentFX
