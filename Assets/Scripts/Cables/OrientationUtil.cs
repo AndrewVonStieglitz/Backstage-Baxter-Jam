@@ -29,7 +29,7 @@ namespace Cables
 
         public static Orientation VectorToOrientation(Vector2 vector)
         {
-            return vector.x > vector.y ? Orientation.Horizontal : Orientation.Vertical;
+            return Mathf.Abs(vector.x) > Mathf.Abs(vector.y) ? Orientation.Horizontal : Orientation.Vertical;
         }
 
         public static Orientation Inverse(this Orientation orientation)

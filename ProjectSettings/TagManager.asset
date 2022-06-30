@@ -9,6 +9,7 @@ TagManager:
   - Pluggable
   - Instrument
   - Platform
+  - Cable
   - HUD
   layers:
   - Default
@@ -19,7 +20,7 @@ TagManager:
   - UI
   - Platform
   - PlugCable
-  - 
+  - CableHead
   - 
   - 
   - 

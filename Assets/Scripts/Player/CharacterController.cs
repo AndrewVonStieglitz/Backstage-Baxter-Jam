@@ -123,7 +123,7 @@ public class CharacterController : MonoBehaviour
 
     public void PickupPressDown(InputAction.CallbackContext context)
     {
-        print("Baxter pickup/release key down");
+        //print("Baxter pickup/release key down");
         pickupHeldTime = Time.time;
         pickupBeingHeld = true;
         StartCoroutine(countdownPickupHold());
@@ -132,7 +132,7 @@ public class CharacterController : MonoBehaviour
     public void PickupPressUp(InputAction.CallbackContext context)
     {
         pickupHeldTime = Time.time - pickupHeldTime;
-        print("Baxter pickup/release key up. Held for: " + pickupHeldTime);
+        //print("Baxter pickup/release key up. Held for: " + pickupHeldTime);
         if (pickupBeingHeld)
         {
             pickupBeingHeld = false;
