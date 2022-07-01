@@ -64,6 +64,8 @@ namespace Cables
             }
             
             Initialise(pluggableStart.transform);
+            print("trying change sorting layer");
+            GetComponentInChildren<LineRenderer>().sortingLayerName = "Cable";
         }
 
         private void Initialise(Transform transform)

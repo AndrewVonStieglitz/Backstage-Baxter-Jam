@@ -12,6 +12,7 @@ public class PluggableMB : MonoBehaviour
 
     [SerializeField] private GameObject cablePrefab;
     [SerializeField] private Cables.CableHead cableHead;
+    public CableColor itemColor;
 
     public void Init()
     {
@@ -19,9 +20,12 @@ public class PluggableMB : MonoBehaviour
         //print(name + " initialising");
         if (identifierSO != null)
         {
-            spriteRenderer.sprite = identifierSO.sprite;
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = identifierSO.coloredSprites[(int)itemColor];
+            boxCol = GetComponent<BoxCollider2D>();
             boxCol.size = identifierSO.colliderDimensions;
             boxCol.offset = identifierSO.colliderOffset;
+            boxCol.isTrigger = true;
         }
         else
             print("ERROR: " + name + " pluggable scriptable object is missing");
@@ -29,14 +33,14 @@ public class PluggableMB : MonoBehaviour
 
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        boxCol = GetComponent<BoxCollider2D>();
-        boxCol.isTrigger = true;
+        //spriteRenderer = GetComponent<SpriteRenderer>();
+        //boxCol = GetComponent<BoxCollider2D>();
+        //boxCol.isTrigger = true;
     }
 
     private void Start()
     {
-        Init(); // would love this to be somewhere else
+        //Init(); // would love this to be somewhere else
     }
 
     // Update is called once per frame
