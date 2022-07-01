@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9152d9b7c51536f45be064c081eb28ee, type: 3}
+  m_Name: BigAmp
+  m_EditorClassIdentifier: 
+  itemName: BigAmplifier
+  coloredSprites:
+  - {fileID: 21300000, guid: b44c1cb7c0dd42a46a50f10ccfa62b35, type: 3}
+  - {fileID: 21300000, guid: bd0439b652c151c4ab8247f6e9c3cb9e, type: 3}
+  - {fileID: 21300000, guid: 9c691351ac8e1574f82a3604ab32f950, type: 3}
+  - {fileID: 21300000, guid: be000dce4032a3a429eaa37f31c00e8a, type: 3}
+  colliderDimensions: {x: 1.4, y: 1.21}
+  colliderOffset: {x: -0.02, y: -0.21}
+  type: 0

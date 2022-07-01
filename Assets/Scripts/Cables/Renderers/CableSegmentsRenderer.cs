@@ -53,7 +53,8 @@ namespace Cables
         {
             var lineRendererObject = Instantiate(cableSegmentPrefab, cableSegmentParent);
             var lineRenderer = lineRendererObject.GetComponent<LineRenderer>();
-            
+
+            lineRenderer.sortingLayerName = "Cable";
             InitialiseLineRenderer(lineRenderer);
             
             lineRenderers.Add(segment, lineRenderer);

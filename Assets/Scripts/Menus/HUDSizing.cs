@@ -7,8 +7,7 @@ public class HUDSizing : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = Camera.current.rect.size;
-        Debug.Log("hI");
+        //transform.position = Camera.current.rect.size;
     }
 
     // Update is called once per frame
