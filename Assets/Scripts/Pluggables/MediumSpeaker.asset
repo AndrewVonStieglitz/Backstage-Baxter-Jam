@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46826efab92af544ab3c68993d58b8ae, type: 3}
   m_Name: MediumSpeaker
   m_EditorClassIdentifier: 
-  itemName: 
-  coloredSprites: []
-  colliderDimensions: {x: 0, y: 0}
-  colliderOffset: {x: 0, y: 0}
-  volume: 0
+  itemName: Medium Speaker
+  coloredSprites:
+  - {fileID: 21300000, guid: 20216475e8457f049960af1a48784307, type: 3}
+  - {fileID: 21300000, guid: 4943a8909c80f844c840374222caab26, type: 3}
+  - {fileID: 21300000, guid: 6fe666163bdc4514a84a060f4d23c3e9, type: 3}
+  - {fileID: 21300000, guid: 77b7444aa5c4282488b0639096a5e798, type: 3}
+  colliderDimensions: {x: 1.64, y: 1.9}
+  colliderOffset: {x: -0.09, y: -0.08}
+  volume: 1
