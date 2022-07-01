@@ -160,6 +160,12 @@ public static class GameEvents
         }
     }
 
+    public static Action<Vector2, Vector2> onPlayerCableCollision;
+    public static void PlayerCableCollision(Vector2 position, Vector2 normal)
+    {
+        onPlayerCableCollision?.Invoke(position, normal);
+    }
+
     public static Action onNextSong;
     public static void NextSong()
     {

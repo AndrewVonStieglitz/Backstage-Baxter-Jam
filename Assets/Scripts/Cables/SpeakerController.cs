@@ -1,3 +1,4 @@
+// DEPRICATED
 using System.Linq;
 using UnityEngine;
 
@@ -44,11 +45,12 @@ namespace Cables
 
             if (cableHead == null) return;
 
-            var cable = cableHead.cable;
+            var cable = cableHead.Cable;
 
             if (cable == null) return;
 
-            amp = cable.amp;
+            // DEPRICATED
+            //amp = cable.amp;
             
             cable.nodes.Last().MoveNode(transform.position);
 

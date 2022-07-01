@@ -1,3 +1,4 @@
+// DEPRICATED
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace Cables
         {
             if (!col.CompareTag("CableHead")) return;
 
-            if (cableHead.cable != null) return;
+            if (cableHead.Cable != null) return;
 
             var cableObject = Instantiate(cablePrefab, transform);
             var cable = cableObject.GetComponent<CableController>();
@@ -38,9 +39,10 @@ namespace Cables
             
             cableHead.NewCable(cable);
 
-            cable.Initialise(this);
+            // DEPRICATED
+            //cable.Initialise(this);
         }
-        
+
         // TODO: This should be listening for the cable getting destroyed, not disconnected.
         private void OnCableDisconnect(CableController cable, SpeakerController speaker)
         {

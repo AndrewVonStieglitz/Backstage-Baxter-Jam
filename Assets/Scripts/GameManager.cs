@@ -9,15 +9,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float intermissionTime;
     public float IntermissionTime { get => intermissionTime; }
 
-    public song currentSong { get => currentSong; private set { currentSong = value; } }
+    public song currentSong { get; set; }
 
-    static public float timer { get => timer; private set { timer = value; } }
+    static public float timer { get; set; }
 
     public enum GameState { menu, intermission, playing }
 
-    static public GameState currentGameState { get => currentGameState; private set { currentGameState = value; } }
+    static public GameState currentGameState { get; set; }
 
-    static public float happiness { get => happiness; private set { happiness = Mathf.Clamp(value, 0, 100); } }
+    static public float happiness { get; set; }
 
     IDictionary<InstrumentSO, recipe> recipeDictionary;
     IDictionary<CableController, InstrumentSO> connectionsDictionary;

@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: LoudSpeaker
   m_EditorClassIdentifier: 
   itemName: Loud Speaker
-  sprite: {fileID: 21300000, guid: f94773d507306694d9c6dac806cabad7, type: 3}
+  coloredSprites:
+  - {fileID: 21300000, guid: 06f4d2eb7e9fbf14492fc03247bd24b2, type: 3}
+  - {fileID: 21300000, guid: 76fa8d58fcae4784b8cc508ca13d8635, type: 3}
+  - {fileID: 21300000, guid: fc5f7a29a9b879440b9aa80e6f1b4dd7, type: 3}
+  - {fileID: 21300000, guid: 2b81865005c6040428b30dde47a6d0ed, type: 3}
   colliderDimensions: {x: 2, y: 2}
-  colliderOffset: {x: 0, y: -0.58}
+  colliderOffset: {x: 0, y: -0.28}
   volume: 0

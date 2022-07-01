@@ -1,3 +1,4 @@
+// DEPRICATED
 using System.Collections.Generic;
 using Cables;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class MusicController : MonoBehaviour
     {
         StartTimer();
         GameEvents.onGameStart += StartTimer;
-        GameEvents.onCableConnect += PlayMusic;
+        //GameEvents.onCableConnect += PlayMusic; // DEPRICATED
         GameEvents.onStartSong += ResetTimer;
         //GameEvents.onCableDisconnect += StopMusic;
     }
@@ -23,7 +24,7 @@ public class MusicController : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.onGameStart -= StartTimer;
-        GameEvents.onCableConnect -= PlayMusic;
+        //GameEvents.onCableConnect -= PlayMusic; // DEPRICATED
         GameEvents.onStartSong -= ResetTimer;
         //GameEvents.onCableDisconnect -= StopMusic;
     }
@@ -34,18 +35,27 @@ public class MusicController : MonoBehaviour
             timer += Time.deltaTime;
     }
 
-    private void PlayMusic(CableController cable, SpeakerController speaker)
-    {
-        var ampID = cable.amp.AmpID;
+    // DEPRICATED
+    //private void PlayMusic(CableController cable, SpeakerController speaker)
+    //{
+    //    var ampID = cable.amp.AmpID;
         
-        if (ampID <= musicList.Count && ampID >= 0)
-        {
-            speaker.PlayMusic(musicList[ampID], ampID, timer);
-        }
-        else
-        {
-            Debug.Log("ID is invalid. Song may not be added to MusicController's musicList");
-        }
+    //    if (ampID <= musicList.Count && ampID >= 0)
+    //    {
+    //        speaker.PlayMusic(musicList[ampID], ampID, timer);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("ID is invalid. Song may not be added to MusicController's musicList");
+    //    }
+    //}
+
+    private void PlayMusic(CableController cable, PlugCable speaker)
+    {
+        // If we are still going to use this class, which I am unsure about, 
+        // here we would find the instrument associated with the PlugCable, and begin
+        // playing it's track. 
+        // The game manager and instruments are more likely to handle this instead. 
     }
 
     private void StopMusic(CableController cable, SpeakerController speaker)
