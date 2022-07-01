@@ -18,8 +18,10 @@ public class PlugCable : MonoBehaviour
     [SerializeField] private PluggableType pluggableType;
     private readonly List<Cables.CableController> cables = new List<Cables.CableController>();
     protected Cables.CableController cableIn, cableOut;
-    [SerializeField] private Sprite defaultCableTexture;
+    //[SerializeField] private Sprite defaultCableTexture;
     private bool isInstrument;
+    [SerializeField] private CableColor itemColor;
+    [SerializeField] private Sprite[] cableColorSprites;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -81,13 +83,13 @@ public class PlugCable : MonoBehaviour
         Refresh();
         if (pluggableType != PluggableType.Instrument)
         {
-            cableSprite = defaultCableTexture;
+            cableSprite = cableColorSprites[0];
             // apply this to the renderers
             Cables.CableController studyCable = cableOut;
             while (studyCable != null)
             {
                 //studyCable.transform.GetChild(1).GetComponent<LineRenderer>().material.mainTexture = defaultCableTexture.texture;
-                studyCable.SetTexture(defaultCableTexture.texture);
+                studyCable.SetTexture(cableColorSprites[0].texture);
                 studyCable = studyCable.pluggableEnd.cableOut;
                 //lineRenderer.material.mainTexture = cableSprite.texture;
             }
@@ -130,11 +132,15 @@ public class PlugCable : MonoBehaviour
         {
             IMB = GetComponent<InstrumentMB>();
             instrument = IMB.GetIdentifierSO();
+            itemColor = IMB.cableColor;
+            cableSprite = cableColorSprites[(int)itemColor];
         }
         else
         {
             PMB = GetComponent<PluggableMB>();
+            PMB.itemColor = itemColor;
             pluggable = PMB.GetIdentifierSO();
+            PMB.Init();
         }
         
         boxCol = GetComponent<BoxCollider2D>();
@@ -143,7 +149,7 @@ public class PlugCable : MonoBehaviour
     private void Start()
     {
         if (cableSprite == null)
-            cableSprite = defaultCableTexture;
+            cableSprite = cableColorSprites[0];
         isInstrument = instrument != null;
         if (cableHead == null)
             cableHead = GameObject.Find("Baxter").GetComponentInChildren<Cables.CableHead>();

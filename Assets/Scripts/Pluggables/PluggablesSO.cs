@@ -6,7 +6,8 @@ public class PluggablesSO : ScriptableObject
 {
     //[SerializeField] protected
     public string itemName;
-    public Sprite sprite;
+    //public Sprite sprite;
+    public Sprite[] coloredSprites;
     public Vector2 colliderDimensions;
     public Vector2 colliderOffset;
 

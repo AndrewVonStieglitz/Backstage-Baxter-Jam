@@ -20,3 +20,12 @@ public enum PluggableType
     Mid,        // wire out and in (amp & mid-affector)
     Speaker     // only wire in
 }
+
+public enum CableColor
+{
+    Grey,
+    Red,
+    Green, 
+    Blue, 
+    Purple
+}
