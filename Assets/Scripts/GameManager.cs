@@ -76,6 +76,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        recipeDictionary = new Dictionary<InstrumentSO, recipe>();
+    }
+
     //Called when game scene is loaded. Initialize level
     private void OnGameStart()
     {
@@ -134,6 +139,7 @@ public class GameManager : MonoBehaviour
     private void OnCableConnected(CableController cable, PlugCable plug)
     {
         InstrumentSO instrument = cable.instrument;
+        print("Recipe dictionary null: " + (recipeDictionary == null));
         if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
         {
             //If matching recipe found with correct instrument
