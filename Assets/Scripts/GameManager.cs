@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     static public GameState currentGameState { get; set; }
 
-    static public int numOfRecipesCompleted { get; set; }
-
     [SerializeField] private float startingHappiness;
     public float StartingHappiness { get => startingHappiness; }
     static public float happinessRate { get; set; } = -1f;
@@ -27,6 +25,8 @@ public class GameManager : MonoBehaviour
 
     IDictionary<InstrumentSO, recipe> recipeDictionary;
     IDictionary<CableController, InstrumentSO> connectionsDictionary;
+
+    List<recipe> completedRecipes = new List<recipe>();
 
     // Update is called once per frame
     void Update()
@@ -58,8 +58,6 @@ public class GameManager : MonoBehaviour
             if (happinessRate < 0) 
             {
                 interpolatedHappinessRate = Mathf.Lerp(happinessRate, 0, t);
-                Debug.Log(happinessRate);
-                Debug.Log(interpolatedHappinessRate);
             }
             else 
             {
@@ -76,8 +74,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
+        Debug.Log("HIII WHAT CAME FIRST?");
         recipeDictionary = new Dictionary<InstrumentSO, recipe>();
     }
 
@@ -87,7 +86,6 @@ public class GameManager : MonoBehaviour
         currentGameState = GameState.intermission;
         timer = intermissionTime;
         happiness = startingHappiness;
-        numOfRecipesCompleted = 0;
         GameEvents.StartAlbum();
         Debug.Log("Game Started");
     }
@@ -139,26 +137,30 @@ public class GameManager : MonoBehaviour
     private void OnCableConnected(CableController cable, PlugCable plug)
     {
         InstrumentSO instrument = cable.instrument;
-        print("Recipe dictionary null: " + (recipeDictionary == null));
         if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
         {
             //If matching recipe found with correct instrument
             int totalPluggables = recipe.midAffectors.Length + 2;
             if (cable.pluggablesList.Count == totalPluggables)
             {//First checks if size of list matches
+                Debug.Log("Got here 1");
                 if (cable.pluggablesList[0] == recipe.amp && cable.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
                 {
+                    Debug.Log("Got here 2");
                     List<PluggablesSO> pluggables = new List<PluggablesSO>(cable.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
                     foreach(MidAffectorSuper midAffector in recipe.midAffectors)
                     {
+                        Debug.Log("Got here 3");
                         if (!pluggables.Contains(midAffector))
                         {
+                            Debug.Log("Got here 4");
                             GameEvents.RecipeBroken(recipe); //If does not contain, it must be a broken recipe
                             return;
                         }
                         else
                         {
                             //removes item if it does contain so it can't represent duplicates
+                            Debug.Log("Got here 5");
                             pluggables.Remove(midAffector);
                         }
                     }
@@ -183,17 +185,16 @@ public class GameManager : MonoBehaviour
     //When we complete a recipe
     private void OnRecipeCompleted(recipe recipe)
     {
-        numOfRecipesCompleted++;
-
-        happinessRate = EvaluateHappinessRate(numOfRecipesCompleted);
+        completedRecipes.Add(recipe);
+        happinessRate = EvaluateHappinessRate(completedRecipes.Count);
     }
 
     //When we break a recipe
     private void OnRecipeBroken(recipe recipe)
     {
-        numOfRecipesCompleted--;
-
-        happinessRate = EvaluateHappinessRate(numOfRecipesCompleted);
+        if (completedRecipes.Exists(x => x.instrument == recipe.instrument)) {
+            happinessRate = EvaluateHappinessRate(completedRecipes.Count);
+        }
     }
 
     private int EvaluateHappinessRate(int recipesCompleted)
