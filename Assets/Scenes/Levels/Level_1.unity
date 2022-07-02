@@ -481,6 +481,10 @@ PrefabInstance:
       propertyPath: cableHead
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8684224621905177040, guid: 34b735925934e114082eedb80d8c3685, type: 3}
+      propertyPath: itemColor
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34b735925934e114082eedb80d8c3685, type: 3}
 --- !u!1001 &346670558
@@ -646,6 +650,10 @@ PrefabInstance:
     - target: {fileID: 8684224621905177040, guid: 34b735925934e114082eedb80d8c3685, type: 3}
       propertyPath: cableHead
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684224621905177040, guid: 34b735925934e114082eedb80d8c3685, type: 3}
+      propertyPath: itemColor
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8684224621905177040, guid: 34b735925934e114082eedb80d8c3685, type: 3}
       propertyPath: pluggableType

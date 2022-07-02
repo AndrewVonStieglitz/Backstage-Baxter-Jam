@@ -52,7 +52,7 @@ public class PlugCable : MonoBehaviour
     {
         //moved functionality from on trigger enter 2D
         bool hasCable = cableHead.Cable != null;
-        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);
+        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
 
         switch (pluggableType)
         {
@@ -171,7 +171,7 @@ public class PlugCable : MonoBehaviour
 
         cableHead.NewCable(cable);
 
-        cable.Initialise(this);
+        cable.Initialise(this, itemColor);
         Refresh();
         print("Starting cable on: " + name);
         // TODO: inform game coordinator that a cable is starting from here
@@ -182,6 +182,12 @@ public class PlugCable : MonoBehaviour
         Cables.CableController cable = cableHead.Cable;
         PlugCable cableStart = cable.pluggableStart;
         if (cableStart == this) return;
+        if (cable.cableColor != itemColor)
+        {
+            // TODO Play a wrong SFX
+            print("Wrong colour cannot endcable");
+            return;
+        }
         //bool refreshOK = Refresh();
         //if (!refreshOK) return;
         if (ContainsLoops(cable))
