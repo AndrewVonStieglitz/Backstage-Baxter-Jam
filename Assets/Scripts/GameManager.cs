@@ -18,8 +18,9 @@ public class GameManager : MonoBehaviour
     static public GameState currentGameState { get; set; }
 
     [SerializeField] private float startingHappiness;
-    public float StartingHappiness { get => startingHappiness; }
-    static public float happinessRate { get; set; } = -1f;
+    [SerializeField] private float minHappinessRate;
+    [SerializeField] private float maxHappinessRate;
+    static public float happinessRate { get; set; }
     static private float m_happiness;
     static public float happiness { get => m_happiness; set { m_happiness = Mathf.Clamp(value, 0, 100); }}
 
@@ -86,6 +87,7 @@ public class GameManager : MonoBehaviour
         currentGameState = GameState.intermission;
         timer = intermissionTime;
         happiness = startingHappiness;
+        happinessRate = minHappinessRate;
         GameEvents.StartAlbum();
         Debug.Log("Game Started");
     }
@@ -136,6 +138,7 @@ public class GameManager : MonoBehaviour
 
     private void OnCableConnected(CableController cable, PlugCable plug)
     {
+        Debug.Log("Cable got connected");
         InstrumentSO instrument = cable.instrument;
         if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
         {
@@ -186,39 +189,47 @@ public class GameManager : MonoBehaviour
     private void OnRecipeCompleted(recipe recipe)
     {
         completedRecipes.Add(recipe);
-        happinessRate = EvaluateHappinessRate(completedRecipes.Count);
+        happinessRate = EvaluateHappinessRate();
     }
 
     //When we break a recipe
     private void OnRecipeBroken(recipe recipe)
     {
         if (completedRecipes.Exists(x => x.instrument == recipe.instrument)) {
-            happinessRate = EvaluateHappinessRate(completedRecipes.Count);
+            happinessRate = EvaluateHappinessRate();
         }
     }
 
-    private int EvaluateHappinessRate(int recipesCompleted)
+    private float EvaluateHappinessRate()
     {
-        switch (recipesCompleted)
-        {
-            case 5:
-                return 10;
-            case 4:
-                return 6;
-            case 3:
-                return 3;
-            case 2:
-                return 1;
-            case 1:
-                return 0;
-            case 0:
-                return -1;
-            case -1:
-                Debug.LogError("We have completed a negative number of recipes, that shouldn't have happened!");
-                return 0;
-            default:
-                return 0;
-        }
+
+        float difference = maxHappinessRate - minHappinessRate;
+        float multiplier = completedRecipes.Count / recipeDictionary.Count;
+        float increment = difference * multiplier;
+        float finalRate = minHappinessRate + increment;
+        Debug.Log(finalRate);
+        return finalRate;
+
+        // switch (recipesCompleted)
+        // {
+        //     case 5:
+        //         return 10;
+        //     case 4:
+        //         return 6;
+        //     case 3:
+        //         return 3;
+        //     case 2:
+        //         return 1;
+        //     case 1:
+        //         return 0;
+        //     case 0:
+        //         return -1;
+        //     case -1:
+        //         Debug.LogError("We have completed a negative number of recipes, that shouldn't have happened!");
+        //         return 0;
+        //     default:
+        //         return 0;
+        // }
     }
 
     private void EndGame()
