@@ -9,6 +9,7 @@ public class SongData : ScriptableObject
 {
     [SerializeField] float duration;
     [SerializeField] RecipeData[] recipeDataList;
+    public AudioClip drumTrack;
     recipe[] componentRecipes;
 
     public song Song
@@ -16,7 +17,7 @@ public class SongData : ScriptableObject
         get
         {
             GenerateRecipes();
-            return new song(duration, componentRecipes);
+            return new song(duration, componentRecipes, drumTrack);
         }
     }
 

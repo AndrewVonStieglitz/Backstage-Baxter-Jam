@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1a84ba2cd551a4b9621fc9728e410e, type: 3}
+  m_Name: RecDemoKeyboard
+  m_EditorClassIdentifier: 
+  instrument: {fileID: 11400000, guid: 645a02cb2d70d684682790d23b9d52f2, type: 2}
+  amp: {fileID: 0}
+  speaker: {fileID: 11400000, guid: 548ed8df63a791243912bcac780ee125, type: 2}
+  midAffectors: []
+  musicPart: {fileID: 8300000, guid: 0cc9b9d4e55062141810990f4ef82565, type: 3}

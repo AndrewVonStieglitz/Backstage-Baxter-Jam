@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1a84ba2cd551a4b9621fc9728e410e, type: 3}
+  m_Name: RecDemoGuitar
+  m_EditorClassIdentifier: 
+  instrument: {fileID: 11400000, guid: 3c7041472411f85478ff340c19a15e11, type: 2}
+  amp: {fileID: 0}
+  speaker: {fileID: 11400000, guid: 1bf43ad69fffa0f4d8ebab9be337affa, type: 2}
+  midAffectors: []
+  musicPart: {fileID: 8300000, guid: 156f696f718caeb48abd17ab173ea7d4, type: 3}

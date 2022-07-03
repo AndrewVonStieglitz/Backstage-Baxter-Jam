@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
 
     List<recipe> completedRecipes = new List<recipe>();
 
+    private AudioSource dummyDrumAS;
+
     // Update is called once per frame
     void Update()
     {
@@ -108,6 +110,11 @@ public class GameManager : MonoBehaviour
     private void OnStartSong()
     {
         currentGameState = GameState.playing;
+        if (dummyDrumAS != null)
+        {
+            dummyDrumAS.clip = currentSong.drumTrack;
+            dummyDrumAS.Play();
+        }
         timer = 0;
     }
 
@@ -124,6 +131,8 @@ public class GameManager : MonoBehaviour
         //Queue up next song and start intermission timer.
         GameEvents.NextSong();
         GameEvents.EndSong();
+        if (dummyDrumAS != null)
+            dummyDrumAS.Stop();
         timer = IntermissionTime;
         currentGameState = GameState.intermission;
     }
@@ -265,5 +274,15 @@ public class GameManager : MonoBehaviour
         GameEvents.onCableDisconnectPlug -= OnCableConnected;
     }
 
-
+    private void Start()
+    {
+        try
+        {
+            dummyDrumAS = transform.GetChild(0).GetComponent<AudioSource>();
+        }
+        catch
+        {
+            print("GM Could not locate dummy drummer player");
+        }
+    }
 }
