@@ -168,6 +168,7 @@ public class GameManager : MonoBehaviour
                         }
                     }
                     //If it hasn't been stopped, recipe must be complete.
+                    print("GM Calling recipe complete");
                     GameEvents.RecipeCompleted(recipe);
                     return;
                 }
@@ -188,6 +189,7 @@ public class GameManager : MonoBehaviour
     //When we complete a recipe
     private void OnRecipeCompleted(recipe recipe)
     {
+        print("GM OnRecipeCompleted function internal");
         completedRecipes.Add(recipe);
         happinessRate = EvaluateHappinessRate();
     }

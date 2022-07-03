@@ -26,6 +26,7 @@ public class InstrumentMB : MonoBehaviour
 
     public void StartPlaying(float startPoint)// Event system call this
     {
+        print("IMB: " + name + " StartPlaying called");
         audioSource.clip = songParts;
         audioSource.time = startPoint;
         audioSource.Play();
@@ -69,7 +70,8 @@ public class InstrumentMB : MonoBehaviour
 
     private void OnRecipeCompleted(recipe recipe) //Uses GameManager timer to get time. If recipe's instrument = this, start playing
     {
-        if (recipe.instrument == this)
+        //print("IBM: " + name + ", called recipe complete via event system");
+        if (recipe.instrument == identifierSO)
         {
             StartPlaying(GameManager.timer);
         }
