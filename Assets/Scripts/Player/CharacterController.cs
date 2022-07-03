@@ -43,9 +43,16 @@ public class CharacterController : MonoBehaviour
     //private PlayerInput baxterInput;
     private IEnumerator pauseControlsRoutine;
 
+    //the collider
+    CircleCollider2D circleCollider;
+    Vector2 defaultCollisionOffset;
+
     // Start is called before the first frame update
     private void Awake()
     {
+        circleCollider = GetComponent<CircleCollider2D>();
+        defaultCollisionOffset = circleCollider.offset;
+
         baxterRigidBody = GetComponent<Rigidbody2D>();
         baxterSpriteRenderer = GetComponent<SpriteRenderer>();
         baxterCollider = GetComponent<CircleCollider2D>();
@@ -178,10 +185,12 @@ public class CharacterController : MonoBehaviour
         if (playerControls.Baxter.Move.ReadValue<float>() > 0)
         {
             baxterSpriteRenderer.flipX = false;
+            circleCollider.offset = defaultCollisionOffset;
         }
         else if (playerControls.Baxter.Move.ReadValue<float>() < 0)
         {
             baxterSpriteRenderer.flipX = true;
+            circleCollider.offset = new Vector2(defaultCollisionOffset.x * -1, defaultCollisionOffset.y);
         }
     }
 
@@ -254,7 +263,7 @@ public class CharacterController : MonoBehaviour
     public void SetFryState()
     {
         animator.SetTrigger("Frying");
-        if (pauseControlsRoutine != null)//if the coroutine is currently running stop it
+        if (pauseControlsRoutine != null)//if the coroutine is currently running stop it to avoid multiple running at once
             StopCoroutine(pauseControlsRoutine);
         pauseControlsRoutine = TempDisablePlayerControls(0.71f);
         StartCoroutine(pauseControlsRoutine);
@@ -268,11 +277,13 @@ public class CharacterController : MonoBehaviour
     {
         baxterRigidBody.velocity = Vector2.zero;
         baxterRigidBody.angularVelocity = 0;
+        baxterRigidBody.isKinematic = true;
         moveAxis = 0;
         animator.SetFloat("xVelo", 0);
         playerControls.Baxter.Disable();
         //Debug.Log("Stop input from running" + playerControls.Baxter.enabled);
         yield return new WaitForSeconds(waitTime);
+        baxterRigidBody.isKinematic = false;
         playerControls.Baxter.Enable();
         //Debug.Log("Re-enable input from running" + playerControls.Baxter.enabled);
 
