@@ -23,6 +23,13 @@ public class PlugCable : MonoBehaviour
     [SerializeField] private CableColor itemColor;
     [SerializeField] private Sprite[] cableColorSprites;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip[] audioConnectOn;
+    [SerializeField] private AudioClip[] audioDisconnectOn;
+    [SerializeField] private AudioClip[] audioConnectOff;
+    [SerializeField] private AudioClip[] audioDisconnectOff;
+    [SerializeField] private AudioClip[] audioElecFailure;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // comment out to replace into Interact()
@@ -52,7 +59,7 @@ public class PlugCable : MonoBehaviour
     {
         //moved functionality from on trigger enter 2D
         bool hasCable = cableHead.Cable != null;
-        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);
+        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
 
         switch (pluggableType)
         {
@@ -144,6 +151,9 @@ public class PlugCable : MonoBehaviour
         }
         
         boxCol = GetComponent<BoxCollider2D>();
+        if (cableHead == null)
+            cableHead = GameObject.Find("Baxter").transform.GetChild(0).GetComponent<Cables.CableHead>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -165,13 +175,17 @@ public class PlugCable : MonoBehaviour
         {
             print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableOut, this);
+
+            // Additional conditions are required to determine whether the target is on or off
+            cableOut.pluggableEnd.PlayRandomSound(audioDisconnectOff);
         }
         cableOut = cable;
         cables.Add(cable);
 
         cableHead.NewCable(cable);
+        PlayRandomSound(audioConnectOn);
 
-        cable.Initialise(this);
+        cable.Initialise(this, itemColor);
         Refresh();
         print("Starting cable on: " + name);
         // TODO: inform game coordinator that a cable is starting from here
@@ -182,6 +196,12 @@ public class PlugCable : MonoBehaviour
         Cables.CableController cable = cableHead.Cable;
         PlugCable cableStart = cable.pluggableStart;
         if (cableStart == this) return;
+        if (cable.cableColor != itemColor)
+        {
+            PlayRandomSound(audioElecFailure);
+            print("Wrong colour cannot endcable");
+            return;
+        }
         //bool refreshOK = Refresh();
         //if (!refreshOK) return;
         if (ContainsLoops(cable))
@@ -193,10 +213,13 @@ public class PlugCable : MonoBehaviour
         cable.pluggablesList.Add(pluggable);
         cable.Complete();
         cable.pluggableEnd = this;
+        PlayRandomSound(audioConnectOff);
         if (cableIn)
         {
             print(name + " (EndCable()) disconnecting cable to: " + cableIn.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableIn, this);
+
+            cableIn.pluggableStart.PlayRandomSound(audioDisconnectOn);
         }
         cableIn = cable;
         GameEvents.CableConnectPlug(cable, this);
@@ -236,6 +259,18 @@ public class PlugCable : MonoBehaviour
             return instrument;
         return cableIn != null ? cableIn.instrument : null;
     }
+
+    public void PlayRandomSound(AudioClip[] array) {
+        // get a random AudioClip from the given array
+        int num = UnityEngine.Random.Range(0, array.Length-1);
+        AudioClip ac = array[num];
+        print("Object: " + name + " playing random clip:" + ac.name);
+        // play the sound
+        audioSource.clip = ac;
+        audioSource.Play();
+    }
+
+    public void PlayRandomDisconnectSound() { PlayRandomSound(audioDisconnectOn); }
 
     public bool IsInstrument() { return isInstrument; } // if someone can make this into actually good code please DM Johnny C
 }

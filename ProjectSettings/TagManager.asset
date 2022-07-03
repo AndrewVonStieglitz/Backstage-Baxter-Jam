@@ -48,3 +48,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3216167045
+    locked: 0
+  - name: Platform
+    uniqueID: 3923148927
+    locked: 0
+  - name: Cable
+    uniqueID: 2096653139
+    locked: 0
+  - name: Pluggable
+    uniqueID: 1038486979
+    locked: 0
+  - name: Baxter
+    uniqueID: 95913767
+    locked: 0
+  - name: UI
+    uniqueID: 3234193547
+    locked: 0

@@ -27,6 +27,7 @@ namespace Cables
 
         public InstrumentSO instrument;
         public List<PluggablesSO> pluggablesList;
+        public CableColor cableColor;
         
 
         private void OnEnable()
@@ -48,9 +49,10 @@ namespace Cables
         //    Initialise(amp.transform);
         //}
 
-        public void Initialise(PlugCable startObj)
+        public void Initialise(PlugCable startObj, CableColor color)
         {
             pluggableStart = startObj;
+            cableColor = color;
             
             if (startObj.tag == "Instrument")
             {
@@ -64,6 +66,8 @@ namespace Cables
             }
             
             Initialise(pluggableStart.transform);
+            print("trying change sorting layer");
+            GetComponentInChildren<LineRenderer>().sortingLayerName = "Cable";
         }
 
         private void Initialise(Transform transform)
