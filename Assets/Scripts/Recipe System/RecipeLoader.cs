@@ -42,11 +42,13 @@ public class RecipeLoader : MonoBehaviour
 
 public struct song
 {
+    public string songName;
     public float duration;
     public recipe[] componentRecipes;
 
-    public song(float durationSO, recipe[] componentRecipesSO)
+    public song(string songNameSO, float durationSO, recipe[] componentRecipesSO)
     {
+        songName = songNameSO;
         duration = durationSO;
         componentRecipes = componentRecipesSO;
     }

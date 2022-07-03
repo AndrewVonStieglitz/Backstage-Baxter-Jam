@@ -20,7 +20,7 @@ public class HUDCassette : MonoBehaviour
     private SpriteRenderer sr;
 
     // we can set these in inspector for debug
-    public string trackTitle;
+    //public string trackTitle;
     public float trackLength;
 
     void Start()
@@ -34,7 +34,15 @@ public class HUDCassette : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         StartCoroutine(Animate());
         // for debug
-        StartCoroutine(StartCountingDown());
+        //StartCoroutine(StartCountingDown());
+
+
+
+    }
+
+    void Update()
+    {
+
     }
 
     private IEnumerator Animate()
@@ -43,6 +51,7 @@ public class HUDCassette : MonoBehaviour
         {
             frame = (frame + 1) % NumOfFrames;
             sr.sprite = sprites[state, frame];
+
             yield return new WaitForSeconds(frameDuration);
         }
     }
@@ -57,12 +66,38 @@ public class HUDCassette : MonoBehaviour
         }
     }
 
-    public void NewSong(string newTitle, float newLength)
+    // public void NewSong(string newTitle, float newLength)
+    // {
+    //     state = 0;
+    //     trackTitle = newTitle;
+    //     trackLength = newLength;
+    //     StopCoroutine(StartCountingDown());
+    //     StartCoroutine(StartCountingDown());
+    // }
+
+    private void OnReadySong(song song)
     {
         state = 0;
-        trackTitle = newTitle;
-        trackLength = newLength;
+        //trackTitle = song.songName;
+        trackLength = song.duration;
+    }
+
+    private void OnStartSong()
+    {
         StopCoroutine(StartCountingDown());
         StartCoroutine(StartCountingDown());
+    }
+
+
+    private void OnEnable()
+    {
+        GameEvents.onReadySong += OnReadySong;
+        GameEvents.onStartSong += OnStartSong;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.onReadySong -= OnReadySong;
+        GameEvents.onStartSong -= OnStartSong;
     }
 }

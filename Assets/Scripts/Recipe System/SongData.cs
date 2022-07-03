@@ -7,6 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "RecipeSystemScriptableObjects/New Song")]
 public class SongData : ScriptableObject
 {
+    [SerializeField] string songName;
     [SerializeField] float duration;
     [SerializeField] RecipeData[] recipeDataList;
     recipe[] componentRecipes;
@@ -16,7 +17,7 @@ public class SongData : ScriptableObject
         get
         {
             GenerateRecipes();
-            return new song(duration, componentRecipes);
+            return new song(songName, duration, componentRecipes);
         }
     }
 

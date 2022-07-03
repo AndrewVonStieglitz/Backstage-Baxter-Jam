@@ -51,12 +51,14 @@ public class HUDHappinessDisplay : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         //animator = GetComponent<Animator>();
         StartCoroutine(Animate());
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+      
     }
 
     private IEnumerator Animate()
@@ -72,7 +74,7 @@ public class HUDHappinessDisplay : MonoBehaviour
     public void SetHappiness(float happiness)
     {
         // assuming happiness [0,100]
-        state = Mathf.RoundToInt(happiness / 100f);
+        state = Mathf.RoundToInt(happiness / 100f * 11f);
     }
 
     //public void SetState(int newState)
