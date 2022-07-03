@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21cf7a7be86ee7c4ab0b5043e1089dcc, type: 3}
   m_Name: Song
   m_EditorClassIdentifier: 
+  songName: Testing Song
   duration: 60
   recipeDataList:
   - {fileID: 11400000, guid: 5df18ea2a1fb6884483904f5aea14d71, type: 2}

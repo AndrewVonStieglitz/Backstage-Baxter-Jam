@@ -5,6 +5,10 @@ using Cables;
 
 public class GameManager : MonoBehaviour
 {
+
+    [SerializeField] private HUDHappinessDisplay happinessHUD;
+    [SerializeField] private TMPro.TextMeshProUGUI cassetteText;
+
     //How long the intermission between songs lasts for
     [SerializeField] private float intermissionTime;
     public float IntermissionTime { get => intermissionTime; }
@@ -55,6 +59,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
+
             //Interpolate happiness rate of change depending on current happiness
             float t = 1 - happiness / 100;
             float interpolatedHappinessRate;
@@ -66,14 +71,21 @@ public class GameManager : MonoBehaviour
             {
                 interpolatedHappinessRate = Mathf.Lerp(.2f, happinessRate, t);
             }
-
             happiness += interpolatedHappinessRate * Time.deltaTime;
-            if (happiness <= 0)
-            {
-                //When happiness reaches 0, we lose
-                GameEvents.GameOver();
-                return;
-            }
+            happinessHUD.SetHappiness(happiness);
+            
+
+            float minutes = Mathf.Floor(timer / 60f);
+            float seconds = Mathf.Ceil(timer % 60f);
+            cassetteText.text = currentSong.songName + "  " + minutes + ":" + seconds.ToString("00");
+
+
+            // if (happiness <= 0)
+            // {
+            //     //When happiness reaches 0, we lose
+            //     GameEvents.GameOver();
+            //     return;
+            // }
         }
     }
 
@@ -90,7 +102,9 @@ public class GameManager : MonoBehaviour
         timer = intermissionTime;
         happiness = startingHappiness;
         happinessRate = minHappinessRate;
+        happinessHUD.SetHappiness(startingHappiness);
         GameEvents.StartAlbum();
+
         Debug.Log("Game Started");
     }
 
@@ -104,6 +118,8 @@ public class GameManager : MonoBehaviour
             recipeDictionary.Add(recipe.instrument, recipe);
             UIEvents.DisplayRecipe(recipe);
         }
+
+        cassetteText.text = song.songName + "  0:00";
     }
 
     //When the song starts playing
@@ -147,7 +163,6 @@ public class GameManager : MonoBehaviour
 
     private void OnCableConnected(CableController cable, PlugCable plug)
     {
-        Debug.Log("Cable got connected");
         InstrumentSO instrument = cable.instrument;
         if(instrument == null)
         {
@@ -203,6 +218,7 @@ public class GameManager : MonoBehaviour
     //When we complete a recipe
     private void OnRecipeCompleted(recipe recipe)
     {
+        // a recipe has been completed
         print("GM OnRecipeCompleted function internal");
         completedRecipes.Add(recipe);
         happinessRate = EvaluateHappinessRate();
@@ -212,6 +228,7 @@ public class GameManager : MonoBehaviour
     private void OnRecipeBroken(recipe recipe)
     {
         if (completedRecipes.Exists(x => x.instrument == recipe.instrument)) {
+            // someone just unplugged a complete recipe
             happinessRate = EvaluateHappinessRate();
         }
     }

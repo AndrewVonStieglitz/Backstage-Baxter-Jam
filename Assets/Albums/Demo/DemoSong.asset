@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21cf7a7be86ee7c4ab0b5043e1089dcc, type: 3}
   m_Name: DemoSong
   m_EditorClassIdentifier: 
+  songName: Original Demo
   duration: 60
   recipeDataList:
   - {fileID: 11400000, guid: e9717d22356ea6d41b6b549775d29703, type: 2}
   - {fileID: 11400000, guid: 6af66cbbf568b524ca56dc895ce00db4, type: 2}
-  DrumTrack: {fileID: 8300000, guid: 505d0862e5ad1ab4db702359a9c94bd8, type: 3}
+  drumTrack: {fileID: 8300000, guid: 505d0862e5ad1ab4db702359a9c94bd8, type: 3}
