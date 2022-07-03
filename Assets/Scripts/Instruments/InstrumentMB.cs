@@ -26,6 +26,7 @@ public class InstrumentMB : MonoBehaviour
 
     public void StartPlaying(float startPoint)// Event system call this
     {
+        print("IMB: " + name + " StartPlaying called");
         audioSource.clip = songParts;
         audioSource.time = startPoint;
         audioSource.Play();
@@ -44,6 +45,7 @@ public class InstrumentMB : MonoBehaviour
 
     void Start()
     {
+        Init();
         if (isDrum) audioSource.volume = 0.5f; // drums are quieter until mic'd
     }
 
@@ -52,7 +54,6 @@ public class InstrumentMB : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
         boxCol = GetComponent<BoxCollider2D>();
-        Init();
     }
 
     private void ReadyInstrument(song song) //Sets caudio clip to play when song is readied
@@ -69,7 +70,8 @@ public class InstrumentMB : MonoBehaviour
 
     private void OnRecipeCompleted(recipe recipe) //Uses GameManager timer to get time. If recipe's instrument = this, start playing
     {
-        if (recipe.instrument == this)
+        //print("IBM: " + name + ", called recipe complete via event system");
+        if (recipe.instrument == identifierSO)
         {
             StartPlaying(GameManager.timer);
         }

@@ -44,8 +44,11 @@ namespace Cables
 
         public void DropCable()
         {
-            if (Cable)
-                Destroy(Cable.gameObject);
+            if (cable)
+            {
+                cable.pluggableStart.PlayRandomDisconnectSound();
+                Destroy(cable.gameObject);
+            }
         }
 
         public bool TryInteract()
