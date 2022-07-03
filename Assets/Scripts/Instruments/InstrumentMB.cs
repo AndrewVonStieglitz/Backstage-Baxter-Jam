@@ -44,6 +44,7 @@ public class InstrumentMB : MonoBehaviour
 
     void Start()
     {
+        Init();
         if (isDrum) audioSource.volume = 0.5f; // drums are quieter until mic'd
     }
 
@@ -52,7 +53,6 @@ public class InstrumentMB : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
         boxCol = GetComponent<BoxCollider2D>();
-        Init();
     }
 
     private void ReadyInstrument(song song) //Sets caudio clip to play when song is readied
