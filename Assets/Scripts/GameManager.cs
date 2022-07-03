@@ -149,6 +149,11 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Cable got connected");
         InstrumentSO instrument = cable.instrument;
+        if(instrument == null)
+        {
+            print("no instrument");
+            return;
+        }
         if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
         {
             //If matching recipe found with correct instrument
