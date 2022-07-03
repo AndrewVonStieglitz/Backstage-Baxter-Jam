@@ -41,6 +41,7 @@ public class CharacterController : MonoBehaviour
     public bool debugIsGrouned = false; // shows the state of this variable in inspector. 
 
     //private PlayerInput baxterInput;
+    private IEnumerator pauseControlsRoutine;
 
     // Start is called before the first frame update
     private void Awake()
@@ -75,30 +76,40 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        setMoveAxis();
+        if (playerControls.Baxter.enabled)
+            setMoveAxis();
 
         if (coyoteTimer > 0) coyoteTimer -= Time.deltaTime;
         animator.SetFloat("yVelo", baxterRigidBody.velocity.y);
+
+        if(Input.GetKey(KeyCode.Q))//temp, just for testing purposes, call the function wherever actually required
+        {
+            Debug.Log("Is Currently Frying");
+            SetFryState();
+        }
     }
 
     private void FixedUpdate()
     {
-        float xVelo = baxterRigidBody.velocity.x;
-        float drag = (xVelo < quadraticThreshold) ? linearDrag * xVelo : (xVelo * xVelo * Mathf.Sign(xVelo)) * quadDrag;
-        baxterRigidBody.AddForce(Vector2.right * drag);
-        GetIsGroundedRayCast();
-        if (jumpBuffer > 0)
+        if (playerControls.Baxter.enabled)
         {
-            jumpBuffer -= Time.fixedDeltaTime;
-            baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            coyoteTimer = -1;
-        }
+            float xVelo = baxterRigidBody.velocity.x;
+            float drag = (xVelo < quadraticThreshold) ? linearDrag * xVelo : (xVelo * xVelo * Mathf.Sign(xVelo)) * quadDrag;
+            baxterRigidBody.AddForce(Vector2.right * drag);
+            GetIsGroundedRayCast();
+            if (jumpBuffer > 0)
+            {
+                jumpBuffer -= Time.fixedDeltaTime;
+                baxterRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                coyoteTimer = -1;
+            }
 
-        //baxterRigidBody.AddForce(Vector2.right * moveSpeed * moveAxis, ForceMode2D.Impulse);
-        baxterRigidBody.velocity = new Vector2( moveSpeed * moveAxis, baxterRigidBody.velocity.y);
-        debugIsGrouned = isGrounded;
-        animator.SetFloat("xVelo", Mathf.Abs(baxterRigidBody.velocity.x));
-        //animator.ResetTrigger("Landed");
+            //baxterRigidBody.AddForce(Vector2.right * moveSpeed * moveAxis, ForceMode2D.Impulse);
+            baxterRigidBody.velocity = new Vector2(moveSpeed * moveAxis, baxterRigidBody.velocity.y);
+            debugIsGrouned = isGrounded;
+            animator.SetFloat("xVelo", Mathf.Abs(baxterRigidBody.velocity.x));
+            //animator.ResetTrigger("Landed");
+        }
     }
 
     public void StartJump(InputAction.CallbackContext context)
@@ -188,7 +199,6 @@ public class CharacterController : MonoBehaviour
         {
             moveAxis = Mathf.MoveTowards(moveAxis, 0, movementAxisGravity / 10 * Time.deltaTime);
         }
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -236,5 +246,35 @@ public class CharacterController : MonoBehaviour
             // print("Landed at: " + Time.time);
         }
         return isGrounded;
+    }
+
+    /// <summary>
+    /// Call whever the player enters the frying state
+    /// </summary>
+    public void SetFryState()
+    {
+        animator.SetTrigger("Frying");
+        if (pauseControlsRoutine != null)//if the coroutine is currently running stop it
+            StopCoroutine(pauseControlsRoutine);
+        pauseControlsRoutine = TempDisablePlayerControls(0.71f);
+        StartCoroutine(pauseControlsRoutine);
+    }
+
+    /// <summary>
+    /// temporarily disable the player controls
+    /// </summary>
+    /// <param name="waitTime">time to wait before the player controls are enabled</param>
+    IEnumerator TempDisablePlayerControls(float waitTime)
+    {
+        baxterRigidBody.velocity = Vector2.zero;
+        baxterRigidBody.angularVelocity = 0;
+        moveAxis = 0;
+        animator.SetFloat("xVelo", 0);
+        playerControls.Baxter.Disable();
+        //Debug.Log("Stop input from running" + playerControls.Baxter.enabled);
+        yield return new WaitForSeconds(waitTime);
+        playerControls.Baxter.Enable();
+        //Debug.Log("Re-enable input from running" + playerControls.Baxter.enabled);
+
     }
 }

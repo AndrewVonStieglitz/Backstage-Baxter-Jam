@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
 
     List<recipe> completedRecipes = new List<recipe>();
 
+    private AudioSource dummyDrumAS;
 
     // Update is called once per frame
     void Update()
@@ -125,6 +126,11 @@ public class GameManager : MonoBehaviour
     private void OnStartSong()
     {
         currentGameState = GameState.playing;
+        if (dummyDrumAS != null)
+        {
+            dummyDrumAS.clip = currentSong.drumTrack;
+            dummyDrumAS.Play();
+        }
         timer = 0;
     }
 
@@ -141,6 +147,8 @@ public class GameManager : MonoBehaviour
         //Queue up next song and start intermission timer.
         GameEvents.NextSong();
         GameEvents.EndSong();
+        if (dummyDrumAS != null)
+            dummyDrumAS.Stop();
         timer = IntermissionTime;
         currentGameState = GameState.intermission;
     }
@@ -156,6 +164,11 @@ public class GameManager : MonoBehaviour
     private void OnCableConnected(CableController cable, PlugCable plug)
     {
         InstrumentSO instrument = cable.instrument;
+        if(instrument == null)
+        {
+            print("no instrument");
+            return;
+        }
         if (recipeDictionary.TryGetValue(instrument, out recipe recipe))
         {
             //If matching recipe found with correct instrument
@@ -184,6 +197,7 @@ public class GameManager : MonoBehaviour
                         }
                     }
                     //If it hasn't been stopped, recipe must be complete.
+                    print("GM Calling recipe complete");
                     GameEvents.RecipeCompleted(recipe);
                     return;
                 }
@@ -205,6 +219,7 @@ public class GameManager : MonoBehaviour
     private void OnRecipeCompleted(recipe recipe)
     {
         // a recipe has been completed
+        print("GM OnRecipeCompleted function internal");
         completedRecipes.Add(recipe);
         happinessRate = EvaluateHappinessRate();
     }
@@ -281,5 +296,15 @@ public class GameManager : MonoBehaviour
         GameEvents.onCableDisconnectPlug -= OnCableConnected;
     }
 
-
+    private void Start()
+    {
+        try
+        {
+            dummyDrumAS = transform.GetChild(0).GetComponent<AudioSource>();
+        }
+        catch
+        {
+            print("GM Could not locate dummy drummer player");
+        }
+    }
 }
