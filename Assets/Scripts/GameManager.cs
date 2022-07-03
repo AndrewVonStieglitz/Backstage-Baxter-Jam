@@ -42,6 +42,11 @@ public class GameManager : MonoBehaviour
         if (currentGameState == GameState.intermission)
         {
             timer -= Time.deltaTime;
+
+            float minutes = Mathf.Floor(timer / 60f);
+            float seconds = Mathf.Ceil(timer % 60f);
+            cassetteText.text = "Intermission" + "  " + minutes + ":" + seconds.ToString("00");
+
             if (timer <= 0)
             {
                 //After a delay, start playing the song
@@ -51,8 +56,8 @@ public class GameManager : MonoBehaviour
 
         if (currentGameState == GameState.playing)
         {
-            timer += Time.deltaTime;
-            if (timer >= currentSong.duration)
+            timer -= Time.deltaTime;
+            if (timer <= 0)
             {
                 //When song duration is up, call time up. Timer counts up instead of down to act as timer for song
                 GameEvents.TimeUp();
@@ -103,8 +108,12 @@ public class GameManager : MonoBehaviour
         happiness = startingHappiness;
         happinessRate = minHappinessRate;
         happinessHUD.SetHappiness(startingHappiness);
-        GameEvents.StartAlbum();
 
+        float minutes = Mathf.Floor(intermissionTime / 60f);
+        float seconds = Mathf.Ceil(intermissionTime % 60f);
+        cassetteText.text = "Intermission" + "  " + minutes + ":" + seconds.ToString("00");
+
+        GameEvents.StartAlbum();
         Debug.Log("Game Started");
     }
 
@@ -118,8 +127,6 @@ public class GameManager : MonoBehaviour
             recipeDictionary.Add(recipe.instrument, recipe);
             UIEvents.DisplayRecipe(recipe);
         }
-
-        cassetteText.text = song.songName + "  0:00";
     }
 
     //When the song starts playing
@@ -131,7 +138,7 @@ public class GameManager : MonoBehaviour
             dummyDrumAS.clip = currentSong.drumTrack;
             dummyDrumAS.Play();
         }
-        timer = 0;
+        timer = currentSong.duration;
     }
 
     //When player wins/fails
