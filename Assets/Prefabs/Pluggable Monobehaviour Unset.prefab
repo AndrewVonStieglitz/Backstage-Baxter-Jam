@@ -50,6 +50,7 @@ MonoBehaviour:
   identifierSO: {fileID: 0}
   cablePrefab: {fileID: 0}
   cableHead: {fileID: 0}
+  itemColor: 0
 --- !u!114 &8684224621905177040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +97,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 81c85ec6bf5264541923067b095da395, type: 3}
   - {fileID: 8300000, guid: dbe9059d6837f9b40838ab363f212e58, type: 3}
   - {fileID: 8300000, guid: 8fdcb31a25cd01f4f9683549d26fa0f2, type: 3}
+  audioElecFailure:
+  - {fileID: 8300000, guid: f30012b9d9803c842b4dbb54af0d524f, type: 3}
+  - {fileID: 8300000, guid: 236e14d5c9de4304ba1e683732a91e24, type: 3}
+  - {fileID: 8300000, guid: 237fafe70bca3de4180383c4068ee1a4, type: 3}
 --- !u!212 &2051680457450499074
 SpriteRenderer:
   m_ObjectHideFlags: 0

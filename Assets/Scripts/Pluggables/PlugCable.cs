@@ -28,6 +28,7 @@ public class PlugCable : MonoBehaviour
     [SerializeField] private AudioClip[] audioDisconnectOn;
     [SerializeField] private AudioClip[] audioConnectOff;
     [SerializeField] private AudioClip[] audioDisconnectOff;
+    [SerializeField] private AudioClip[] audioElecFailure;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -197,7 +198,7 @@ public class PlugCable : MonoBehaviour
         if (cableStart == this) return;
         if (cable.cableColor != itemColor)
         {
-            // TODO Play a wrong SFX
+            PlayRandomSound(audioElecFailure);
             print("Wrong colour cannot endcable");
             return;
         }
