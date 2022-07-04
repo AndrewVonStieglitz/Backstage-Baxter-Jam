@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4712185536865832911}
   - component: {fileID: 4712185536865832910}
   - component: {fileID: 4712185536865832909}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Drummer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,10 +27,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4712185536865832907}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.11, y: -4.14, z: -0.0033957106}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.896, y: -4.14, z: -0.0033957106}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.828529}
   m_Children: []
-  m_Father: {fileID: 4712185537623110509}
+  m_Father: {fileID: 7873930993465555631}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4712185536865832911
@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 4712185537040693160}
   - component: {fileID: 4712185537040693162}
   - component: {fileID: 4712185537040693161}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 4712185537122667423}
   - component: {fileID: 4712185537122667422}
   - component: {fileID: 4712185537122667421}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Guitarist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,11 +248,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4712185537122667419}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.97, y: -4.05, z: -0.0033957106}
-  m_LocalScale: {x: 1, y: 0.9, z: 1}
+  m_LocalPosition: {x: -2, y: -4.05, z: -0.0033957106}
+  m_LocalScale: {x: 0.7621, y: 0.68588996, z: 0.7621}
   m_Children:
   - {fileID: 4712185537040693160}
-  m_Father: {fileID: 4712185537623110509}
+  m_Father: {fileID: 7873930993465555631}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4712185537122667423
@@ -349,25 +349,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4712185537623110509}
+  - component: {fileID: 7873930993465555631}
   - component: {fileID: 4712185537623110508}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Band
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4712185537623110509
-Transform:
+--- !u!224 &7873930993465555631
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4712185537623110507}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -9720}
+  m_LocalScale: {x: 108, y: 108, z: 108}
   m_Children:
   - {fileID: 4712185537658025555}
   - {fileID: 4712185537122667420}
@@ -375,6 +375,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -29.160002, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!210 &4712185537623110508
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -383,8 +388,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4712185537623110507}
   m_Enabled: 1
-  m_SortingLayerID: -1060773749
-  m_SortingLayer: 6
+  m_SortingLayerID: 1602764803
+  m_SortingLayer: 8
   m_SortingOrder: 5
 --- !u!1 &4712185537658025554
 GameObject:
@@ -398,7 +403,7 @@ GameObject:
   - component: {fileID: 4712185537658025558}
   - component: {fileID: 4712185537658025557}
   - component: {fileID: 4712185537658025556}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Singer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,11 +418,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4712185537658025554}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.51, y: -4.05, z: -0.0033957106}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.5, y: -4.05, z: -0.0033957106}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_Children:
   - {fileID: 4712185538458935428}
-  m_Father: {fileID: 4712185537623110509}
+  m_Father: {fileID: 7873930993465555631}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4712185537658025558
@@ -517,7 +522,7 @@ GameObject:
   - component: {fileID: 4712185538458935428}
   - component: {fileID: 4712185538458935430}
   - component: {fileID: 4712185538458935429}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -15,11 +15,12 @@ public class BPMMovement : MonoBehaviour
     [SerializeField] float test;
     static bool isStarted;
     Vector3 originalScale;
+    public bool isConnected;
     // Start is called before the first frame update
     void Start()
     {
         originalScale = transform.localScale;
-
+        
     }
 
     // Update is called once per frame

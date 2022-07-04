@@ -33,7 +33,7 @@ RectTransform:
   - {fileID: 757253249537031584}
   - {fileID: 757253248025562553}
   m_Father: {fileID: 757253248512235507}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -169,8 +169,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 757253249139336557}
   - {fileID: 757253247906329368}
+  - {fileID: 1069823186522368123}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -567,10 +567,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestCrowd
       objectReference: {fileID: 0}
+    - target: {fileID: 1122500506638647960, guid: a080759914a9f40429460f3d32d343c6, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a080759914a9f40429460f3d32d343c6, type: 3}
---- !u!4 &757253249139336557 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 849323353431150478, guid: a080759914a9f40429460f3d32d343c6, type: 3}
+--- !u!224 &1069823186522368123 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1122500506638647960, guid: a080759914a9f40429460f3d32d343c6, type: 3}
   m_PrefabInstance: {fileID: 93215248982534883}
   m_PrefabAsset: {fileID: 0}
