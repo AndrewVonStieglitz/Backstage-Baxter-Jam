@@ -109,15 +109,21 @@ namespace Cables.Platforms
         {
             if (cable.nodes.Count < 3) return;
 
-            var node = cable.nodes[cable.nodes.Count - 2] as PlatformNode;
+            var cableNode = cable.nodes[cable.nodes.Count - 2];
             
-            if (node is null) return;
+            var platformNode = cableNode as PlatformNode;
+            
+            if (platformNode is null) return;
 
-            var hit2 = RaycastBetweenNodes(cable.nodes[cable.nodes.Count - 1], cable.nodes[cable.nodes.Count - 3]);
+            var inVector = cable.nodes[cable.nodes.Count - 3].Position - cableNode.Position;
+            var outVector = cable.nodes[cable.nodes.Count - 1].Position - cableNode.Position;
 
-            if (hit2.collider != null) return;
+            var inAngle = Vector2.Angle(inVector, platformNode.Normal);
+            var outAngle = Vector2.Angle(outVector, platformNode.Normal);
 
-            cable.DestroyNode(cable.nodes[cable.nodes.Count - 2]);
+            if (inAngle + outAngle > 180) return;
+
+            cable.DestroyNode(cableNode);
         }
 
         private RaycastHit2D RaycastBetweenNodes(CableNode fromNode, CableNode toNode)
