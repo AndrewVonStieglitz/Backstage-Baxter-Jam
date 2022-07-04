@@ -29,6 +29,15 @@ public class RecipeHUD : MonoBehaviour
         // This loops through each recipe UI and each ingredient UI, then updates them with the new info
         // If the recipe or ingredient display won't be used, it disables it so the UI automatically rearranges.
 
+        int longestRecipe = 0;
+
+        for (int recipeIndex = 0; recipeIndex < currentSong.componentRecipes.Length; recipeIndex++)
+        {
+            recipe recipe = currentSong.componentRecipes[recipeIndex];
+            int length = 2 + (recipe.amp != null ? 1 : 0) + recipe.midAffectors.Length;
+            longestRecipe = Mathf.Max(longestRecipe, length);
+        }
+
         for (int recipeIndex = 0; recipeIndex < currentSong.componentRecipes.Length; recipeIndex++)
         {
             Transform recipeUI = recipeContainer.GetChild(recipeIndex);
@@ -36,23 +45,37 @@ public class RecipeHUD : MonoBehaviour
 
             // Terrible way to get the instrument color, but it works for now
             InstrumentMB instrument = Array.Find(instruments, x => x.identifierSO.itemName == recipe.instrument.itemName);
-            int colorIndex = (int)instrument.cableColor;
+            int colorIndex = 0;
+            if (instrument != null)
+            {
+                colorIndex = (int)instrument.cableColor;
+            }
 
             recipeUI.GetChild(0).GetComponentInChildren<Image>().sprite = recipe.instrument.sprite;
-            recipeUI.GetChild(1).GetComponentInChildren<Image>().sprite = recipe.amp.coloredSprites[colorIndex];
+            int ingredientIndex = 1;
+
+            if (recipe.amp != null)
+            {
+                recipeUI.GetChild(1).GetComponentInChildren<Image>().sprite = recipe.amp.coloredSprites[colorIndex];
+                ingredientIndex++;
+            }
+
+            int ingredientOffsetAmp = ingredientIndex;
 
             // Loops through all midAffectors (if any)
-            int ingredientIndex = 2;
-            for (; ingredientIndex < currentSong.componentRecipes[recipeIndex].midAffectors.Length + 2; ingredientIndex++)
+            for (; ingredientIndex < currentSong.componentRecipes[recipeIndex].midAffectors.Length + ingredientOffsetAmp; ingredientIndex++)
             {
-                recipeUI.GetChild(ingredientIndex).GetComponentInChildren<Image>().sprite = recipe.midAffectors[ingredientIndex - 2].coloredSprites[colorIndex];
+                recipeUI.GetChild(ingredientIndex).GetComponentInChildren<Image>().sprite = recipe.midAffectors[ingredientIndex - ingredientOffsetAmp].coloredSprites[colorIndex];
             }
             recipeUI.GetChild(ingredientIndex).GetComponentInChildren<Image>().sprite = recipe.speaker.coloredSprites[colorIndex];
 
-            // Enables/Disables ingredientUI elements depending on if they are used
+            
             for (int i = 0; i < recipeUI.childCount; i++)
             {
-                recipeUI.GetChild(i).gameObject.SetActive(i <= ingredientIndex);
+                // Hides/Shows ingredientUI elements depending on if they are used
+                recipeUI.GetChild(i).GetComponent<CanvasGroup>().alpha = i <= ingredientIndex ? 1 : 0;
+                // Disables all ingredientUI that are past the longest recipe to fix UI
+                recipeUI.GetChild(i).gameObject.SetActive(i < longestRecipe);
             }
         }
 
