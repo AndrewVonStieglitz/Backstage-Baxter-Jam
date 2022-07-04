@@ -63,12 +63,18 @@ TagManager:
   - name: Baxter
     uniqueID: 95913767
     locked: 0
-  - name: UI
-    uniqueID: 3234193547
+  - name: Lights
+    uniqueID: 1179396369
     locked: 0
   - name: Stage
     uniqueID: 4262689383
     locked: 0
   - name: Band
     uniqueID: 1602764803
+    locked: 0
+  - name: Crowd
+    uniqueID: 2846764301
+    locked: 0
+  - name: UI
+    uniqueID: 3234193547
     locked: 0

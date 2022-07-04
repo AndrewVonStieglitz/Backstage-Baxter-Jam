@@ -44,15 +44,17 @@ public struct song
 {
     public string songName;
     public float duration;
+    public float bpm;
     public recipe[] componentRecipes;
-    public AudioClip drumTrack;
+    public AudioClip drumTrack; 
 
-    public song(string songNameSO, float durationSO, recipe[] componentRecipesSO, AudioClip drumTrack)
+    public song(string songNameSO, float durationSO, recipe[] componentRecipesSO, AudioClip drumTrack, float songBPM)
     {
         songName = songNameSO;
         duration = durationSO;
         componentRecipes = componentRecipesSO;
         this.drumTrack = drumTrack;
+        bpm = songBPM;
     }
 }
 

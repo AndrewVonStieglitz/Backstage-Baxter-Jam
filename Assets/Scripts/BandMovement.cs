@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BPMMovement : MonoBehaviour
+public class BandMovement : MonoBehaviour
 {
     [SerializeField] float bpm; //possible placeholder - could make a static member somewhere else to get this value?
 
