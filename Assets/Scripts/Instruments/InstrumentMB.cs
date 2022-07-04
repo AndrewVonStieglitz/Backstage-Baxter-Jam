@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InstrumentMB : MonoBehaviour
 {
-    [SerializeField] protected InstrumentSO identifierSO;
+    [SerializeField] public InstrumentSO identifierSO;
     [SerializeField] protected AudioClip songParts;// the audio associated with each song for this instrument
     [SerializeField] protected Color cableCol;
     public CableColor cableColor;
