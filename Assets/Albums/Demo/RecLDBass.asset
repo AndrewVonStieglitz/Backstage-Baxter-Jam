@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1a84ba2cd551a4b9621fc9728e410e, type: 3}
   m_Name: RecLDBass
   m_EditorClassIdentifier: 
-  instrument: {fileID: 11400000, guid: 356b67b1e2926c74a96d386ad0c43828, type: 2}
+  instrument: {fileID: 11400000, guid: 88716bacdb01d7042a6d2196792dd4f1, type: 2}
   amp: {fileID: 0}
   speaker: {fileID: 11400000, guid: 548ed8df63a791243912bcac780ee125, type: 2}
   midAffectors: []
