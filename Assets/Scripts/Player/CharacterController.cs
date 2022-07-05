@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,6 +70,7 @@ public class CharacterController : MonoBehaviour
         //distToGround = baxterCollider.radius*1.05f;
         // print("Distance to ground: " + distToGround);
 
+        // TODO: Unlisten
         playerControls.Baxter.Enable();
         playerControls.Baxter.Jump.performed += StartJump;
         playerControls.Baxter.Jump.canceled += EndJump;
@@ -84,11 +86,21 @@ public class CharacterController : MonoBehaviour
         raycastOrigin = new Vector2(rayIncrementor.x * -(raycastResolution)/2, 0f);
     }
 
-    void Start()
+    private void OnEnable()
     {
+        GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
     }
 
-    // Update is called once per frame
+    private void OnDisable()
+    {
+        GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+    }
+
+    private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
+    {
+       SetFryState(); 
+    }
+
     void Update()
     {
         if (playerControls.Baxter.enabled)
@@ -96,12 +108,6 @@ public class CharacterController : MonoBehaviour
 
         if (coyoteTimeCounter > 0) coyoteTimeCounter -= Time.deltaTime;
         animator.SetFloat("yVelo", baxterRigidBody.velocity.y);
-
-        if(Input.GetKey(KeyCode.Q))//temp, just for testing purposes, call the function wherever actually required
-        {
-            Debug.Log("Is Currently Frying");
-            SetFryState();
-        }
     }
 
     private void FixedUpdate()

@@ -690,7 +690,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b39de900498acb4580f23027c404af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 297473218}
 --- !u!4 &665999592
 Transform:
   m_ObjectHideFlags: 0
@@ -987,6 +986,10 @@ PrefabInstance:
     - target: {fileID: 7626457371547512592, guid: 5e7eedb55f1fcdb4fab7ffd7c042cda2, type: 3}
       propertyPath: m_Name
       value: Pipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626457371547512592, guid: 5e7eedb55f1fcdb4fab7ffd7c042cda2, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7626457371547512597, guid: 5e7eedb55f1fcdb4fab7ffd7c042cda2, type: 3}
       propertyPath: m_IsTrigger

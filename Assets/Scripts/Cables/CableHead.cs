@@ -25,6 +25,21 @@ namespace Cables
         public UnityEvent cableChanged = new UnityEvent();
         private CableController cable;
 
+        private void OnEnable()
+        {
+            GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+        }
+
+        private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
+        {
+            DropCable();
+        }
+
         public void NewCable(CableController cable)
         {
             Cable = cable;

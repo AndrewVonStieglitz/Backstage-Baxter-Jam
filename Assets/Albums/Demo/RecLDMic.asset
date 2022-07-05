@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instrument: {fileID: 11400000, guid: 356b67b1e2926c74a96d386ad0c43828, type: 2}
   amp: {fileID: 0}
-  speaker: {fileID: 11400000, guid: 548ed8df63a791243912bcac780ee125, type: 2}
+  speaker: {fileID: 11400000, guid: 02bc067414bcf1c44bb40660191b7ea6, type: 2}
   midAffectors: []
   musicPart: {fileID: 8300000, guid: 2288bd16e60548f48a3a8f4911caf89f, type: 3}

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4690615933875131387}
   - component: {fileID: 1027681111473932894}
   - component: {fileID: 5795314323903290841}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Renderer
   m_TagString: Cable
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 8511436087669080055}
   - component: {fileID: 6228321870821142823}
   - component: {fileID: 5125566223370737176}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cable
   m_TagString: Cable
   m_Icon: {fileID: 0}
@@ -309,7 +309,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   state: 0
-  amp: {fileID: 0}
   pluggableStart: {fileID: 0}
   pluggableEnd: {fileID: 0}
   cableWidth: 0.5
