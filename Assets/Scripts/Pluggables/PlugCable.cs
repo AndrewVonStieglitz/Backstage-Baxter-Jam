@@ -74,7 +74,7 @@ public class PlugCable : MonoBehaviour
                 else
                 {
                     if (cableOut != null)
-                        cableOut.pluggableEnd.Unplug();
+                        cableOut.pluggableEnd.Unplug(false);
                     StartCable();
                 }
                 break;
@@ -85,7 +85,7 @@ public class PlugCable : MonoBehaviour
         }
     }
 
-    public void Unplug()
+    public void Unplug(bool useErrorSound)
     {
         cableIn = null;
         Refresh();
@@ -102,6 +102,10 @@ public class PlugCable : MonoBehaviour
                 //lineRenderer.material.mainTexture = cableSprite.texture;
             }
         }
+        if (useErrorSound)
+            PlayRandomSound(audioElecFailure);
+        else
+            PlayRandomDisconnectSound();
     }
 
     public bool Refresh()
@@ -169,7 +173,7 @@ public class PlugCable : MonoBehaviour
     private void StartCable()
     {
         if (cableOut != null)
-            cableOut.pluggableEnd.Unplug();
+            cableOut.pluggableEnd.Unplug(false);
         GameObject cableObject = Instantiate(cablePrefab, transform);
         Cables.CableController cable = cableObject.GetComponent<Cables.CableController>();
         if (cableOut)
@@ -223,10 +227,10 @@ public class PlugCable : MonoBehaviour
             cableIn.pluggableStart.PlayRandomSound(audioDisconnectOn);
         }
         cableIn = cable;
-        GameEvents.CableConnectPlug(cable, this);
         cable.pluggableEnd = this;
         cableSprite = cableStart.cableSprite;
         Refresh();
+        GameEvents.CableConnectPlug(cable, this);
         print("Connected cable from: " + cableStart.name + ",\t to: " + name);
         // TODO: inform game coordinator that a cable has finished here, if speaker play song. 
     }
@@ -267,6 +271,7 @@ public class PlugCable : MonoBehaviour
         AudioClip ac = array[num];
         //print("Object: " + name + " playing random clip:" + ac.name);
         // play the sound
+        audioSource.time = 0f;
         audioSource.clip = ac;
         audioSource.Play();
     }

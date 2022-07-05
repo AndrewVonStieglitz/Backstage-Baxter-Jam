@@ -216,11 +216,13 @@ public class GameManager : MonoBehaviour
             }
             //If no conditions are met, recipe must be broken
             GameEvents.RecipeBroken(recipe);
-            
         }
         else
         {
-            Debug.LogError("No recipe found matching instrument");
+            //Debug.LogError("No recipe found matching instrument");// crashing the game when the player makes a mistake is not wicked sick
+            Debug.LogWarning("Cable wired into wrong this for recipe");
+            plug.Unplug(true);
+
         }
         //cable.pluggablesList;
         //plug.pluggable
