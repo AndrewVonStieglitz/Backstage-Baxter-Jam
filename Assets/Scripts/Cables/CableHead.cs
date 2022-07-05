@@ -69,6 +69,8 @@ namespace Cables
         public bool TryInteract()
         {
             //print("Cable head TryInteract, overlap = " + (lastOverlappedTrigCollider != null));
+            //if ((lastOverlappedTrigCollider != null))
+            //    print("with: " + lastOverlappedTrigCollider.name);
             if (lastOverlappedTrigCollider != null)
             {
                 if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
@@ -81,8 +83,10 @@ namespace Cables
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            if (col.tag == "Cable") return;
+            col.GetComponent<PlugCable>();
             lastOverlappedTrigCollider = col;
-            
+
             CheckCableCollision(col);
         }
 
@@ -97,6 +101,9 @@ namespace Cables
             if (cable == null) return;
             
             if (!col.CompareTag("Cable")) return;
+
+            // rushjob code to fit catastrophic bug 
+            if (col.GetComponentInParent<CableController>().cableColor == cable.cableColor) return;
 
             var hit = TriggerCollision(velocity);
 
@@ -124,5 +131,7 @@ namespace Cables
 
             Cable.nodes.Last().MoveNode(transform.position);
         }
+
+        public CableController GetCable() { return cable; }
     }
 }
