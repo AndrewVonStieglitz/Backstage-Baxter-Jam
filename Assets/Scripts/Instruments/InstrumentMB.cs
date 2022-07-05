@@ -73,7 +73,8 @@ public class InstrumentMB : MonoBehaviour
         //print("IBM: " + name + ", called recipe complete via event system");
         if (recipe.instrument == identifierSO)
         {
-            StartPlaying(GameManager.timer);
+            StartPlaying(GameManager.timeElapsed);
+            print(name + " start playing song with timer: " + GameManager.timer);
         }
     }
 

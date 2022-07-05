@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public song currentSong { get; set; }
 
     static public float timer { get; set; }
+    static public float timeElapsed { get; set; }
 
     public enum GameState { menu, intermission, playing }
 
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
 
         if (currentGameState == GameState.playing)
         {
+            timeElapsed += Time.deltaTime;
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
@@ -105,6 +107,7 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = GameState.intermission;
         timer = intermissionTime;
+        timeElapsed = 0f;
         happiness = startingHappiness;
         happinessRate = minHappinessRate;
         happinessHUD.SetHappiness(startingHappiness);
@@ -139,6 +142,7 @@ public class GameManager : MonoBehaviour
             dummyDrumAS.Play();
         }
         timer = currentSong.duration;
+        timeElapsed = 0f;
     }
 
     //When player wins/fails
@@ -157,6 +161,7 @@ public class GameManager : MonoBehaviour
         if (dummyDrumAS != null)
             dummyDrumAS.Stop();
         timer = IntermissionTime;
+        timeElapsed = 0f;
         currentGameState = GameState.intermission;
     }
 
