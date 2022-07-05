@@ -3,67 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneController : MonoBehaviour
+class MyClass
 {
-    [SerializeField] string level1SceneName;
-    [SerializeField] string gameOverSceneName;
-    [SerializeField] string mainMenuSceneName;
-    // Start is called before the first frame update
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
 
-    void Start()
-    {
-        
-    }
+    static string level1SceneName = "Level_1";
+    static string gameOverSceneName = "Game_Over_Menu";
+    static string mainMenuSceneName = "Main_Menu";
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    private void OnEnable()
+    [RuntimeInitializeOnLoadMethod]
+    static void OnRuntimeMethodLoad()
     {
         MenuEvents.onStartSelected += SwitchToGameScene;
         MenuEvents.onGameEnded += SwitchToGameOver;
         MenuEvents.onReturnToMainMenu += SwitchToMainMenu;
         SceneManager.sceneLoaded += OnSceneLoadDo;
-    }
 
-    private void OnDisable()
-    {
-        MenuEvents.onStartSelected -= SwitchToGameScene;
-        MenuEvents.onGameEnded -= SwitchToGameOver;
-        MenuEvents.onReturnToMainMenu -= SwitchToMainMenu;
-        SceneManager.sceneLoaded -= OnSceneLoadDo;
-    }
-
-    private void SwitchToGameScene()
-    {
-        SceneManager.LoadScene(level1SceneName);
-
-    }
-
-    private void SwitchToMainMenu()
-    {
-        SceneManager.LoadScene(mainMenuSceneName);
-    }
-
-    private void SwitchToGameOver()
-    {
-        SceneManager.LoadScene(gameOverSceneName);
-
-    }
-
-    private void OnSceneLoadDo(Scene scene, LoadSceneMode loadSceneMode)
-    {
-        if (scene.name == level1SceneName)
+        // this is neccessary cause sceneLoaded doesn't fire for the first scene
+        Debug.Log(SceneManager.GetActiveScene().name);
+        if (SceneManager.GetActiveScene().name != gameOverSceneName && SceneManager.GetActiveScene().name != mainMenuSceneName)
         {
             GameEvents.GameStart();
             Debug.Log("Starting Game");
         }
     }
+
+
+    private static void SwitchToGameScene()
+    {
+        SceneManager.LoadScene(level1SceneName);
+
+    }
+
+    private static void SwitchToMainMenu()
+    {
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private static void SwitchToGameOver()
+    {
+        SceneManager.LoadScene(gameOverSceneName);
+
+    }
+
+    private static void OnSceneLoadDo(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        if (scene.name != mainMenuSceneName && scene.name != gameOverSceneName)
+        {
+            GameEvents.GameStart();
+            Debug.Log("Starting Game");
+        }
+    }
+
 }
