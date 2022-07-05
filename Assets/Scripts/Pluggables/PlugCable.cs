@@ -59,7 +59,8 @@ public class PlugCable : MonoBehaviour
     {
         //moved functionality from on trigger enter 2D
         bool hasCable = cableHead.Cable != null;
-        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
+        if (GameManager.currentGameState != GameManager.GameState.playing) return;
+        //print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
 
         switch (pluggableType)
         {
@@ -173,7 +174,7 @@ public class PlugCable : MonoBehaviour
         Cables.CableController cable = cableObject.GetComponent<Cables.CableController>();
         if (cableOut)
         {
-            print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
+            //print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableOut, this);
 
             // Additional conditions are required to determine whether the target is on or off
@@ -187,7 +188,7 @@ public class PlugCable : MonoBehaviour
 
         cable.Initialise(this, itemColor);
         Refresh();
-        print("Starting cable on: " + name);
+        //print("Starting cable on: " + name);
         // TODO: inform game coordinator that a cable is starting from here
     }
 
@@ -199,7 +200,7 @@ public class PlugCable : MonoBehaviour
         if (cable.cableColor != itemColor)
         {
             PlayRandomSound(audioElecFailure);
-            print("Wrong colour cannot endcable");
+            //print("Wrong colour cannot endcable");
             return;
         }
         //bool refreshOK = Refresh();
@@ -264,7 +265,7 @@ public class PlugCable : MonoBehaviour
         // get a random AudioClip from the given array
         int num = UnityEngine.Random.Range(0, array.Length-1);
         AudioClip ac = array[num];
-        print("Object: " + name + " playing random clip:" + ac.name);
+        //print("Object: " + name + " playing random clip:" + ac.name);
         // play the sound
         audioSource.clip = ac;
         audioSource.Play();
