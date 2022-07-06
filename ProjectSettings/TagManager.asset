@@ -11,6 +11,8 @@ TagManager:
   - Platform
   - Cable
   - HUD
+  - MainLight
+  - StageLight
   layers:
   - Default
   - TransparentFX

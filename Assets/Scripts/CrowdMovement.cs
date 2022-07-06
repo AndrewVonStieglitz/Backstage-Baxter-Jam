@@ -14,22 +14,28 @@ public class CrowdMovement : MonoBehaviour
 
     [SerializeField] float test;
    
-    static bool isStarted;
+    bool isStarted;
     [SerializeField] bool isBopping;
     [SerializeField] bool isVibing;
     [SerializeField] bool isReversed;
+
+    [SerializeField] GameManager gameManager;
 
     Vector3 originalPos;
     // Start is called before the first frame update
     void Start()
     {
         originalPos = transform.localPosition;
+        //bpm = recipeLoader.GetSong().bpm;
+        bpm = gameManager.currentSong.bpm;
+        isStarted = false;
     }
 
     // Update is called once per frame
     void Update()
     {
        
+        
         beat = bpm / 60; //bps
         float scaleX = (xScale / 2) * Mathf.Cos((Mathf.PI * 2 * (float)AudioSettings.dspTime) * beat) + (1 + (xScale / 2));
         float transformY = -yTransform * Mathf.Cos((Mathf.PI * 2 * (float)AudioSettings.dspTime) * beat);

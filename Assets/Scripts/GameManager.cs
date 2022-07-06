@@ -18,13 +18,15 @@ public class GameManager : MonoBehaviour
     static public float timer { get; set; }
 
     public enum GameState { menu, intermission, playing }
-
+    
     static public GameState currentGameState { get; set; }
 
     [SerializeField] private float startingHappiness;
     [SerializeField] private float minHappinessRate;
     [SerializeField] private float maxHappinessRate;
     static public float happinessRate { get; set; }
+    public bool isStarted { get; set; }
+
     static private float m_happiness;
     static public float happiness { get => m_happiness; set { m_happiness = Mathf.Clamp(value, 0, 100); }}
 
@@ -133,6 +135,7 @@ public class GameManager : MonoBehaviour
     private void OnStartSong()
     {
         currentGameState = GameState.playing;
+        isStarted = true;
         if (dummyDrumAS != null)
         {
             dummyDrumAS.clip = currentSong.drumTrack;

@@ -8,7 +8,7 @@ public class RecipeHUD : MonoBehaviour
 {
     [SerializeField] private Transform recipeContainer;
 
-    private song currentSong;
+    public song currentSong;
 
     private InstrumentMB[] instruments;
 

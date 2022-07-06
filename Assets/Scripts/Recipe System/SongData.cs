@@ -10,7 +10,7 @@ public class SongData : ScriptableObject
     [SerializeField] string songName;
     [SerializeField] float duration;
     [SerializeField] RecipeData[] recipeDataList;
-    float songBPM;
+    [SerializeField] float songBPM;
     public AudioClip drumTrack;
     recipe[] componentRecipes;
 

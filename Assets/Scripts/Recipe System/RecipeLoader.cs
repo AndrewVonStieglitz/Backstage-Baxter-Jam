@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class RecipeLoader : MonoBehaviour
 {
-    [SerializeField] Album album;
+    [SerializeField] public Album album;
     int currentSong = 0;
-
+    
     void PlaySong()
     {
         if (currentSong < album.songDataList.Count)
