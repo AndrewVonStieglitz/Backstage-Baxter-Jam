@@ -59,7 +59,8 @@ public class PlugCable : MonoBehaviour
     {
         //moved functionality from on trigger enter 2D
         bool hasCable = cableHead.Cable != null;
-        print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
+        if (GameManager.currentGameState != GameManager.GameState.playing) return;
+        //print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
 
         switch (pluggableType)
         {
@@ -73,7 +74,7 @@ public class PlugCable : MonoBehaviour
                 else
                 {
                     if (cableOut != null)
-                        cableOut.pluggableEnd.Unplug();
+                        cableOut.pluggableEnd.Unplug(false);
                     StartCable();
                 }
                 break;
@@ -84,7 +85,7 @@ public class PlugCable : MonoBehaviour
         }
     }
 
-    public void Unplug()
+    public void Unplug(bool useErrorSound)
     {
         cableIn = null;
         Refresh();
@@ -101,6 +102,10 @@ public class PlugCable : MonoBehaviour
                 //lineRenderer.material.mainTexture = cableSprite.texture;
             }
         }
+        if (useErrorSound)
+            PlayRandomSound(audioElecFailure);
+        else
+            PlayRandomDisconnectSound();
     }
 
     public bool Refresh()
@@ -168,12 +173,12 @@ public class PlugCable : MonoBehaviour
     private void StartCable()
     {
         if (cableOut != null)
-            cableOut.pluggableEnd.Unplug();
+            cableOut.pluggableEnd.Unplug(false);
         GameObject cableObject = Instantiate(cablePrefab, transform);
         Cables.CableController cable = cableObject.GetComponent<Cables.CableController>();
         if (cableOut)
         {
-            print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
+            //print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
             GameEvents.CableDisconnectPlug(cableOut, this);
 
             // Additional conditions are required to determine whether the target is on or off
@@ -187,7 +192,7 @@ public class PlugCable : MonoBehaviour
 
         cable.Initialise(this, itemColor);
         Refresh();
-        print("Starting cable on: " + name);
+        //print("Starting cable on: " + name);
         // TODO: inform game coordinator that a cable is starting from here
     }
 
@@ -199,7 +204,7 @@ public class PlugCable : MonoBehaviour
         if (cable.cableColor != itemColor)
         {
             PlayRandomSound(audioElecFailure);
-            print("Wrong colour cannot endcable");
+            //print("Wrong colour cannot endcable");
             return;
         }
         //bool refreshOK = Refresh();
@@ -222,10 +227,10 @@ public class PlugCable : MonoBehaviour
             cableIn.pluggableStart.PlayRandomSound(audioDisconnectOn);
         }
         cableIn = cable;
-        GameEvents.CableConnectPlug(cable, this);
         cable.pluggableEnd = this;
         cableSprite = cableStart.cableSprite;
         Refresh();
+        GameEvents.CableConnectPlug(cable, this);
         print("Connected cable from: " + cableStart.name + ",\t to: " + name);
         // TODO: inform game coordinator that a cable has finished here, if speaker play song. 
     }
@@ -264,8 +269,9 @@ public class PlugCable : MonoBehaviour
         // get a random AudioClip from the given array
         int num = UnityEngine.Random.Range(0, array.Length-1);
         AudioClip ac = array[num];
-        print("Object: " + name + " playing random clip:" + ac.name);
+        //print("Object: " + name + " playing random clip:" + ac.name);
         // play the sound
+        audioSource.time = 0f;
         audioSource.clip = ac;
         audioSource.Play();
     }

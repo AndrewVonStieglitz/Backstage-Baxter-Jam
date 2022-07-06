@@ -36,10 +36,14 @@ namespace Cables.Pipes
             
             if (!col.CompareTag("Cable")) return;
 
+            // rushjob code to fit catastrophic bug 
+            if (col.GetComponentInParent<CableController>().cableColor == cableHead.GetCable().cableColor) return;
+
+
             var hit = cableHead.TriggerCollision(cableHead.velocity);
 
-            // Debug.Log("Player Cable Collision");
-            // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+            Debug.Log("Player Cable Collision");
+            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
 
             GameEvents.PlayerCableCollision(hit.point, hit.normal);
         }

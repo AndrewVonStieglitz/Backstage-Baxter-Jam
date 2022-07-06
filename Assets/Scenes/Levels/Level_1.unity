@@ -1406,6 +1406,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pipe
       objectReference: {fileID: 0}
+    - target: {fileID: 7626457371547512592, guid: 5e7eedb55f1fcdb4fab7ffd7c042cda2, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7626457371547512597, guid: 5e7eedb55f1fcdb4fab7ffd7c042cda2, type: 3}
       propertyPath: m_IsTrigger
       value: 0

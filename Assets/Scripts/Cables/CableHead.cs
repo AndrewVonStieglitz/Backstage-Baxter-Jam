@@ -25,6 +25,21 @@ namespace Cables
         public UnityEvent cableChanged = new UnityEvent();
         private CableController cable;
 
+        private void OnEnable()
+        {
+            GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+        }
+
+        private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
+        {
+            DropCable();
+        }
+
         public void NewCable(CableController cable)
         {
             Cable = cable;
@@ -53,34 +68,25 @@ namespace Cables
 
         public bool TryInteract()
         {
-            //print(lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>());
-            //print("cable head TryInteract, with "+lastOverlappedTrigCollider.name);
+            //print("Cable head TryInteract, overlap = " + (lastOverlappedTrigCollider != null));
+            //if ((lastOverlappedTrigCollider != null))
+            //    print("with: " + lastOverlappedTrigCollider.name);
             if (lastOverlappedTrigCollider != null)
             {
                 if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
                     plugCableInto.Interact();
                     return true;
                 }
-                //try
-                //{
-                //    print("Cable head attempting to interact with PlugCable on: " + lastOverlappedTrigCollider.name);
-                //    PlugCable plugCableInto = lastOverlappedTrigCollider.gameObject.GetComponent<PlugCable>();
-                //    plugCableInto.Interact();
-                //    return true;
-                //}
-                //catch
-                //{
-                //    print("Cable head Could not find Plugcable on most recent trigger contact");
-                //    return false;
-                //}
             }
             return false;
         }
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            if (col.tag == "Cable") return;
+            col.GetComponent<PlugCable>();
             lastOverlappedTrigCollider = col;
-            
+
             CheckCableCollision(col);
         }
 
@@ -95,6 +101,9 @@ namespace Cables
             if (cable == null) return;
             
             if (!col.CompareTag("Cable")) return;
+
+            // rushjob code to fit catastrophic bug 
+            if (col.GetComponentInParent<CableController>().cableColor == cable.cableColor) return;
 
             var hit = TriggerCollision(velocity);
 
@@ -122,5 +131,7 @@ namespace Cables
 
             Cable.nodes.Last().MoveNode(transform.position);
         }
+
+        public CableController GetCable() { return cable; }
     }
 }

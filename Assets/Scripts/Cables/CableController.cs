@@ -66,7 +66,6 @@ namespace Cables
             }
             
             Initialise(pluggableStart.transform);
-            print("trying change sorting layer");
             GetComponentInChildren<LineRenderer>().sortingLayerName = "Cable";
         }
 
@@ -103,8 +102,8 @@ namespace Cables
                 newPList.Add(pluggableEnd.pluggable);
             instrument = newInstrument;
             pluggablesList = newPList;
-            print("Refreshing: " + name + " to instrument: " + (newInstrument != null ? instrument.itemName : "NULL") 
-                + ",\tpluggables list contains: " + newPList.Count);
+            //print("Refreshing: " + name + " to instrument: " + (newInstrument != null ? instrument.itemName : "NULL") 
+            //    + ",\tpluggables list contains: " + newPList.Count);
             //return true;
         }
 

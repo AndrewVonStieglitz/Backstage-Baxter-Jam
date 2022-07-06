@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RecLDGuitar
   m_EditorClassIdentifier: 
   instrument: {fileID: 11400000, guid: 3c7041472411f85478ff340c19a15e11, type: 2}
-  amp: {fileID: 0}
+  amp: {fileID: 11400000, guid: fcb5cbe1016d695419a5cbc4e8cdcbe4, type: 2}
   speaker: {fileID: 11400000, guid: 1bf43ad69fffa0f4d8ebab9be337affa, type: 2}
   midAffectors: []
   musicPart: {fileID: 8300000, guid: 5c88bfd7380e362429adb1ec4664e002, type: 3}
