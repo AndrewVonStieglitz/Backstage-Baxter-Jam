@@ -32,13 +32,11 @@ namespace Cables
 
         private void OnEnable()
         {
-            GameEvents.onCableDisconnect += OnCableDisconnect;
             GameEvents.onCableDisconnectPlug += OnCableDisconnectPlug;
         }
         
         private void OnDisable()
         {
-            GameEvents.onCableDisconnect -= OnCableDisconnect;
             GameEvents.onCableDisconnectPlug -= OnCableDisconnectPlug;
         }
 
@@ -113,15 +111,16 @@ namespace Cables
         }
 
         // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.
-        private void OnCableDisconnect(CableController cable, SpeakerController speaker)
+        private void OnCableDisconnect(CableController cable)
         {
             if (cable != this) return;
             
             Destroy(gameObject);
         }
+        
         private void OnCableDisconnectPlug(CableController cable, PlugCable endObj)
         {
-            OnCableDisconnect(cable, null);
+            OnCableDisconnect(cable);
         }
 
         public void CreateNode(CableNode node, Vector3 nodePos)

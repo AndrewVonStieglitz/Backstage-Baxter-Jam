@@ -13,10 +13,7 @@ using Cables;
  * onHurt()
  * onCablePickup(CableController cable)
  * onCableDrop(CableController cable)
- * onCableSpawn(AmpController amp, CableController cable)
- * onCableConnect(CableController cable, SpeakerController speaker)
  * onCableConnectPlug(CableController cable, PlugCable endObj)
- * onCableDisconnect(CableController cable, SpeakerController speaker)
  * onCableDisconnectPlug(CableController cable, PlugCable endObj)
  * onCableReset(CableController cable)
  * onCableWind(CableController cable, pole orientation, location)
@@ -83,26 +80,6 @@ public static class GameEvents
         }
     }
 
-    public static Action<AmpController, CableController> onCableSpawn;
-    public static void CableSpawn(AmpController amp, CableController cable)
-    {
-        if (onCableSpawn != null)
-        {
-            onCableSpawn(amp, cable);
-        }
-    }
-
-    //Legacy: Should delete
-    public static Action<CableController, SpeakerController> onCableConnect;
-    public static void CableConnect(CableController cable, SpeakerController speaker)
-    {
-        if (onCableConnect != null)
-        {
-            onCableConnect(cable, speaker);
-        }
-    }
-
-    // pluggables compatible
     public static Action<CableController, PlugCable> onCableConnectPlug;
     public static void CableConnectPlug(CableController cable, PlugCable endObj)
     {
@@ -112,17 +89,6 @@ public static class GameEvents
         }
     }
 
-    //Legacy: Should delete
-    public static Action<CableController, SpeakerController> onCableDisconnect;
-    public static void CableDisconnect(CableController cable, SpeakerController speaker)
-    {
-        if (onCableDisconnect != null)
-        {
-            onCableDisconnect(cable, speaker);
-        }
-    }
-
-    // pluggables compatible
     public static Action<CableController, PlugCable> onCableDisconnectPlug;
     public static void CableDisconnectPlug(CableController cable, PlugCable endObj)
     {
