@@ -18,4 +18,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d78467f6fbb4bef42b8afe78057ad894, type: 2}
   - {fileID: 11400000, guid: d29235d44ca38e84ca656e4b222f8948, type: 2}
   - {fileID: 11400000, guid: 04d367612994eb44dbbb979e31db2830, type: 2}
+  songBPM: 175
   drumTrack: {fileID: 8300000, guid: 7ecbe6f4c5428b943ad33994d12d3699, type: 3}
