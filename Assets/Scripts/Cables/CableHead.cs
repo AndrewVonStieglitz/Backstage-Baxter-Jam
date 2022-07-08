@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Pluggables;
 using UnityEngine;
@@ -7,6 +6,7 @@ using UnityEngine.Events;
 
 namespace Cables
 {
+    [RequireComponent(typeof(BoxCollider2D))]
     public class CableHead : MonoBehaviour
     {
         [SerializeField] private GameObject cablePrefab;
@@ -23,19 +23,19 @@ namespace Cables
             }
         }
 
-        private Vector3 lastPosition;
-
         public Vector3 Velocity { get; private set; }
-
-        // TODO: Use SerializedField.
+        public UnityEvent cableChanged = new UnityEvent();
+        
+        private Vector3 lastPosition;
+        private CableController currentCurrentCable;
+        private Connection connection;
+        private Dictionary<Connection, CableController> cables = new Dictionary<Connection, CableController>();
         private BoxCollider2D boxCollider2D;
 
-        public UnityEvent cableChanged = new UnityEvent();
-        private CableController currentCurrentCable;
-
-        private Connection connection;
-
-        private Dictionary<Connection, CableController> cables = new Dictionary<Connection, CableController>();
+        private void Awake()
+        {
+            boxCollider2D = GetComponent<BoxCollider2D>();
+        }
 
         private void OnEnable()
         {
@@ -65,7 +65,6 @@ namespace Cables
             
             cables.Add(connection, CurrentCable);
 
-            boxCollider2D = GetComponent<BoxCollider2D>();
             boxCollider2D.size = new Vector2(CurrentCable.cableWidth, CurrentCable.cableWidth);
             
             CurrentCable.Initialise(connection.PluggableStart.transform, coloredCableSprites[(int) connection.Color]);
@@ -96,11 +95,6 @@ namespace Cables
             cables.Remove(connection);
             
             if (connection == this.connection) this.connection = null;
-        }
-
-        private void DestroyCable(CableController cable)
-        {
-            DestroyCable(cables.First(c => c.Value == cable).Key);
         }
 
         private void OnTriggerEnter2D(Collider2D col)
