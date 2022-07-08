@@ -35,7 +35,7 @@ namespace Cables.Pipes
 
             if (!col.CompareTag("Pipe")) return;
 
-            var hit = cableHead.TriggerCollision(cableHead.velocity);
+            var hit = cableHead.TriggerCollision(cableHead.Velocity);
 
             Vector2 nodePosition = hit.point + hit.normal * cableHead.CurrentCable.cableWidth / 2;
 
@@ -52,7 +52,7 @@ namespace Cables.Pipes
             
             if (!col.CompareTag("Pipe")) return;
 
-            var hit = cableHead.TriggerCollision(-cableHead.velocity);
+            var hit = cableHead.TriggerCollision(-cableHead.Velocity);
             
             pipeNodeController.PipeExit(hit.normal);
         }

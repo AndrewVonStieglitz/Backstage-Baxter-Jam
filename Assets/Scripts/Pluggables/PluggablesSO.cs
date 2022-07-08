@@ -7,6 +7,7 @@ namespace Pluggables
         //[SerializeField] protected
         public string itemName;
         //public Sprite sprite;
+        [Tooltip("Indexed according to Enums.Colours.")]
         public Sprite[] coloredSprites;
         public Vector2 colliderDimensions;
         public Vector2 colliderOffset;

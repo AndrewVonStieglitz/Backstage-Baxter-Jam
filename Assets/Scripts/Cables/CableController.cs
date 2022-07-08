@@ -21,25 +21,16 @@ namespace Cables
         public CableState state;
         public float cableWidth;
         public List<CableNode> nodes = new List<CableNode>();
-        public CableColor cableColor;
+        public Sprite Sprite;
 
-        public void Initialise(Transform transform, CableColor color)
+        public void Initialise(Transform transform, Sprite sprite)
         {
-            cableColor = color;
+            Sprite = sprite;
             
             CreateNode(new CableNode(), transform.position);
             CreateNode(new CableNode(), transform.position);
             
-            // TODO: Move to CableRenderer.
-            GetComponentInChildren<LineRenderer>().sortingLayerName = "Cable";
-
             initialised.Invoke();
-        }
-
-        // TODO: Move to CableRenderer.
-        public void SetTexture(Texture texture)
-        {
-            GetComponentInChildren<LineRenderer>().material.mainTexture = texture;
         }
 
         public void CreateNode(CableNode node, Vector3 nodePos)

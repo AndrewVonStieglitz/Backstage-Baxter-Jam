@@ -8,11 +8,10 @@ namespace Pluggables
         [SerializeField] protected PluggablesSO identifierSO;
         protected SpriteRenderer spriteRenderer;
         protected BoxCollider2D boxCol;
-        protected Color wireColor;
 
         [SerializeField] private GameObject cablePrefab;
         [SerializeField] private Cables.CableHead cableHead;
-        public CableColor itemColor;
+        public ColorEnum color;
 
         public void Init()
         {
@@ -21,7 +20,7 @@ namespace Pluggables
             if (identifierSO != null)
             {
                 spriteRenderer = GetComponent<SpriteRenderer>();
-                spriteRenderer.sprite = identifierSO.coloredSprites[(int)itemColor];
+                spriteRenderer.sprite = identifierSO.coloredSprites[(int)color];
                 boxCol = GetComponent<BoxCollider2D>();
                 boxCol.size = identifierSO.colliderDimensions;
                 boxCol.offset = identifierSO.colliderOffset;

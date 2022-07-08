@@ -11,15 +11,16 @@ namespace Pluggables
         // TODO: Remove this dependency.
         [SerializeField] private ConnectionHead connectionHead;
         [SerializeField] private PluggableType pluggableType;
-        public Connection connectionIn;
-        public Connection connectionOut;
 
-        [SerializeField] protected CableColor itemColor;
+        private Connection connectionIn;
+        private Connection connectionOut;
+
+        [SerializeField] public ColorEnum color;
 
         protected void Awake()
         {
             PMB = GetComponent<PluggableMB>();
-            PMB.itemColor = itemColor;
+            PMB.color = color;
             pluggable = PMB.GetIdentifierSO();
             PMB.Init();
         }
@@ -49,7 +50,7 @@ namespace Pluggables
                 GameEvents.Disconnect(oldConnectionOut, this);
             }
 
-            Connection connection = new Connection(this, itemColor);
+            Connection connection = new Connection(this);
             
             connectionOut = connection;
             
@@ -95,7 +96,9 @@ namespace Pluggables
             // TODO: Pretty sure this case is covered by ContainsLoops.
             if (connection.PluggableStart == this) return false;
 
-            if (connection.cableColor != itemColor) return false;
+            // Prevent connections between different colours
+            // TODO: Pretty sure this duplicates logic in the GameManager.
+            if (connection.Color != color) return false;
 
             if (ContainsLoops(connection)) return false;
 
@@ -124,7 +127,6 @@ namespace Pluggables
 
         private bool ContainsLoops(Connection cable)
         {
-            //print("Checking for loops on: " + name);
             List<PlugCable> seenPlugCables = new List<PlugCable>();
             seenPlugCables.Add(this);
             PlugCable studyCable = cable.PluggableStart;
@@ -135,7 +137,6 @@ namespace Pluggables
                 seenPlugCables.Add(studyCable);
                 studyCable = studyCable.PrevPlugCable();
             }
-            //print("Found no loops");
             return false;
         }
     }

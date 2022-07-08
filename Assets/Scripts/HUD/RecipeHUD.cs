@@ -48,7 +48,7 @@ public class RecipeHUD : MonoBehaviour
             int colorIndex = 0;
             if (instrument != null)
             {
-                colorIndex = (int)instrument.cableColor;
+                colorIndex = (int)instrument.color;
             }
 
             recipeUI.GetChild(0).GetComponentInChildren<Image>().sprite = recipe.instrument.sprite;

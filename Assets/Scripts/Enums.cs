@@ -21,7 +21,7 @@ public enum PluggableType
     Speaker     // only wire in
 }
 
-public enum CableColor
+public enum ColorEnum
 {
     Grey,
     Red,

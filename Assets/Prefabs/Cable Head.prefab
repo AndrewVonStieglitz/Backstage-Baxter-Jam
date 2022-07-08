@@ -47,7 +47,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
-  velocity: {x: 0, y: 0, z: 0}
+  coloredCableSprites:
+  - {fileID: 21300000, guid: 55cedffc9196904418427f7a84276782, type: 3}
+  - {fileID: 21300000, guid: 6c5a397f748008042b7641144d71baa8, type: 3}
+  - {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
+  - {fileID: 21300000, guid: 9738370b10e40734d9db95c3c47eaff9, type: 3}
+  - {fileID: 21300000, guid: 9cd646b3660094a4ab034f4e212ada66, type: 3}
   cableChanged:
     m_PersistentCalls:
       m_Calls: []

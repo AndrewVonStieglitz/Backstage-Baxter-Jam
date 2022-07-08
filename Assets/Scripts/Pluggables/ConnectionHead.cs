@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Pluggables
 {
@@ -26,9 +25,6 @@ namespace Pluggables
 
         public bool TryInteract()
         {
-            //print("Cable head TryInteract, overlap = " + (lastOverlappedTrigCollider != null));
-            //if ((lastOverlappedTrigCollider != null))
-            //    print("with: " + lastOverlappedTrigCollider.name);
             if (lastOverlappedTrigCollider != null)
             {
                 if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {

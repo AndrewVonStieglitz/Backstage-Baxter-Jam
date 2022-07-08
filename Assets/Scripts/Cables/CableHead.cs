@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Pluggables;
 using UnityEngine;
@@ -9,7 +10,9 @@ namespace Cables
     public class CableHead : MonoBehaviour
     {
         [SerializeField] private GameObject cablePrefab;
-        
+        [Tooltip("Indexed according to Enums.Colours.")]
+        [SerializeField] private List<Sprite> coloredCableSprites;
+
         public CableController CurrentCable
         {
             get => currentCurrentCable;
@@ -21,7 +24,9 @@ namespace Cables
         }
 
         private Vector3 lastPosition;
-        public Vector3 velocity;
+
+        public Vector3 Velocity { get; private set; }
+
         // TODO: Use SerializedField.
         private BoxCollider2D boxCollider2D;
 
@@ -63,7 +68,7 @@ namespace Cables
             boxCollider2D = GetComponent<BoxCollider2D>();
             boxCollider2D.size = new Vector2(CurrentCable.cableWidth, CurrentCable.cableWidth);
             
-            CurrentCable.Initialise(connection.PluggableStart.transform, connection.cableColor);
+            CurrentCable.Initialise(connection.PluggableStart.transform, coloredCableSprites[(int) connection.Color]);
 
             this.connection = connection;
         }
@@ -109,13 +114,13 @@ namespace Cables
             
             if (!col.CompareTag("Cable")) return;
 
-            // rushjob code to fit catastrophic bug 
-            if (col.GetComponentInParent<CableController>().cableColor == CurrentCable.cableColor) return;
+            // Cable should not collide with other cables of the same color
+            if (col.GetComponentInParent<CableController>().Sprite == CurrentCable.Sprite) return;
 
-            var hit = TriggerCollision(velocity);
+            var hit = TriggerCollision(Velocity);
 
-            Debug.Log("Player Cable Collision");
-            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+            // Debug.Log("Player Cable Collision");
+            // Debug.DrawLine(hit.point, hit.point + hit.normal, UnityEngine.Color.yellow, 30f);
             
             GameEvents.PlayerCableCollision(hit.point, hit.normal);
         }
@@ -133,7 +138,7 @@ namespace Cables
         {
             if (CurrentCable == null || CurrentCable.state != CableController.CableState.InProgress) return;
 
-            velocity = (transform.position - lastPosition) / Time.deltaTime;
+            Velocity = (transform.position - lastPosition) / Time.deltaTime;
             lastPosition = transform.position;
 
             CurrentCable.nodes.Last().MoveNode(transform.position);

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace Pluggables
 {
@@ -27,17 +26,14 @@ namespace Pluggables
 
         public InstrumentSO Instrument { get; private set; }
         public List<PluggablesSO> pluggablesList = new List<PluggablesSO>();
-        // TODO: THis is just here temporarily. We need to move all this texture stuff up to the cables system.
-        public CableColor cableColor;
-        public Texture texture { get; set; }
+        public ColorEnum Color { get; private set; }
 
         private PlugCable pluggableStart;
         private PlugCable pluggableEnd;
 
-        public Connection(PlugCable startObj, CableColor color)
+        public Connection(PlugCable startObj)
         {
             PluggableStart = startObj;
-            cableColor = color;
         }
 
         private void RecalculatePluggablesList()
@@ -57,6 +53,7 @@ namespace Pluggables
                 if (instrumentPlug != null)
                 {
                     Instrument = instrumentPlug.instrument;
+                    Color = instrumentPlug.color;
                     break;
                 }
 
@@ -74,23 +71,5 @@ namespace Pluggables
             
             pluggablesList = newPList;
         }
-
-        private void UpdateSprite()
-        {
-            // cableSprite = connectionIn.PluggableStart.cableSprite;
-            // if (connectionOut != null)
-            // {
-            //     connectionOut.texture = connectionIn.PluggableStart.cableSprite.texture;
-            // }
-        }
-        
-        // TODO: Connections need to update their own sprites / texture whenever they change
-        
-                // Connection studyConnection = connectionOut;
-                // while (studyConnection != null)
-                // {
-                //     studyConnection.texture = cableColorSprites[0].texture;
-                //     studyConnection = studyConnection.PluggableEnd.connectionOut;
-                // }
     }
 }
