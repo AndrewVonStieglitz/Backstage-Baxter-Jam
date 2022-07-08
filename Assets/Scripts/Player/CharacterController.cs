@@ -1,5 +1,4 @@
 using System.Collections;
-using Pluggables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,9 +7,6 @@ public class CharacterController : MonoBehaviour
     private Rigidbody2D baxterRigidBody;
     private SpriteRenderer baxterSpriteRenderer;
     private CircleCollider2D baxterCollider;
-    // TODO: Remove this dependency.
-    private Cables.CableHead cableHead;
-    private ConnectionHead connectionHead;
 
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpBuffer;
@@ -29,7 +25,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private float linearDrag = 0.05f;
     [SerializeField] private float quadDrag = 0.05f;
 
-    PlayerControls playerControls;
+    private PlayerControls playerControls;
 
     [SerializeField] private int raycastResolution;
     private Vector2 rayIncrementor, raycastOrigin;
@@ -39,10 +35,6 @@ public class CharacterController : MonoBehaviour
     private int platformLayer = 6;
 
     private Animator animator;
-
-    private float pickupHeldFrom = 0f;
-    private bool pickupBeingHeld = false;
-    [SerializeField] private float maxHoldPickup;
 
     public bool debugIsGrouned = false; // shows the state of this variable in inspector. 
 
@@ -64,9 +56,6 @@ public class CharacterController : MonoBehaviour
         //baxterCollider = GetComponent<CircleCollider2D>();
         animator = GetComponent<Animator>();
         //baxterInput = GetComponent<PlayerInput>();
-        // TODO: Use SerialisedFields.
-        cableHead = transform.GetChild(0).GetComponent<Cables.CableHead>();// requires cable head be first child!!
-        connectionHead = transform.GetChild(0).GetComponent<ConnectionHead>();// requires cable head be first child!!
 
         playerControls = new PlayerControls();
 
@@ -78,8 +67,6 @@ public class CharacterController : MonoBehaviour
         playerControls.Baxter.Jump.performed += StartJump;
         playerControls.Baxter.Jump.canceled += EndJump;
         playerControls.Baxter.Move.performed += PlayerMove;
-        playerControls.Baxter.PickupRelease.performed += PickupPressDown;
-        playerControls.Baxter.PickupRelease.canceled += PickupPressUp;
         
         groundedLayerMask = (1 << platformLayer);
         BoxCollider2D box = GetComponent<BoxCollider2D>();
@@ -168,43 +155,6 @@ public class CharacterController : MonoBehaviour
         coyoteTimeCounter = 0f;
     }
 
-    public void PickupPressDown(InputAction.CallbackContext context)
-    {
-        pickupHeldFrom = Time.time;
-        pickupBeingHeld = true;
-        StopCoroutine(countdownPickupHold());
-        StartCoroutine(countdownPickupHold());
-    }
-
-    public void PickupPressUp(InputAction.CallbackContext context)
-    {
-        float pickupHeldTime= Time.time - pickupHeldFrom;
-        pickupBeingHeld = false;
-        StopCoroutine(countdownPickupHold());
-        if (pickupHeldTime < maxHoldPickup)
-        {
-            // pick up the cable
-            connectionHead.TryInteract();
-        }
-        else
-        {
-            // release the cable
-            cableHead.DropCable();
-        }
-    }
-
-    private IEnumerator countdownPickupHold()
-    {
-        float startTime = Time.time;
-        yield return new WaitForSeconds(maxHoldPickup);
-        if (pickupBeingHeld && Time.time - pickupHeldFrom >= maxHoldPickup)
-        {
-            // release cable
-            //print("Coroutine force releasing cable\tat: " + Time.time + ",\t started at: " + startTime);
-            cableHead.DropCable();
-            pickupBeingHeld = false;
-        }
-    }
 
     public void PlayerMove(InputAction.CallbackContext context)
     {
@@ -219,7 +169,6 @@ public class CharacterController : MonoBehaviour
             //circleCollider.offset = new Vector2(defaultCollisionOffset.x * -1, defaultCollisionOffset.y);
         }
     }
-
 
     private void setMoveAxis()
     {
