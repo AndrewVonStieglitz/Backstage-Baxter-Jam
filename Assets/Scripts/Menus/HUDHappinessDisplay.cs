@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +16,21 @@ public class HUDHappinessDisplay : MonoBehaviour
 
     private Image image;
 
+    private void OnEnable()
+    {
+        UIEvents.onHappinessChanged += OnHappinessChanged;
+    }
+
+    private void OnDisable()
+    {
+        UIEvents.onHappinessChanged -= OnHappinessChanged;
+    }
+
+    private void OnHappinessChanged(float happiness)
+    {
+        SetHappiness(happiness);
+    }
+
     void Start()
     {
         frameDuration = frameRate / 60f;
@@ -35,7 +48,7 @@ public class HUDHappinessDisplay : MonoBehaviour
         }
     }
 
-    public void SetHappiness(float happiness)
+    private void SetHappiness(float happiness)
     {
         // assuming happiness [0,100]
         state = Mathf.RoundToInt(happiness / 100f * 11f);

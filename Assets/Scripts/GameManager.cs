@@ -5,8 +5,6 @@ using Pluggables;
 
 public class GameManager : MonoBehaviour
 {
-
-    [SerializeField] private HUDHappinessDisplay happinessHUD;
     [SerializeField] private TMPro.TextMeshProUGUI cassetteText;
 
     //How long the intermission between songs lasts for
@@ -29,7 +27,15 @@ public class GameManager : MonoBehaviour
     public bool isStarted { get; set; }
 
     static private float m_happiness;
-    static public float happiness { get => m_happiness; set { m_happiness = Mathf.Clamp(value, 0, 100); }}
+    static public float happiness
+    {
+        get => m_happiness;
+        set
+        {
+            m_happiness = Mathf.Clamp(value, 0, 100);
+            UIEvents.HappinessChanged(happiness);
+        }
+    }
 
     IDictionary<InstrumentSO, recipe> recipeDictionary;
     IDictionary<CableController, InstrumentSO> connectionsDictionary;
@@ -81,8 +87,6 @@ public class GameManager : MonoBehaviour
                 interpolatedHappinessRate = Mathf.Lerp(.2f, happinessRate, t);
             }
             happiness += interpolatedHappinessRate * Time.deltaTime;
-            happinessHUD.SetHappiness(happiness);
-            
 
             float minutes = Mathf.Floor(timer / 60f);
             float seconds = Mathf.Ceil(timer % 60f);
@@ -111,7 +115,6 @@ public class GameManager : MonoBehaviour
         timeElapsed = 0f;
         happiness = startingHappiness;
         happinessRate = minHappinessRate;
-        happinessHUD.SetHappiness(startingHappiness);
 
         float minutes = Mathf.Floor(intermissionTime / 60f);
         float seconds = Mathf.Ceil(intermissionTime % 60f);
