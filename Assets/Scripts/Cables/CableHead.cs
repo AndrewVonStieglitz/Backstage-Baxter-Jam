@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DefaultNamespace.Pluggables;
+using Pluggables;
 using UnityEngine;
 using UnityEngine.Events;
 

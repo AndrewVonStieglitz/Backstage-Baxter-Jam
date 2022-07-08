@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Cables
+namespace Cables.Renderers
 {
     public class CableSegmentsRenderer : CableRenderer
     {

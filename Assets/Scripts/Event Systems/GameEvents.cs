@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 using Cables;
-using DefaultNamespace.Pluggables;
+using Pluggables;
 
 /*
  * Event List ============================

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DefaultNamespace.Pluggables
+namespace Pluggables
 {
     public class ConnectionHead : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace DefaultNamespace.Pluggables
+namespace Pluggables
 {
     public class Connection
     {

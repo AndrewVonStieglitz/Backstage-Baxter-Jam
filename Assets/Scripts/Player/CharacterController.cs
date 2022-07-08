@@ -1,5 +1,5 @@
 using System.Collections;
-using DefaultNamespace.Pluggables;
+using Pluggables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

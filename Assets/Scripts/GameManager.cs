@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cables;
-using DefaultNamespace.Pluggables;
+using Pluggables;
 
 public class GameManager : MonoBehaviour
 {

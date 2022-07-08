@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Cables
+namespace Cables.Renderers
 {
     public abstract class CableRenderer : MonoBehaviour
     {

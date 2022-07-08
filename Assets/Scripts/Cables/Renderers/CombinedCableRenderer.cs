@@ -3,7 +3,7 @@ using System.Linq;
 using Cables.Pipes;
 using UnityEngine;
 
-namespace Cables
+namespace Cables.Renderers
 {
     public class CombinedCableRenderer : CableRenderer
     {
