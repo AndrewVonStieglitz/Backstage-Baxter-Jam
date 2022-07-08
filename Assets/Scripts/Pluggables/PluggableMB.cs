@@ -9,8 +9,6 @@ namespace Pluggables
         protected SpriteRenderer spriteRenderer;
         protected BoxCollider2D boxCol;
 
-        [SerializeField] private GameObject cablePrefab;
-        [SerializeField] private Cables.CableHead cableHead;
         public ColorEnum color;
 
         public void Init()
