@@ -26,27 +26,6 @@ namespace Cables.Pipes
         private void OnTriggerEnter2D(Collider2D col)
         {
             CheckPipeCollision(col);
-
-            CheckCableCollision(col);
-        }
-
-        private void CheckCableCollision(Collider2D col)
-        {
-            if (cableHead.Cable == null) return;
-            
-            if (!col.CompareTag("Cable")) return;
-
-            // TODO: Duplicate code. See CableHead.CheckCableCollision.
-            // rushjob code to fit catastrophic bug 
-            if (col.GetComponentInParent<CableController>().cableColor == cableHead.Cable.cableColor) return;
-
-
-            var hit = cableHead.TriggerCollision(cableHead.velocity);
-
-            Debug.Log("Player Cable Collision");
-            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
-
-            GameEvents.PlayerCableCollision(hit.point, hit.normal);
         }
 
         private void CheckPipeCollision(Collider2D col)

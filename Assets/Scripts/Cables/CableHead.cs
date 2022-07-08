@@ -32,7 +32,6 @@ namespace Cables
         private void OnEnable()
         {
             GameEvents.onConnectionStarted += OnConnectionStarted;
-            GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
             GameEvents.onConnect += OnConnect;
             GameEvents.onDisconnect += OnDisconnect;
         }
@@ -40,7 +39,6 @@ namespace Cables
         private void OnDisable()
         {
             GameEvents.onConnectionStarted -= OnConnectionStarted;
-            GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
             GameEvents.onConnect -= OnConnect;
             GameEvents.onDisconnect -= OnDisconnect;
         }
@@ -57,11 +55,6 @@ namespace Cables
             Cable.Initialise(connection.pluggableStart.transform, connection.cableColor);
 
             this.connection = connection;
-        }
-
-        private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
-        {
-            DropCable();
         }
 
         private void OnConnect(Connection connection, PlugCable destination)
@@ -103,7 +96,6 @@ namespace Cables
             
             if (!col.CompareTag("Cable")) return;
 
-            // TODO: Duplicate code. See PipeCableHead.CheckCableCollision.
             // rushjob code to fit catastrophic bug 
             if (col.GetComponentInParent<CableController>().cableColor == Cable.cableColor) return;
 
@@ -111,6 +103,8 @@ namespace Cables
 
             // Debug.Log("Player Cable Collision");
             // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+            
+            DropCable();
 
             GameEvents.PlayerCableCollision(hit.point, hit.normal);
         }
