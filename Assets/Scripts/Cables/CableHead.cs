@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Pluggables;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,12 +10,12 @@ namespace Cables
     {
         [SerializeField] private GameObject cablePrefab;
         
-        public CableController Cable
+        public CableController CurrentCable
         {
-            get => cable;
+            get => currentCurrentCable;
             private set
             {
-                cable = value;
+                currentCurrentCable = value;
                 cableChanged.Invoke();
             }
         }
@@ -25,15 +26,23 @@ namespace Cables
         private BoxCollider2D boxCollider2D;
 
         public UnityEvent cableChanged = new UnityEvent();
-        private CableController cable;
+        private CableController currentCurrentCable;
 
         private Connection connection;
+
+        private Dictionary<Connection, CableController> cables = new Dictionary<Connection, CableController>();
 
         private void OnEnable()
         {
             GameEvents.onConnectionStarted += OnConnectionStarted;
             GameEvents.onConnect += OnConnect;
             GameEvents.onDisconnect += OnDisconnect;
+            GameEvents.onConnectionAbandoned += OnConnectionAbandoned;
+        }
+
+        private void OnConnectionAbandoned(Connection connection)
+        {
+            DestroyCable(connection);
         }
 
         private void OnDisable()
@@ -45,44 +54,48 @@ namespace Cables
 
         private void OnConnectionStarted(Connection connection)
         {
-            var cableObject = Instantiate(cablePrefab, connection.pluggableStart.transform);
+            var cableObject = Instantiate(cablePrefab, connection.PluggableStart.transform);
             
-            Cable = cableObject.GetComponent<CableController>();
+            CurrentCable = cableObject.GetComponent<CableController>();
+            
+            cables.Add(connection, CurrentCable);
 
             boxCollider2D = GetComponent<BoxCollider2D>();
-            boxCollider2D.size = new Vector2(Cable.cableWidth, Cable.cableWidth);
+            boxCollider2D.size = new Vector2(CurrentCable.cableWidth, CurrentCable.cableWidth);
             
-            Cable.Initialise(connection.pluggableStart.transform, connection.cableColor);
+            CurrentCable.Initialise(connection.PluggableStart.transform, connection.cableColor);
 
             this.connection = connection;
         }
 
         private void OnConnect(Connection connection, PlugCable destination)
         {
-            Cable.Complete(destination.transform.position);
+            CurrentCable.Complete(destination.transform.position);
 
-            Cable = null;
+            CurrentCable = null;
         }
         
         // TODO: Set the cable state to abandoned and invoke a cableAbandoned event.
         // TODO: Rename this, and some of the other events too.
         private void OnDisconnect(Connection connection, PlugCable endObj)
         {
-            if (connection != this.connection) return;
-            
-            DropCable();
+            DestroyCable(connection);
         }
 
-        public void DropCable()
+        private void DestroyCable(Connection connection)
         {
-            if (Cable)
-            {
-                // TODO: Reimplement this somewhere.
-                // Cable.pluggableStart.PlayRandomDisconnectSound();
-                Destroy(Cable.gameObject);
-                
-                connection = null;
-            }
+            if (!cables.ContainsKey(connection)) return;
+            
+            Destroy(cables[connection].gameObject);
+
+            cables.Remove(connection);
+            
+            if (connection == this.connection) this.connection = null;
+        }
+
+        private void DestroyCable(CableController cable)
+        {
+            DestroyCable(cables.First(c => c.Value == cable).Key);
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -92,20 +105,18 @@ namespace Cables
 
         private void CheckCableCollision(Collider2D col)
         {
-            if (Cable == null) return;
+            if (CurrentCable == null) return;
             
             if (!col.CompareTag("Cable")) return;
 
             // rushjob code to fit catastrophic bug 
-            if (col.GetComponentInParent<CableController>().cableColor == Cable.cableColor) return;
+            if (col.GetComponentInParent<CableController>().cableColor == CurrentCable.cableColor) return;
 
             var hit = TriggerCollision(velocity);
 
-            // Debug.Log("Player Cable Collision");
-            // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
+            Debug.Log("Player Cable Collision");
+            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
             
-            DropCable();
-
             GameEvents.PlayerCableCollision(hit.point, hit.normal);
         }
 
@@ -120,12 +131,12 @@ namespace Cables
 
         private void FixedUpdate()
         {
-            if (Cable == null || Cable.state != CableController.CableState.InProgress) return;
+            if (CurrentCable == null || CurrentCable.state != CableController.CableState.InProgress) return;
 
             velocity = (transform.position - lastPosition) / Time.deltaTime;
             lastPosition = transform.position;
 
-            Cable.nodes.Last().MoveNode(transform.position);
+            CurrentCable.nodes.Last().MoveNode(transform.position);
         }
     }
 }

@@ -7,8 +7,6 @@ namespace Player
 {
     public class PickupInput : MonoBehaviour
     {
-        // TODO: Remove this dependency.
-        [SerializeField] private Cables.CableHead cableHead;
         [SerializeField] private ConnectionHead connectionHead;
         [SerializeField] private float maxHoldPickup;
 
@@ -38,36 +36,29 @@ namespace Player
         {
             pickupHeldFrom = Time.time;
             pickupBeingHeld = true;
-            StopCoroutine(countdownPickupHold());
-            StartCoroutine(countdownPickupHold());
+            StopCoroutine(CountdownPickupHold());
+            StartCoroutine(CountdownPickupHold());
         }
 
         private void PickupPressUp(InputAction.CallbackContext context)
         {
-            float pickupHeldTime= Time.time - pickupHeldFrom;
+            if (!pickupBeingHeld) return;
+            
             pickupBeingHeld = false;
-            StopCoroutine(countdownPickupHold());
-            if (pickupHeldTime < maxHoldPickup)
-            {
-                // pick up the cable
-                connectionHead.TryInteract();
-            }
-            else
-            {
-                // release the cable
-                cableHead.DropCable();
-            }
+            
+            StopCoroutine(CountdownPickupHold());
+            
+            connectionHead.TryInteract();
         }
 
-        private IEnumerator countdownPickupHold()
+        private IEnumerator CountdownPickupHold()
         {
-            float startTime = Time.time;
             yield return new WaitForSeconds(maxHoldPickup);
+            
             if (pickupBeingHeld && Time.time - pickupHeldFrom >= maxHoldPickup)
             {
-                // release cable
-                //print("Coroutine force releasing cable\tat: " + Time.time + ",\t started at: " + startTime);
-                cableHead.DropCable();
+                connectionHead.AbandonConnection();
+                
                 pickupBeingHeld = false;
             }
         }

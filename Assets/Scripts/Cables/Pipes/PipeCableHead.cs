@@ -20,7 +20,7 @@ namespace Cables.Pipes
 
         private void OnCableChanged()
         {
-            pipeNodeController = cableHead.Cable == null ? null : cableHead.Cable.GetComponent<CablePipeNodeController>();
+            pipeNodeController = cableHead.CurrentCable == null ? null : cableHead.CurrentCable.GetComponent<CablePipeNodeController>();
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -31,13 +31,13 @@ namespace Cables.Pipes
         private void CheckPipeCollision(Collider2D col)
         {
             // TODO: Duplicate code. See OnTriggerExit2D.
-            if (cableHead.Cable == null) return;
+            if (cableHead.CurrentCable == null) return;
 
             if (!col.CompareTag("Pipe")) return;
 
             var hit = cableHead.TriggerCollision(cableHead.velocity);
 
-            Vector2 nodePosition = hit.point + hit.normal * cableHead.Cable.cableWidth / 2;
+            Vector2 nodePosition = hit.point + hit.normal * cableHead.CurrentCable.cableWidth / 2;
 
             // Draw collision normals
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
@@ -48,7 +48,7 @@ namespace Cables.Pipes
         private void OnTriggerExit2D(Collider2D col)
         {
             // TODO: Duplicate code. See OnTriggerEnter2D.
-            if (cableHead.Cable == null) return;
+            if (cableHead.CurrentCable == null) return;
             
             if (!col.CompareTag("Pipe")) return;
 

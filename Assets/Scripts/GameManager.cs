@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
     private void OnCableConnected(Connection connection, PlugCable plug)
     {
         print("On Cable connected called in GM");
-        InstrumentSO instrument = connection.instrument;
+        InstrumentSO instrument = connection.Instrument;
         if(instrument == null)
         {
             print("no instrument");
@@ -230,7 +230,7 @@ public class GameManager : MonoBehaviour
         {
             //Debug.LogError("No recipe found matching instrument");// crashing the game when the player makes a mistake is not wicked sick
             Debug.LogWarning("Cable wired into wrong this for recipe");
-            plug.Unplug(true);
+            plug.UnplugInput();
 
         }
         //cable.pluggablesList;

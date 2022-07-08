@@ -70,12 +70,12 @@ public static class GameEvents
         }
     }
 
-    public static Action<CableController> onCableDrop;
-    public static void CableDrop(CableController cable)
+    public static Action<Connection> onConnectionAbandoned;
+    public static void ConnectionAbandoned(Connection connection)
     {
-        if (onCableDrop != null)
+        if (onConnectionAbandoned != null)
         {
-            onCableDrop(cable);
+            onConnectionAbandoned(connection);
         }
     }
 

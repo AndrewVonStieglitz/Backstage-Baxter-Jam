@@ -5,62 +5,92 @@ namespace Pluggables
 {
     public class Connection
     {
-        public enum ConnectionState {InProgress, Connected}
-        
-        public PlugCable pluggableStart;
-        public PlugCable pluggableEnd;
-        public InstrumentSO instrument;
-        public List<PluggablesSO> pluggablesList = new List<PluggablesSO>();
-        public CableColor cableColor;
-        // TODO: THis is just here temporarily. We need to move all this texture stuff up to the cables system.
-        public Texture texture { get; set; }
-        public ConnectionState state;
-        
-        public void Initialise(PlugCable startObj, CableColor color)
+        public PlugCable PluggableStart
         {
-            pluggableStart = startObj;
-            cableColor = color;
-            
-            if (startObj.tag == "Instrument")
+            get => pluggableStart;
+            set
             {
-                instrument = startObj.instrument;
-            }
-            
-            if (startObj.tag == "Pluggable")
-            {
-                pluggablesList.Add(startObj.pluggable);
-                instrument = startObj.GetPathsInstrument();
+                pluggableStart = value;
+                RecalculatePluggablesList();
             }
         }
-        
-        public void RecalculatePluggablesList()
+
+        public PlugCable PluggableEnd
         {
-            PlugCable studyPlug = pluggableStart;
+            get => pluggableEnd;
+            set
+            {
+                pluggableEnd = value;
+                RecalculatePluggablesList();
+            }
+        }
+
+        public InstrumentSO Instrument { get; private set; }
+        public List<PluggablesSO> pluggablesList = new List<PluggablesSO>();
+        // TODO: THis is just here temporarily. We need to move all this texture stuff up to the cables system.
+        public CableColor cableColor;
+        public Texture texture { get; set; }
+
+        private PlugCable pluggableStart;
+        private PlugCable pluggableEnd;
+
+        public Connection(PlugCable startObj, CableColor color)
+        {
+            PluggableStart = startObj;
+            cableColor = color;
+        }
+
+        private void RecalculatePluggablesList()
+        {
             List<PluggablesSO> newPList = new List<PluggablesSO>();
+            PlugCable studyPlug = PluggableStart;
+            
             //List<PlugCable> seenPlugCables = new List<PlugCable>(); // to prevent loops
-            InstrumentSO newInstrument = null;
             //newPList.Add(pluggableStart.pluggable);
+            
             while (studyPlug != null)
             {
-                if (studyPlug.IsInstrument())
+                newPList.Add(studyPlug.pluggable);
+                
+                var instrumentPlug = studyPlug as InstrumentPlugCable;
+
+                if (instrumentPlug != null)
                 {
-                    newInstrument = studyPlug.instrument;
+                    Instrument = instrumentPlug.instrument;
                     break;
                 }
-                newPList.Add(studyPlug.pluggable);
-                studyPlug = studyPlug.GetPrevPlugCable();
+
+                studyPlug = studyPlug.PrevPlugCable();
+                
                 //if (seenPlugCables.Contains(studyPlug))
                 //    return false;
                 //seenPlugCables.Add(studyPlug);
             }
+
             newPList.Reverse();
-            if (pluggableEnd != null)
-                newPList.Add(pluggableEnd.pluggable);
-            instrument = newInstrument;
+            
+            if (PluggableEnd != null)
+                newPList.Add(PluggableEnd.pluggable);
+            
             pluggablesList = newPList;
-            //print("Refreshing: " + name + " to instrument: " + (newInstrument != null ? instrument.itemName : "NULL") 
-            //    + ",\tpluggables list contains: " + newPList.Count);
-            //return true;
         }
+
+        private void UpdateSprite()
+        {
+            // cableSprite = connectionIn.PluggableStart.cableSprite;
+            // if (connectionOut != null)
+            // {
+            //     connectionOut.texture = connectionIn.PluggableStart.cableSprite.texture;
+            // }
+        }
+        
+        // TODO: Connections need to update their own sprites / texture whenever they change
+        
+                // Connection studyConnection = connectionOut;
+                // while (studyConnection != null)
+                // {
+                //     studyConnection.texture = cableColorSprites[0].texture;
+                //     studyConnection = studyConnection.PluggableEnd.connectionOut;
+                // }
     }
 }

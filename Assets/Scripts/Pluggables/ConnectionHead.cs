@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Pluggables
 {
@@ -7,7 +8,22 @@ namespace Pluggables
         public Connection Connection;
         
         private Collider2D lastOverlappedTrigCollider;
+
+        private void OnEnable()
+        {
+            GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
+        }
         
+        private void OnDisable()
+        {
+            GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+        }
+
+        private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
+        {
+            AbandonConnection();
+        }
+
         public bool TryInteract()
         {
             //print("Cable head TryInteract, overlap = " + (lastOverlappedTrigCollider != null));
@@ -16,7 +32,7 @@ namespace Pluggables
             if (lastOverlappedTrigCollider != null)
             {
                 if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
-                    plugCableInto.Interact();
+                    plugCableInto.Interact(Connection);
                     return true;
                 }
             }
@@ -32,6 +48,19 @@ namespace Pluggables
         {
             if (lastOverlappedTrigCollider == col)
                 lastOverlappedTrigCollider = null;
+        }
+
+        public void AbandonConnection()
+        {
+            if (Connection == null) return;
+            
+            var connection = Connection;
+            
+            Connection = null;
+            
+            connection.PluggableStart.UnplugOutput();
+            
+            GameEvents.ConnectionAbandoned(connection);
         }
     }
 }
