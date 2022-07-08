@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using DefaultNamespace.Pluggables;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,6 +7,8 @@ namespace Cables
 {
     public class CableHead : MonoBehaviour
     {
+        [SerializeField] private GameObject cablePrefab;
+        
         public CableController Cable
         {
             get => cable;
@@ -19,20 +21,42 @@ namespace Cables
 
         private Vector3 lastPosition;
         public Vector3 velocity;
+        // TODO: Use SerializedField.
         private BoxCollider2D boxCollider2D;
-        private Collider2D lastOverlappedTrigCollider;
 
         public UnityEvent cableChanged = new UnityEvent();
         private CableController cable;
 
+        private Connection connection;
+
         private void OnEnable()
         {
+            GameEvents.onConnectionStarted += OnConnectionStarted;
             GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
+            GameEvents.onConnect += OnConnect;
+            GameEvents.onDisconnect += OnDisconnect;
         }
 
         private void OnDisable()
         {
+            GameEvents.onConnectionStarted -= OnConnectionStarted;
             GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+            GameEvents.onConnect -= OnConnect;
+            GameEvents.onDisconnect -= OnDisconnect;
+        }
+
+        private void OnConnectionStarted(Connection connection)
+        {
+            var cableObject = Instantiate(cablePrefab, connection.pluggableStart.transform);
+            
+            Cable = cableObject.GetComponent<CableController>();
+
+            boxCollider2D = GetComponent<BoxCollider2D>();
+            boxCollider2D.size = new Vector2(Cable.cableWidth, Cable.cableWidth);
+            
+            Cable.Initialise(connection.pluggableStart.transform, connection.cableColor);
+
+            this.connection = connection;
         }
 
         private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
@@ -40,70 +64,48 @@ namespace Cables
             DropCable();
         }
 
-        public void NewCable(CableController cable)
+        private void OnConnect(Connection connection, PlugCable destination)
         {
-            Cable = cable;
-
-            boxCollider2D = GetComponent<BoxCollider2D>();
-            boxCollider2D.size = new Vector2(cable.cableWidth, cable.cableWidth);
-            
-            cable.cableCompleted.AddListener(OnCableCompleted);
-        }
-
-        private void OnCableCompleted()
-        {
-            Cable.cableCompleted.RemoveListener(OnCableCompleted);
+            Cable.Complete(destination.transform.position);
 
             Cable = null;
+        }
+        
+        // TODO: Set the cable state to abandoned and invoke a cableAbandoned event.
+        // TODO: Rename this, and some of the other events too.
+        private void OnDisconnect(Connection connection, PlugCable endObj)
+        {
+            if (connection != this.connection) return;
+            
+            DropCable();
         }
 
         public void DropCable()
         {
-            if (cable)
+            if (Cable)
             {
-                cable.pluggableStart.PlayRandomDisconnectSound();
-                Destroy(cable.gameObject);
+                // TODO: Reimplement this somewhere.
+                // Cable.pluggableStart.PlayRandomDisconnectSound();
+                Destroy(Cable.gameObject);
+                
+                connection = null;
             }
-        }
-
-        public bool TryInteract()
-        {
-            //print("Cable head TryInteract, overlap = " + (lastOverlappedTrigCollider != null));
-            //if ((lastOverlappedTrigCollider != null))
-            //    print("with: " + lastOverlappedTrigCollider.name);
-            if (lastOverlappedTrigCollider != null)
-            {
-                if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
-                    plugCableInto.Interact();
-                    return true;
-                }
-            }
-            return false;
         }
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.tag == "Cable") return;
-            col.GetComponent<PlugCable>();
-            lastOverlappedTrigCollider = col;
-
             CheckCableCollision(col);
-        }
-
-        private void OnTriggerExit2D(Collider2D col)
-        {
-            if (lastOverlappedTrigCollider == col)
-                lastOverlappedTrigCollider = null;
         }
 
         private void CheckCableCollision(Collider2D col)
         {
-            if (cable == null) return;
+            if (Cable == null) return;
             
             if (!col.CompareTag("Cable")) return;
 
+            // TODO: Duplicate code. See PipeCableHead.CheckCableCollision.
             // rushjob code to fit catastrophic bug 
-            if (col.GetComponentInParent<CableController>().cableColor == cable.cableColor) return;
+            if (col.GetComponentInParent<CableController>().cableColor == Cable.cableColor) return;
 
             var hit = TriggerCollision(velocity);
 
@@ -131,7 +133,5 @@ namespace Cables
 
             Cable.nodes.Last().MoveNode(transform.position);
         }
-
-        public CableController GetCable() { return cable; }
     }
 }

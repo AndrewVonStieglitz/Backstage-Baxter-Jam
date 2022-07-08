@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cables;
+using DefaultNamespace.Pluggables;
 
 public class GameManager : MonoBehaviour
 {
@@ -175,10 +176,10 @@ public class GameManager : MonoBehaviour
         Invoke("EndGame", 5);
     }
 
-    private void OnCableConnected(CableController cable, PlugCable plug)
+    private void OnCableConnected(Connection connection, PlugCable plug)
     {
         print("On Cable connected called in GM");
-        InstrumentSO instrument = cable.instrument;
+        InstrumentSO instrument = connection.instrument;
         if(instrument == null)
         {
             print("no instrument");
@@ -189,14 +190,14 @@ public class GameManager : MonoBehaviour
             //If matching recipe found with correct instrument
             bool recipeUseAmp = recipe.amp != null;
             int totalPluggables = recipe.midAffectors.Length + (recipeUseAmp ? 2 : 1);
-            if (cable.pluggablesList.Count == totalPluggables)
+            if (connection.pluggablesList.Count == totalPluggables)
             {//First checks if size of list matches
                 Debug.Log("Correct number of items in Pluggables List");
-                bool ampCheck = recipeUseAmp ? cable.pluggablesList[0] == recipe.amp : true;
-                if (ampCheck && cable.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
+                bool ampCheck = recipeUseAmp ? connection.pluggablesList[0] == recipe.amp : true;
+                if (ampCheck && connection.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
                 {
                     Debug.Log("Correct (or no) amp check passed");
-                    List<PluggablesSO> pluggables = new List<PluggablesSO>(cable.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
+                    List<PluggablesSO> pluggables = new List<PluggablesSO>(connection.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
                     foreach(MidAffectorSuper midAffector in recipe.midAffectors)
                     {
                         Debug.Log("Got here 3");
@@ -221,7 +222,7 @@ public class GameManager : MonoBehaviour
             }
             //If no conditions are met, recipe must be broken
             GameEvents.RecipeBroken(recipe);
-            print("GM Recipe broken. totalP: " + totalPluggables + ",\tlistCount: " + cable.pluggablesList.Count);
+            print("GM Recipe broken. totalP: " + totalPluggables + ",\tlistCount: " + connection.pluggablesList.Count);
         }
         else
         {
@@ -298,8 +299,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onEndAlbum += OnAlbumEnded;
         GameEvents.onReadySong += OnReadySong;
         GameEvents.onStartSong += OnStartSong;
-        GameEvents.onCableConnectPlug += OnCableConnected;
-        GameEvents.onCableDisconnectPlug += OnCableConnected;
+        GameEvents.onConnect += OnCableConnected;
+        GameEvents.onDisconnect += OnCableConnected;
         GameEvents.onRecipeCompleted += OnRecipeCompleted;
         GameEvents.onRecipeBroken += OnRecipeBroken;
     }
@@ -312,8 +313,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onEndAlbum -= OnAlbumEnded;
         GameEvents.onReadySong -= OnReadySong;
         GameEvents.onStartSong -= OnStartSong;
-        GameEvents.onCableConnectPlug -= OnCableConnected;
-        GameEvents.onCableDisconnectPlug -= OnCableConnected;
+        GameEvents.onConnect -= OnCableConnected;
+        GameEvents.onDisconnect -= OnCableConnected;
     }
 
     private void Start()

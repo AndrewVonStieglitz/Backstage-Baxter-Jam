@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Cables;
+using DefaultNamespace.Pluggables;
 
 /*
  * Event List ============================
@@ -62,12 +61,12 @@ public static class GameEvents
         }
     }
 
-    public static Action<CableController> onCablePickup;
-    public static void CablePickup(CableController cable)
+    public static Action<Connection> onConnectionStarted;
+    public static void ConnectionStarted(Connection connection)
     {
-        if (onCablePickup != null)
+        if (onConnectionStarted != null)
         {
-            onCablePickup(cable);
+            onConnectionStarted(connection);
         }
     }
 
@@ -80,21 +79,21 @@ public static class GameEvents
         }
     }
 
-    public static Action<CableController, PlugCable> onCableConnectPlug;
-    public static void CableConnectPlug(CableController cable, PlugCable endObj)
+    public static Action<Connection, PlugCable> onConnect;
+    public static void Connect(Connection connection, PlugCable endObj)
     {
-        if (onCableConnectPlug != null)
+        if (onConnect != null)
         {
-            onCableConnectPlug(cable, endObj);
+            onConnect(connection, endObj);
         }
     }
 
-    public static Action<CableController, PlugCable> onCableDisconnectPlug;
-    public static void CableDisconnectPlug(CableController cable, PlugCable endObj)
+    public static Action<Connection, PlugCable> onDisconnect;
+    public static void Disconnect(Connection connection, PlugCable endObj)
     {
-        if (onCableDisconnectPlug != null)
+        if (onDisconnect != null)
         {
-            onCableDisconnectPlug(cable, endObj);
+            onDisconnect(connection, endObj);
         }
     }
 

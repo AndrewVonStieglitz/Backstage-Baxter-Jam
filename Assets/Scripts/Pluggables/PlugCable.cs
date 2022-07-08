@@ -1,8 +1,6 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
+using DefaultNamespace.Pluggables;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PlugCable : MonoBehaviour
 {
@@ -12,12 +10,11 @@ public class PlugCable : MonoBehaviour
     public InstrumentSO instrument;
     private BoxCollider2D boxCol;
 
-    [SerializeField] private GameObject cablePrefab;
-    [SerializeField] private Cables.CableHead cableHead;
+    [SerializeField] private ConnectionHead connectionHead;
     public Sprite cableSprite;
     [SerializeField] private PluggableType pluggableType;
-    private readonly List<Cables.CableController> cables = new List<Cables.CableController>();
-    protected Cables.CableController cableIn, cableOut;
+    private readonly List<Connection> connections = new List<Connection>();
+    protected Connection connectionIn, connectionOut;
     //[SerializeField] private Sprite defaultCableTexture;
     private bool isInstrument;
     [SerializeField] private CableColor itemColor;
@@ -58,7 +55,7 @@ public class PlugCable : MonoBehaviour
     public void Interact()
     {
         //moved functionality from on trigger enter 2D
-        bool hasCable = cableHead.Cable != null;
+        bool hasCable = connectionHead.Connection != null;
         if (GameManager.currentGameState != GameManager.GameState.playing) return;
         //print("Interact called on: " + name + ",\tType: " + pluggableType + ",\thasCable: " + hasCable);// + ",\tIt's colour: " + itemColor + ",\tCable colour: " + cableHead.Cable.cableColor);
 
@@ -73,8 +70,8 @@ public class PlugCable : MonoBehaviour
                     EndCable();
                 else
                 {
-                    if (cableOut != null)
-                        cableOut.pluggableEnd.Unplug(false);
+                    if (connectionOut != null)
+                        connectionOut.pluggableEnd.Unplug(false);
                     StartCable();
                 }
                 break;
@@ -87,18 +84,18 @@ public class PlugCable : MonoBehaviour
 
     public void Unplug(bool useErrorSound)
     {
-        cableIn = null;
+        connectionIn = null;
         Refresh();
         if (pluggableType != PluggableType.Instrument)
         {
             cableSprite = cableColorSprites[0];
             // apply this to the renderers
-            Cables.CableController studyCable = cableOut;
-            while (studyCable != null)
+            Connection studyConnection = connectionOut;
+            while (studyConnection != null)
             {
                 //studyCable.transform.GetChild(1).GetComponent<LineRenderer>().material.mainTexture = defaultCableTexture.texture;
-                studyCable.SetTexture(cableColorSprites[0].texture);
-                studyCable = studyCable.pluggableEnd.cableOut;
+                studyConnection.texture = cableColorSprites[0].texture;
+                studyConnection = studyConnection.pluggableEnd.connectionOut;
                 //lineRenderer.material.mainTexture = cableSprite.texture;
             }
         }
@@ -110,28 +107,28 @@ public class PlugCable : MonoBehaviour
 
     public bool Refresh()
     {
-        if (cableIn != null)
+        if (connectionIn != null)
         {
             // This bool is false if the recalculation encounters a loop, the most terrible thing. 
             // if it does, pass that on to know not to allow the connection. 
-            cableIn.RecalculatePluggablesList();//bool recalcOK = 
+            connectionIn.RecalculatePluggablesList();//bool recalcOK = 
             //if (!recalcOK)
             //    return false;
-            cableSprite = cableIn.pluggableStart.cableSprite;
-            if (cableOut != null)
+            cableSprite = connectionIn.pluggableStart.cableSprite;
+            if (connectionOut != null)
             {
-                cableOut.SetTexture(cableIn.pluggableStart.cableSprite.texture);
+                connectionOut.texture = connectionIn.pluggableStart.cableSprite.texture;
                 //cableOut.transform.GetChild(1).GetComponent<LineRenderer>().material.mainTexture = cableIn.pluggableStart.cableSprite.texture;
             }
-            instrument = cableIn.pluggableStart.instrument;
+            instrument = connectionIn.pluggableStart.instrument;
         }
-        if (cableOut != null)
+        if (connectionOut != null)
         {
-            cableOut.RecalculatePluggablesList();//bool recalcOK = 
+            connectionOut.RecalculatePluggablesList();//bool recalcOK = 
             //if (!recalcOK) return false;
-            if (cableOut.state == Cables.CableController.CableState.Completed)
+            if (connectionOut.state == Connection.ConnectionState.Connected)
             {
-                cableOut.pluggableEnd.Refresh();//recalcokOKOK
+                connectionOut.pluggableEnd.Refresh();//recalcokOKOK
             }
         }
         return true;
@@ -156,8 +153,8 @@ public class PlugCable : MonoBehaviour
         }
         
         boxCol = GetComponent<BoxCollider2D>();
-        if (cableHead == null)
-            cableHead = GameObject.Find("Baxter").transform.GetChild(0).GetComponent<Cables.CableHead>();
+        if (connectionHead == null)
+            connectionHead = GameObject.Find("Baxter").transform.GetChild(0).GetComponent<ConnectionHead>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -166,42 +163,46 @@ public class PlugCable : MonoBehaviour
         if (cableSprite == null)
             cableSprite = cableColorSprites[0];
         isInstrument = instrument != null;
-        if (cableHead == null)
-            cableHead = GameObject.Find("Baxter").GetComponentInChildren<Cables.CableHead>();
+        if (connectionHead == null)
+            connectionHead = GameObject.Find("Baxter").GetComponentInChildren<ConnectionHead>();
     }
 
     private void StartCable()
     {
-        if (cableOut != null)
-            cableOut.pluggableEnd.Unplug(false);
-        GameObject cableObject = Instantiate(cablePrefab, transform);
-        Cables.CableController cable = cableObject.GetComponent<Cables.CableController>();
-        if (cableOut)
+        if (connectionOut != null)
+            connectionOut.pluggableEnd.Unplug(false);
+        
+        Connection connection = new Connection();
+        
+        if (connectionOut != null)
         {
             //print(name + " (StartCable()) disconnecting cable to: " + cableOut.pluggableStart.name);
-            GameEvents.CableDisconnectPlug(cableOut, this);
+            GameEvents.Disconnect(connectionOut, this);
 
             // Additional conditions are required to determine whether the target is on or off
-            cableOut.pluggableEnd.PlayRandomSound(audioDisconnectOff);
+            connectionOut.pluggableEnd.PlayRandomSound(audioDisconnectOff);
         }
-        cableOut = cable;
-        cables.Add(cable);
+        connectionOut = connection;
+        connections.Add(connection);
 
-        cableHead.NewCable(cable);
+        connectionHead.Connection = connection;
+        
         PlayRandomSound(audioConnectOn);
 
-        cable.Initialise(this, itemColor);
+        connection.Initialise(this, itemColor);
         Refresh();
         //print("Starting cable on: " + name);
         // TODO: inform game coordinator that a cable is starting from here
+
+        GameEvents.ConnectionStarted(connection);
     }
 
     private void EndCable()
     {
-        Cables.CableController cable = cableHead.Cable;
-        PlugCable cableStart = cable.pluggableStart;
+        Connection connection = connectionHead.Connection;
+        PlugCable cableStart = connection.pluggableStart;
         if (cableStart == this) return;
-        if (cable.cableColor != itemColor)
+        if (connection.cableColor != itemColor)
         {
             PlayRandomSound(audioElecFailure);
             //print("Wrong colour cannot endcable");
@@ -209,40 +210,40 @@ public class PlugCable : MonoBehaviour
         }
         //bool refreshOK = Refresh();
         //if (!refreshOK) return;
-        if (ContainsLoops(cable))
+        if (ContainsLoops(connection))
         {
             // play a truly grusome sound effect
             return;
         }
-        cable.nodes.Last().MoveNode(transform.position);
-        cable.pluggablesList.Add(pluggable);
-        cable.Complete();
-        cable.pluggableEnd = this;
+        connection.pluggablesList.Add(pluggable);
+        connection.pluggableEnd = this;
         PlayRandomSound(audioConnectOff);
-        if (cableIn)
+        if (connectionIn != null)
         {
-            print(name + " (EndCable()) disconnecting cable to: " + cableIn.pluggableStart.name);
-            GameEvents.CableDisconnectPlug(cableIn, this);
+            print(name + " (EndCable()) disconnecting cable to: " + connectionIn.pluggableStart.name);
+            GameEvents.Disconnect(connectionIn, this);
 
-            cableIn.pluggableStart.PlayRandomSound(audioDisconnectOn);
+            connectionIn.pluggableStart.PlayRandomSound(audioDisconnectOn);
         }
-        cableIn = cable;
-        cable.pluggableEnd = this;
+        connectionIn = connection;
+        connection.pluggableEnd = this;
         cableSprite = cableStart.cableSprite;
         Refresh();
-        GameEvents.CableConnectPlug(cable, this);
+        connection.state = Connection.ConnectionState.Connected;
+        connectionHead.Connection = null;
+        GameEvents.Connect(connection, this);
         print("Connected cable from: " + cableStart.name + ",\t to: " + name);
         // TODO: inform game coordinator that a cable has finished here, if speaker play song. 
     }
 
     public PlugCable GetPrevPlugCable()
     {
-        if (cableIn != null)
-            return cableIn.pluggableStart;
+        if (connectionIn != null)
+            return connectionIn.pluggableStart;
         return null;
     }
 
-    private bool ContainsLoops(Cables.CableController cable)
+    private bool ContainsLoops(Connection cable)
     {
         //print("Checking for loops on: " + name);
         List<PlugCable> seenPlugCables = new List<PlugCable>();
@@ -262,7 +263,7 @@ public class PlugCable : MonoBehaviour
     public InstrumentSO GetPathsInstrument() {
         if (instrument != null)
             return instrument;
-        return cableIn != null ? cableIn.instrument : null;
+        return connectionIn != null ? connectionIn.instrument : null;
     }
 
     public void PlayRandomSound(AudioClip[] array) {

@@ -1,6 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using DefaultNamespace.Pluggables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +8,9 @@ public class CharacterController : MonoBehaviour
     private Rigidbody2D baxterRigidBody;
     private SpriteRenderer baxterSpriteRenderer;
     private CircleCollider2D baxterCollider;
+    // TODO: Remove this dependency.
     private Cables.CableHead cableHead;
+    private ConnectionHead connectionHead;
 
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpBuffer;
@@ -63,7 +64,9 @@ public class CharacterController : MonoBehaviour
         //baxterCollider = GetComponent<CircleCollider2D>();
         animator = GetComponent<Animator>();
         //baxterInput = GetComponent<PlayerInput>();
+        // TODO: Use SerialisedFields.
         cableHead = transform.GetChild(0).GetComponent<Cables.CableHead>();// requires cable head be first child!!
+        connectionHead = transform.GetChild(0).GetComponent<ConnectionHead>();// requires cable head be first child!!
 
         playerControls = new PlayerControls();
 
@@ -181,7 +184,7 @@ public class CharacterController : MonoBehaviour
         if (pickupHeldTime < maxHoldPickup)
         {
             // pick up the cable
-            cableHead.TryInteract();
+            connectionHead.TryInteract();
         }
         else
         {

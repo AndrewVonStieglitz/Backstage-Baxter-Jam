@@ -36,8 +36,9 @@ namespace Cables.Pipes
             
             if (!col.CompareTag("Cable")) return;
 
+            // TODO: Duplicate code. See CableHead.CheckCableCollision.
             // rushjob code to fit catastrophic bug 
-            if (col.GetComponentInParent<CableController>().cableColor == cableHead.GetCable().cableColor) return;
+            if (col.GetComponentInParent<CableController>().cableColor == cableHead.Cable.cableColor) return;
 
 
             var hit = cableHead.TriggerCollision(cableHead.velocity);

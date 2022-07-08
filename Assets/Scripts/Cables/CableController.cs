@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,112 +16,30 @@ namespace Cables
         public UnityEvent initialised = new UnityEvent();
         public UnityEvent<CableNode> nodeCreated = new UnityEvent<CableNode>();
         public UnityEvent<CableNode> nodeDestroyed = new UnityEvent<CableNode>();
-        public UnityEvent cableCompleted = new UnityEvent();
         public UnityEvent<CableNode> nodeMoved = new UnityEvent<CableNode>();
 
         public CableState state;
-        //public AmpController amp;
-        public PlugCable pluggableStart;
-        public PlugCable pluggableEnd;
         public float cableWidth;
         public List<CableNode> nodes = new List<CableNode>();
-
-        public InstrumentSO instrument;
-        public List<PluggablesSO> pluggablesList;
         public CableColor cableColor;
-        
 
-        private void OnEnable()
+        public void Initialise(Transform transform, CableColor color)
         {
-            GameEvents.onCableDisconnectPlug += OnCableDisconnectPlug;
-        }
-        
-        private void OnDisable()
-        {
-            GameEvents.onCableDisconnectPlug -= OnCableDisconnectPlug;
-        }
-
-        //public void Initialise(AmpController amp)
-        //{
-        //    this.amp = amp;
-            
-        //    Initialise(amp.transform);
-        //}
-
-        public void Initialise(PlugCable startObj, CableColor color)
-        {
-            pluggableStart = startObj;
             cableColor = color;
             
-            if (startObj.tag == "Instrument")
-            {
-                instrument = startObj.instrument;
-            }
+            CreateNode(new CableNode(), transform.position);
+            CreateNode(new CableNode(), transform.position);
             
-            if (startObj.tag == "Pluggable")
-            {
-                pluggablesList.Add(startObj.pluggable);
-                instrument = startObj.GetPathsInstrument();
-            }
-            
-            Initialise(pluggableStart.transform);
+            // TODO: Move to CableRenderer.
             GetComponentInChildren<LineRenderer>().sortingLayerName = "Cable";
-        }
-
-        private void Initialise(Transform transform)
-        {
-            CreateNode(new CableNode(), transform.position);
-            CreateNode(new CableNode(), transform.position);
 
             initialised.Invoke();
         }
 
-        public void RecalculatePluggablesList()
-        {
-            PlugCable studyPlug = pluggableStart;
-            List<PluggablesSO> newPList = new List<PluggablesSO>();
-            //List<PlugCable> seenPlugCables = new List<PlugCable>(); // to prevent loops
-            InstrumentSO newInstrument = null;
-            //newPList.Add(pluggableStart.pluggable);
-            while (studyPlug != null)
-            {
-                if (studyPlug.IsInstrument())
-                {
-                    newInstrument = studyPlug.instrument;
-                    break;
-                }
-                newPList.Add(studyPlug.pluggable);
-                studyPlug = studyPlug.GetPrevPlugCable();
-                //if (seenPlugCables.Contains(studyPlug))
-                //    return false;
-                //seenPlugCables.Add(studyPlug);
-            }
-            newPList.Reverse();
-            if (pluggableEnd != null)
-                newPList.Add(pluggableEnd.pluggable);
-            instrument = newInstrument;
-            pluggablesList = newPList;
-            //print("Refreshing: " + name + " to instrument: " + (newInstrument != null ? instrument.itemName : "NULL") 
-            //    + ",\tpluggables list contains: " + newPList.Count);
-            //return true;
-        }
-
+        // TODO: Move to CableRenderer.
         public void SetTexture(Texture texture)
         {
             GetComponentInChildren<LineRenderer>().material.mainTexture = texture;
-        }
-
-        // TODO: Should set the cable state to abandoned and invoke a cableAbandoned event.
-        private void OnCableDisconnect(CableController cable)
-        {
-            if (cable != this) return;
-            
-            Destroy(gameObject);
-        }
-        
-        private void OnCableDisconnectPlug(CableController cable, PlugCable endObj)
-        {
-            OnCableDisconnect(cable);
         }
 
         public void CreateNode(CableNode node, Vector3 nodePos)
@@ -153,11 +72,11 @@ namespace Cables
             nodeDestroyed.Invoke(node);
         }
 
-        public void Complete()
+        public void Complete(Vector3 endPosition)
         {
-            state = CableState.Completed;
+            nodes.Last().MoveNode(endPosition);
             
-            cableCompleted.Invoke();
+            state = CableState.Completed;
         }
     }
 }

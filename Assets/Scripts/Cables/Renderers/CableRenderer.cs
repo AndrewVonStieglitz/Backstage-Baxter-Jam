@@ -75,8 +75,9 @@ namespace Cables
 
         protected virtual void OnInitialised()
         {
-            if (cable.pluggableStart)
-                cableSprite = cable.pluggableStart.cableSprite;
+            // TODO: Not sure how to reimplement this yet.
+            // if (cable.pluggableStart)
+            //     cableSprite = cable.pluggableStart.cableSprite;
             
             initialised.Invoke();
         }
@@ -84,7 +85,8 @@ namespace Cables
         protected void InitialiseLineRenderer(LineRenderer lineRenderer)
         {
             lineRenderer.widthCurve = AnimationCurve.Constant(1, 1, cable.cableWidth);
-            lineRenderer.material.mainTexture = cableSprite.texture; 
+            // TODO: cableSprite isn't defined, commenting out for now
+            // lineRenderer.material.mainTexture = cableSprite.texture; 
         }
     }
 }
