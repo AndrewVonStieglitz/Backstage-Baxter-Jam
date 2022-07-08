@@ -1,67 +1,72 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Pluggables
 {
     public class PlugCableAudio : MonoBehaviour
     {
-        [SerializeField] private PlugCable plugCable;
+        // TODO: These still need to be hooked up according to the tooltips.
         [SerializeField] private AudioSource audioSource;
-        [Tooltip("Clips to be played when a connection creates a full connection.")]
+        [Tooltip("Clips to be played when a connection would be audible through a speaker.")]
         [SerializeField] private AudioClip[] audioConnectOn;
-        [Tooltip("Clips to be played when a disconnection destroys a full connection.")]
+        [Tooltip("Clips to be played when a disconnection would be audible through a speaker.")]
         [SerializeField] private AudioClip[] audioDisconnectOn;
-        [Tooltip("Clips to be played when a connection does not create a full connection.")]
+        [Tooltip("Clips to be played when a connection would not be audible through a speaker.")]
         [SerializeField] private AudioClip[] audioConnectOff;
-        [Tooltip("Clips to be played when a disconnection does not destroy a full connection.")]
+        [Tooltip("Clips to be played when a disconnection would not be audible through a speaker.")]
         [SerializeField] private AudioClip[] audioDisconnectOff;
         [SerializeField] private AudioClip[] audioElecFailure;
 
         private void OnEnable()
         {
-            
+            GameEvents.onDisconnect += OnDisconnect;
+            GameEvents.onConnectionStarted += OnConnectionStarted;
+            GameEvents.onConnect += OnConnect;
+            GameEvents.onConnectionAbandoned += OnConnectionAbandoned;
+            GameEvents.onConnectionFailure += OnConnectionFailure;
+        }
+        
+        private void OnDisable()
+        {
+            GameEvents.onDisconnect -= OnDisconnect;
+            GameEvents.onConnectionStarted -= OnConnectionStarted;
+            GameEvents.onConnect -= OnConnect;
+            GameEvents.onConnectionAbandoned -= OnConnectionAbandoned;
+            GameEvents.onConnectionFailure -= OnConnectionFailure;
         }
 
-        public void PlayRandomSound(AudioClip[] array) {
-            // get a random AudioClip from the given array
-            int num = UnityEngine.Random.Range(0, array.Length-1);
-            AudioClip ac = array[num];
-            //print("Object: " + name + " playing random clip:" + ac.name);
-            // play the sound
+        private void OnConnectionFailure(Connection obj)
+        {
+            PlayRandomSound(audioElecFailure);
+        }
+
+        private void OnConnectionAbandoned(Connection obj)
+        {
+            PlayRandomSound(audioDisconnectOn);
+        }
+
+        private void OnConnect(Connection connection, PlugCable arg2)
+        {
+            PlayRandomSound(audioConnectOff);
+        }
+
+        private void OnConnectionStarted(Connection obj)
+        {
+            PlayRandomSound(audioConnectOn);
+        }
+
+        private void OnDisconnect(Connection arg1, PlugCable arg2)
+        {
+            PlayRandomSound(audioDisconnectOff);
+        }
+
+        private void PlayRandomSound(AudioClip[] array) {
+            int randIndex = Random.Range(0, array.Length - 1);
+            
+            AudioClip randClip = array[randIndex];
+            
             audioSource.time = 0f;
-            audioSource.clip = ac;
+            audioSource.clip = randClip;
             audioSource.Play();
         }
-
-        public void PlayRandomDisconnectSound() { PlayRandomSound(audioDisconnectOn); }
-        
-        
-        // On Unplug
-        
-            // if (useErrorSound)
-                // PlayRandomSound(audioElecFailure);
-            // else
-                // PlayRandomDisconnectSound();
-                
-                // On Disconnect
-                
-                
-                // Additional conditions are required to determine whether the target is on or off
-                // connectionOut.PluggableEnd.PlayRandomSound(audioDisconnectOff);
-
-                // On Connection Started
-                // PlayRandomSound(audioConnectOn);
-                
-                // On Connection Filure
-                // PlayRandomSound(audioElecFailure);
-                
-                // On Cable Connection
-                // PlayRandomSound(audioConnectOff);
-                
-                // On Connection Abandoned
-                
-            
-            // TODO: Reimplement this.
-            // connection.PluggableStart.PlayRandomDisconnectSound();
     }
 }

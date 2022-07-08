@@ -59,8 +59,8 @@ namespace Pluggables
         {
             if (!ConnectionAllowed(headConnection))
             {
-                // TODO: Call the connection failure event.
-
+                GameEvents.onConnectionFailure(headConnection);
+                
                 return;
             }
             

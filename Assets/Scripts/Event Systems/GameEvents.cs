@@ -97,6 +97,12 @@ public static class GameEvents
         }
     }
 
+    public static Action<Connection> onConnectionFailure;
+    public static void ConnectionFailure(Connection connection)
+    {
+        onConnectionFailure?.Invoke(connection);
+    }
+
     //When a cable is first pulled from an instrument
     public static Action<CableController, InstrumentSO> onCableIntrumentStart;
     public static void CableIntrumentStart(CableController cable, InstrumentSO instrument)
