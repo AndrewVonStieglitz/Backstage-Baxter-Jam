@@ -3,6 +3,7 @@ using System.Linq;
 using Pluggables;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility;
 
 namespace Cables
 {
@@ -12,6 +13,7 @@ namespace Cables
         [SerializeField] private GameObject cablePrefab;
         [Tooltip("Indexed according to Enums.Colours.")]
         [SerializeField] private List<Sprite> coloredCableSprites;
+        [SerializeField] private VelocityTracker velocityTracker;
 
         public CableController CurrentCable
         {
@@ -23,10 +25,8 @@ namespace Cables
             }
         }
 
-        public Vector3 Velocity { get; private set; }
         public UnityEvent cableChanged = new UnityEvent();
         
-        private Vector3 lastPosition;
         private CableController currentCurrentCable;
         private Connection connection;
         private Dictionary<Connection, CableController> cables = new Dictionary<Connection, CableController>();
@@ -111,29 +111,17 @@ namespace Cables
             // Cable should not collide with other cables of the same color
             if (col.GetComponentInParent<CableController>().Sprite == CurrentCable.Sprite) return;
 
-            var hit = TriggerCollision(Velocity);
+            var hit = UtilityFunctions.TriggerCollision(boxCollider2D, velocityTracker.Velocity);
 
             // Debug.Log("Player Cable Collision");
             // Debug.DrawLine(hit.point, hit.point + hit.normal, UnityEngine.Color.yellow, 30f);
             
             GameEvents.PlayerCableCollision(hit.point, hit.normal);
         }
-
-        public RaycastHit2D TriggerCollision(Vector2 castDirection)
-        {
-            var hits = new RaycastHit2D[1];
-            
-            boxCollider2D.Cast(castDirection, hits, 1);
-
-            return hits[0];
-        }
-
+        
         private void FixedUpdate()
         {
             if (CurrentCable == null || CurrentCable.state != CableController.CableState.InProgress) return;
-
-            Velocity = (transform.position - lastPosition) / Time.deltaTime;
-            lastPosition = transform.position;
 
             CurrentCable.nodes.Last().MoveNode(transform.position);
         }

@@ -1,12 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Utility;
 
 namespace Cables.Pipes
 {
+    [RequireComponent(typeof(Collider2D))]
     public class PipeCableHead : MonoBehaviour
     {
         [SerializeField] private CableHead cableHead;
+        [SerializeField] private VelocityTracker velocityTracker;
         
         private CablePipeNodeController pipeNodeController;
+        private Collider2D collider2D;
+
+        private void Awake()
+        {
+            collider2D = GetComponent<Collider2D>();
+        }
 
         private void OnEnable()
         {
@@ -20,22 +30,17 @@ namespace Cables.Pipes
 
         private void OnCableChanged()
         {
+            // TODO: Is there any reason the PipeNodeController is on the cable?
             pipeNodeController = cableHead.CurrentCable == null ? null : cableHead.CurrentCable.GetComponent<CablePipeNodeController>();
         }
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            CheckPipeCollision(col);
-        }
-
-        private void CheckPipeCollision(Collider2D col)
-        {
-            // TODO: Duplicate code. See OnTriggerExit2D.
             if (cableHead.CurrentCable == null) return;
 
             if (!col.CompareTag("Pipe")) return;
 
-            var hit = cableHead.TriggerCollision(cableHead.Velocity);
+            var hit = UtilityFunctions.TriggerCollision(collider2D, velocityTracker.Velocity);
 
             Vector2 nodePosition = hit.point + hit.normal * cableHead.CurrentCable.cableWidth / 2;
 
@@ -47,12 +52,11 @@ namespace Cables.Pipes
 
         private void OnTriggerExit2D(Collider2D col)
         {
-            // TODO: Duplicate code. See OnTriggerEnter2D.
             if (cableHead.CurrentCable == null) return;
             
             if (!col.CompareTag("Pipe")) return;
 
-            var hit = cableHead.TriggerCollision(-cableHead.Velocity);
+            var hit = UtilityFunctions.TriggerCollision(collider2D, -velocityTracker.Velocity);
             
             pipeNodeController.PipeExit(hit.normal);
         }
