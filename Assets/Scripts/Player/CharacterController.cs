@@ -62,12 +62,6 @@ public class CharacterController : MonoBehaviour
         //distToGround = baxterCollider.radius*1.05f;
         // print("Distance to ground: " + distToGround);
 
-        // TODO: Unlisten
-        playerControls.Baxter.Enable();
-        playerControls.Baxter.Jump.performed += StartJump;
-        playerControls.Baxter.Jump.canceled += EndJump;
-        playerControls.Baxter.Move.performed += PlayerMove;
-        
         groundedLayerMask = (1 << platformLayer);
         BoxCollider2D box = GetComponent<BoxCollider2D>();
         colliderWidth = box.size.x;
@@ -79,11 +73,21 @@ public class CharacterController : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
+        
+        playerControls.Baxter.Enable();
+        playerControls.Baxter.Jump.performed += StartJump;
+        playerControls.Baxter.Jump.canceled += EndJump;
+        playerControls.Baxter.Move.performed += PlayerMove;
     }
 
     private void OnDisable()
     {
         GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+        
+        playerControls.Baxter.Disable();
+        playerControls.Baxter.Jump.performed -= StartJump;
+        playerControls.Baxter.Jump.canceled -= EndJump;
+        playerControls.Baxter.Move.performed -= PlayerMove;
     }
 
     private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
