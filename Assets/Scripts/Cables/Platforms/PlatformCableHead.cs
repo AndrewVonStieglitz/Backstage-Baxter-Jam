@@ -2,20 +2,33 @@
 
 namespace Cables.Platforms
 {
-    public class CablePlatformNodeController : MonoBehaviour
+    public class PlatformCableHead : MonoBehaviour
     {
-        [SerializeField] private CableController cable;
+        [SerializeField] private CableHead cableHead;
         [SerializeField] private float cableRaycastSize;
         [SerializeField] private LayerMask platformLayerMask;
 
+        private CableController cable;
+
         private void OnEnable()
         {
-            cable.nodeMoved.AddListener(OnNodeMoved);
+            cableHead.cableChanged.AddListener(OnCableChanged);
         }
 
         private void OnDisable()
         {
-            cable.nodeMoved.RemoveListener(OnNodeMoved);
+            cableHead.cableChanged.RemoveListener(OnCableChanged);
+        }
+
+        private void OnCableChanged()
+        {
+            if (cable != null)
+                cable.nodeMoved.RemoveListener(OnNodeMoved);
+            
+            cable = cableHead.CurrentCable;
+
+            if (cable != null)
+                cable.nodeMoved.AddListener(OnNodeMoved);
         }
 
         private void OnNodeMoved(CableNode cableNode)

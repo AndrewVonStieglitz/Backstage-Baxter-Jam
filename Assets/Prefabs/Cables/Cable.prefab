@@ -256,8 +256,6 @@ GameObject:
   - component: {fileID: 8120014663964540500}
   - component: {fileID: 4879019852954964372}
   - component: {fileID: 8511436087669080055}
-  - component: {fileID: 6228321870821142823}
-  - component: {fileID: 5125566223370737176}
   m_Layer: 7
   m_Name: Cable
   m_TagString: Cable
@@ -302,18 +300,12 @@ MonoBehaviour:
   nodeDestroyed:
     m_PersistentCalls:
       m_Calls: []
-  cableCompleted:
-    m_PersistentCalls:
-      m_Calls: []
   nodeMoved:
     m_PersistentCalls:
       m_Calls: []
   state: 0
-  pluggableStart: {fileID: 0}
-  pluggableEnd: {fileID: 0}
   cableWidth: 0.5
-  instrument: {fileID: 0}
-  pluggablesList: []
+  Sprite: {fileID: 0}
 --- !u!114 &8511436087669080055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,33 +357,3 @@ MonoBehaviour:
   cableSegmentDestroyed:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6228321870821142823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8120014663964540498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6ce1852cbd3438db272c648bfb6b68d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cable: {fileID: 4879019852954964372}
---- !u!114 &5125566223370737176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8120014663964540498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0cc15c03dba45a29b3edf005501425e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cable: {fileID: 4879019852954964372}
-  cableRaycastSize: 0.5
-  platformLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
