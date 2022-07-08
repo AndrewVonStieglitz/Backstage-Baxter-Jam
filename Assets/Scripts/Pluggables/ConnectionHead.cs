@@ -4,18 +4,32 @@ namespace Pluggables
 {
     public class ConnectionHead : MonoBehaviour
     {
-        public Connection Connection;
+        private Connection connection;
         
         private Collider2D lastOverlappedTrigCollider;
 
         private void OnEnable()
         {
             GameEvents.onPlayerCableCollision += OnPlayerCableCollision;
+            GameEvents.onConnect += OnConnect;
+            GameEvents.onConnectionStarted += OnConnectionStarted;
         }
         
         private void OnDisable()
         {
             GameEvents.onPlayerCableCollision -= OnPlayerCableCollision;
+            GameEvents.onConnect -= OnConnect;
+            GameEvents.onConnectionStarted -= OnConnectionStarted;
+        }
+
+        private void OnConnectionStarted(Connection connection)
+        {
+            this.connection = connection;
+        }
+
+        private void OnConnect(Connection connection, PlugCable plugCable)
+        {
+            this.connection = null;
         }
 
         private void OnPlayerCableCollision(Vector2 position, Vector2 normal)
@@ -28,7 +42,7 @@ namespace Pluggables
             if (lastOverlappedTrigCollider != null)
             {
                 if (lastOverlappedTrigCollider.TryGetComponent(out PlugCable plugCableInto)) {
-                    plugCableInto.Interact(Connection);
+                    plugCableInto.Interact(connection);
                     return true;
                 }
             }
@@ -48,11 +62,11 @@ namespace Pluggables
 
         public void AbandonConnection()
         {
-            if (Connection == null) return;
+            if (this.connection == null) return;
             
-            var connection = Connection;
+            var connection = this.connection;
             
-            Connection = null;
+            this.connection = null;
             
             connection.PluggableStart.UnplugOutput();
             

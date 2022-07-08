@@ -8,8 +8,6 @@ namespace Pluggables
         private PluggableMB PMB;
         public PluggablesSO pluggable;
 
-        // TODO: Remove this dependency.
-        [SerializeField] private ConnectionHead connectionHead;
         [SerializeField] private PluggableType pluggableType;
 
         private Connection connectionIn;
@@ -25,14 +23,14 @@ namespace Pluggables
             PMB.Init();
         }
         
-        public void Interact(Connection connection)
+        public void Interact(Connection headConnection)
         {
             if (GameManager.currentGameState != GameManager.GameState.playing) return;
             
-            bool hasConnection = connectionHead.Connection != null;
+            bool hasConnection = headConnection != null;
 
             if (hasConnection && pluggableType != PluggableType.Instrument)
-                CompleteConnection();
+                CompleteConnection(headConnection);
             else if (!hasConnection && pluggableType != PluggableType.Speaker)
                 StartConnection();
         }
@@ -54,17 +52,12 @@ namespace Pluggables
             
             connectionOut = connection;
             
-            connectionHead.Connection = connection;
-
             GameEvents.ConnectionStarted(connection);
         }
 
-        private void CompleteConnection()
+        private void CompleteConnection(Connection headConnection)
         {
-            var connection = connectionHead.Connection;
-            
-            // Check for connection failure
-            if (!ConnectionAllowed(connection))
+            if (!ConnectionAllowed(headConnection))
             {
                 // TODO: Call the connection failure event.
 
@@ -82,13 +75,11 @@ namespace Pluggables
                 GameEvents.Disconnect(oldConnectionIn, this);
             }
 
-            connectionIn = connection;
+            connectionIn = headConnection;
 
-            connection.PluggableEnd = this;
+            headConnection.PluggableEnd = this;
 
-            connectionHead.Connection = null;
-
-            GameEvents.Connect(connection, this);
+            GameEvents.Connect(headConnection, this);
         }
 
         private bool ConnectionAllowed(Connection connection)
