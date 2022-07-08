@@ -46,8 +46,6 @@ namespace Pluggables
             
             while (studyPlug != null)
             {
-                newPList.Add(studyPlug.pluggable);
-                
                 var instrumentPlug = studyPlug as InstrumentPlugCable;
 
                 if (instrumentPlug != null)
@@ -57,8 +55,9 @@ namespace Pluggables
                     break;
                 }
 
+                newPList.Add(studyPlug.pluggable);
                 studyPlug = studyPlug.PrevPlugCable();
-                
+
                 //if (seenPlugCables.Contains(studyPlug))
                 //    return false;
                 //seenPlugCables.Add(studyPlug);
