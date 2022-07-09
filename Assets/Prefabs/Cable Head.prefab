@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 6278875621673640300}
   - component: {fileID: 6278875621673640301}
   - component: {fileID: 5329417229349185476}
+  - component: {fileID: 7681515874820867188}
+  - component: {fileID: 7349572768399508542}
+  - component: {fileID: 5004016612292111524}
   m_Layer: 8
   m_Name: Cable Head
   m_TagString: CableHead
@@ -45,7 +48,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a2dd49795143759376a202f38cee91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0, z: 0}
+  cablePrefab: {fileID: 8120014663964540498, guid: 396bdb262bcaa1645b7f912dea827949, type: 3}
+  coloredCableSprites:
+  - {fileID: 21300000, guid: 55cedffc9196904418427f7a84276782, type: 3}
+  - {fileID: 21300000, guid: 6c5a397f748008042b7641144d71baa8, type: 3}
+  - {fileID: 21300000, guid: 1de30f6868c4934468f103dd448d0917, type: 3}
+  - {fileID: 21300000, guid: 9738370b10e40734d9db95c3c47eaff9, type: 3}
+  - {fileID: 21300000, guid: 9cd646b3660094a4ab034f4e212ada66, type: 3}
+  velocityTracker: {fileID: 5004016612292111524}
   cableChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -88,3 +98,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cableHead: {fileID: 6278875621673640300}
+  velocityTracker: {fileID: 5004016612292111524}
+--- !u!114 &7681515874820867188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6278875621673640303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7739aeb380ce4ce4bdf04079fd600c56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7349572768399508542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6278875621673640303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0cc15c03dba45a29b3edf005501425e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cableHead: {fileID: 6278875621673640300}
+  cableRaycastSize: 0.5
+  platformLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &5004016612292111524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6278875621673640303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858731ea55f34a2299013e806eb17a05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Pluggables;
 using UnityEngine;
 
 public class InstrumentMB : MonoBehaviour
 {
     [SerializeField] public InstrumentSO identifierSO;
     [SerializeField] protected AudioClip songParts;// the audio associated with each song for this instrument
-    [SerializeField] protected Color cableCol;
-    public CableColor cableColor;
+    public ColorEnum color;
     private AudioSource audioSource;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCol;
@@ -53,7 +51,6 @@ public class InstrumentMB : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
-        boxCol = GetComponent<BoxCollider2D>();
     }
 
     private void ReadyInstrument(song song) //Sets caudio clip to play when song is readied

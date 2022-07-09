@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Cables
+namespace Cables.Renderers
 {
     public abstract class CableRenderer : MonoBehaviour
     {
@@ -75,8 +75,7 @@ namespace Cables
 
         protected virtual void OnInitialised()
         {
-            if (cable.pluggableStart)
-                cableSprite = cable.pluggableStart.cableSprite;
+            cableSprite = cable.Sprite;
             
             initialised.Invoke();
         }
@@ -84,7 +83,10 @@ namespace Cables
         protected void InitialiseLineRenderer(LineRenderer lineRenderer)
         {
             lineRenderer.widthCurve = AnimationCurve.Constant(1, 1, cable.cableWidth);
-            lineRenderer.material.mainTexture = cableSprite.texture; 
+            lineRenderer.sortingLayerName = "Cable";
+            
+            if (cableSprite != null)
+                lineRenderer.material.mainTexture = cableSprite.texture; 
         }
     }
 }

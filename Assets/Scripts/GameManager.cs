@@ -1,12 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cables;
+using Pluggables;
 
 public class GameManager : MonoBehaviour
 {
-
-    [SerializeField] private HUDHappinessDisplay happinessHUD;
     [SerializeField] private TMPro.TextMeshProUGUI cassetteText;
 
     //How long the intermission between songs lasts for
@@ -29,7 +27,15 @@ public class GameManager : MonoBehaviour
     public bool isStarted { get; set; }
 
     static private float m_happiness;
-    static public float happiness { get => m_happiness; set { m_happiness = Mathf.Clamp(value, 0, 100); }}
+    static public float happiness
+    {
+        get => m_happiness;
+        set
+        {
+            m_happiness = Mathf.Clamp(value, 0, 100);
+            UIEvents.HappinessChanged(happiness);
+        }
+    }
 
     IDictionary<InstrumentSO, recipe> recipeDictionary;
     IDictionary<CableController, InstrumentSO> connectionsDictionary;
@@ -81,8 +87,6 @@ public class GameManager : MonoBehaviour
                 interpolatedHappinessRate = Mathf.Lerp(.2f, happinessRate, t);
             }
             happiness += interpolatedHappinessRate * Time.deltaTime;
-            happinessHUD.SetHappiness(happiness);
-            
 
             float minutes = Mathf.Floor(timer / 60f);
             float seconds = Mathf.Ceil(timer % 60f);
@@ -111,7 +115,6 @@ public class GameManager : MonoBehaviour
         timeElapsed = 0f;
         happiness = startingHappiness;
         happinessRate = minHappinessRate;
-        happinessHUD.SetHappiness(startingHappiness);
 
         float minutes = Mathf.Floor(intermissionTime / 60f);
         float seconds = Mathf.Ceil(intermissionTime % 60f);
@@ -175,10 +178,10 @@ public class GameManager : MonoBehaviour
         Invoke("EndGame", 5);
     }
 
-    private void OnCableConnected(CableController cable, PlugCable plug)
+    private void OnCableConnected(Connection connection, PlugCable plug)
     {
         print("On Cable connected called in GM");
-        InstrumentSO instrument = cable.instrument;
+        InstrumentSO instrument = connection.Instrument;
         if(instrument == null)
         {
             print("no instrument");
@@ -189,14 +192,14 @@ public class GameManager : MonoBehaviour
             //If matching recipe found with correct instrument
             bool recipeUseAmp = recipe.amp != null;
             int totalPluggables = recipe.midAffectors.Length + (recipeUseAmp ? 2 : 1);
-            if (cable.pluggablesList.Count == totalPluggables)
+            if (connection.pluggablesList.Count == totalPluggables)
             {//First checks if size of list matches
                 Debug.Log("Correct number of items in Pluggables List");
-                bool ampCheck = recipeUseAmp ? cable.pluggablesList[0] == recipe.amp : true;
-                if (ampCheck && cable.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
+                bool ampCheck = recipeUseAmp ? connection.pluggablesList[0] == recipe.amp : true;
+                if (ampCheck && connection.pluggablesList[totalPluggables - 1] == recipe.speaker) //Checks if amp and speaker are correct
                 {
                     Debug.Log("Correct (or no) amp check passed");
-                    List<PluggablesSO> pluggables = new List<PluggablesSO>(cable.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
+                    List<PluggablesSO> pluggables = new List<PluggablesSO>(connection.pluggablesList); //Makes duplicate of lists so operations can be done on it without affecting original
                     foreach(MidAffectorSuper midAffector in recipe.midAffectors)
                     {
                         Debug.Log("Got here 3");
@@ -221,13 +224,13 @@ public class GameManager : MonoBehaviour
             }
             //If no conditions are met, recipe must be broken
             GameEvents.RecipeBroken(recipe);
-            print("GM Recipe broken. totalP: " + totalPluggables + ",\tlistCount: " + cable.pluggablesList.Count);
+            print("GM Recipe broken. totalP: " + totalPluggables + ",\tlistCount: " + connection.pluggablesList.Count);
         }
         else
         {
             //Debug.LogError("No recipe found matching instrument");// crashing the game when the player makes a mistake is not wicked sick
             Debug.LogWarning("Cable wired into wrong this for recipe");
-            plug.Unplug(true);
+            plug.UnplugInput();
 
         }
         //cable.pluggablesList;
@@ -298,8 +301,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onEndAlbum += OnAlbumEnded;
         GameEvents.onReadySong += OnReadySong;
         GameEvents.onStartSong += OnStartSong;
-        GameEvents.onCableConnectPlug += OnCableConnected;
-        GameEvents.onCableDisconnectPlug += OnCableConnected;
+        GameEvents.onConnect += OnCableConnected;
+        GameEvents.onDisconnect += OnCableConnected;
         GameEvents.onRecipeCompleted += OnRecipeCompleted;
         GameEvents.onRecipeBroken += OnRecipeBroken;
     }
@@ -312,8 +315,8 @@ public class GameManager : MonoBehaviour
         GameEvents.onEndAlbum -= OnAlbumEnded;
         GameEvents.onReadySong -= OnReadySong;
         GameEvents.onStartSong -= OnStartSong;
-        GameEvents.onCableConnectPlug -= OnCableConnected;
-        GameEvents.onCableDisconnectPlug -= OnCableConnected;
+        GameEvents.onConnect -= OnCableConnected;
+        GameEvents.onDisconnect -= OnCableConnected;
     }
 
     private void Start()

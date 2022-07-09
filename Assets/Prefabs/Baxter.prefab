@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 598958075835846359}
   - component: {fileID: 8051980483707947660}
   - component: {fileID: 4431247321528808095}
+  - component: {fileID: 7815644935613342103}
   m_Layer: 0
   m_Name: Baxter
   m_TagString: Player
@@ -110,7 +111,6 @@ MonoBehaviour:
   linearDrag: 0.125
   quadDrag: 3
   raycastResolution: 4
-  maxHoldPickup: 0.85
   debugIsGrouned: 0
 --- !u!50 &598958075835846359
 Rigidbody2D:
@@ -178,6 +178,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.13, y: 0.6}
   m_EdgeRadius: 0
+--- !u!114 &7815644935613342103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598958075835846352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b07fe587828146c6ae6f946e3b1f39d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cableHead: {fileID: 4795881982970210056}
+  connectionHead: {fileID: 9166884222414995984}
+  maxHoldPickup: 0.85
 --- !u!1001 &1562020492059412068
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -256,3 +271,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6278875621673640302, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
   m_PrefabInstance: {fileID: 1562020492059412068}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4795881982970210056 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6278875621673640300, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
+  m_PrefabInstance: {fileID: 1562020492059412068}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24a2dd49795143759376a202f38cee91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9166884222414995984 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7681515874820867188, guid: fcaea3e767f90604fa6e687ca8394e23, type: 3}
+  m_PrefabInstance: {fileID: 1562020492059412068}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7739aeb380ce4ce4bdf04079fd600c56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

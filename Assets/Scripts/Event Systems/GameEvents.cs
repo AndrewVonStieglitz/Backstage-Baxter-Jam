@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Cables;
+using Pluggables;
 
 /*
  * Event List ============================
@@ -13,10 +12,7 @@ using Cables;
  * onHurt()
  * onCablePickup(CableController cable)
  * onCableDrop(CableController cable)
- * onCableSpawn(AmpController amp, CableController cable)
- * onCableConnect(CableController cable, SpeakerController speaker)
  * onCableConnectPlug(CableController cable, PlugCable endObj)
- * onCableDisconnect(CableController cable, SpeakerController speaker)
  * onCableDisconnectPlug(CableController cable, PlugCable endObj)
  * onCableReset(CableController cable)
  * onCableWind(CableController cable, pole orientation, location)
@@ -65,71 +61,46 @@ public static class GameEvents
         }
     }
 
-    public static Action<CableController> onCablePickup;
-    public static void CablePickup(CableController cable)
+    public static Action<Connection> onConnectionStarted;
+    public static void ConnectionStarted(Connection connection)
     {
-        if (onCablePickup != null)
+        if (onConnectionStarted != null)
         {
-            onCablePickup(cable);
+            onConnectionStarted(connection);
         }
     }
 
-    public static Action<CableController> onCableDrop;
-    public static void CableDrop(CableController cable)
+    public static Action<Connection> onConnectionAbandoned;
+    public static void ConnectionAbandoned(Connection connection)
     {
-        if (onCableDrop != null)
+        if (onConnectionAbandoned != null)
         {
-            onCableDrop(cable);
+            onConnectionAbandoned(connection);
         }
     }
 
-    public static Action<AmpController, CableController> onCableSpawn;
-    public static void CableSpawn(AmpController amp, CableController cable)
+    public static Action<Connection, PlugCable> onConnect;
+    public static void Connect(Connection connection, PlugCable endObj)
     {
-        if (onCableSpawn != null)
+        if (onConnect != null)
         {
-            onCableSpawn(amp, cable);
+            onConnect(connection, endObj);
         }
     }
 
-    //Legacy: Should delete
-    public static Action<CableController, SpeakerController> onCableConnect;
-    public static void CableConnect(CableController cable, SpeakerController speaker)
+    public static Action<Connection, PlugCable> onDisconnect;
+    public static void Disconnect(Connection connection, PlugCable endObj)
     {
-        if (onCableConnect != null)
+        if (onDisconnect != null)
         {
-            onCableConnect(cable, speaker);
+            onDisconnect(connection, endObj);
         }
     }
 
-    // pluggables compatible
-    public static Action<CableController, PlugCable> onCableConnectPlug;
-    public static void CableConnectPlug(CableController cable, PlugCable endObj)
+    public static Action<Connection> onConnectionFailure;
+    public static void ConnectionFailure(Connection connection)
     {
-        if (onCableConnectPlug != null)
-        {
-            onCableConnectPlug(cable, endObj);
-        }
-    }
-
-    //Legacy: Should delete
-    public static Action<CableController, SpeakerController> onCableDisconnect;
-    public static void CableDisconnect(CableController cable, SpeakerController speaker)
-    {
-        if (onCableDisconnect != null)
-        {
-            onCableDisconnect(cable, speaker);
-        }
-    }
-
-    // pluggables compatible
-    public static Action<CableController, PlugCable> onCableDisconnectPlug;
-    public static void CableDisconnectPlug(CableController cable, PlugCable endObj)
-    {
-        if (onCableDisconnectPlug != null)
-        {
-            onCableDisconnectPlug(cable, endObj);
-        }
+        onConnectionFailure?.Invoke(connection);
     }
 
     //When a cable is first pulled from an instrument

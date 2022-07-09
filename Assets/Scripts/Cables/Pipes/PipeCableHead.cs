@@ -1,80 +1,63 @@
 ﻿using UnityEngine;
+using Utility;
 
 namespace Cables.Pipes
 {
+    [RequireComponent(typeof(Collider2D))]
     public class PipeCableHead : MonoBehaviour
     {
         [SerializeField] private CableHead cableHead;
-        
-        private CablePipeNodeController pipeNodeController;
+        [SerializeField] private VelocityTracker velocityTracker;
 
-        private void OnEnable()
-        {
-            cableHead.cableChanged.AddListener(OnCableChanged);
-        }
+        private new Collider2D collider2D;
+        private Vector2 pipeEntryNormal;
+        private CableController Cable => cableHead.CurrentCable;
 
-        private void OnDisable()
+        private void Awake()
         {
-            cableHead.cableChanged.RemoveListener(OnCableChanged);
-        }
-
-        private void OnCableChanged()
-        {
-            pipeNodeController = cableHead.Cable == null ? null : cableHead.Cable.GetComponent<CablePipeNodeController>();
+            collider2D = GetComponent<Collider2D>();
         }
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            CheckPipeCollision(col);
-
-            CheckCableCollision(col);
-        }
-
-        private void CheckCableCollision(Collider2D col)
-        {
-            if (cableHead.Cable == null) return;
-            
-            if (!col.CompareTag("Cable")) return;
-
-            // rushjob code to fit catastrophic bug 
-            if (col.GetComponentInParent<CableController>().cableColor == cableHead.GetCable().cableColor) return;
-
-
-            var hit = cableHead.TriggerCollision(cableHead.velocity);
-
-            Debug.Log("Player Cable Collision");
-            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
-
-            GameEvents.PlayerCableCollision(hit.point, hit.normal);
-        }
-
-        private void CheckPipeCollision(Collider2D col)
-        {
-            // TODO: Duplicate code. See OnTriggerExit2D.
-            if (cableHead.Cable == null) return;
+            if (Cable == null) return;
 
             if (!col.CompareTag("Pipe")) return;
 
-            var hit = cableHead.TriggerCollision(cableHead.velocity);
+            var hit = UtilityFunctions.TriggerCollision(collider2D, velocityTracker.Velocity);
 
-            Vector2 nodePosition = hit.point + hit.normal * cableHead.Cable.cableWidth / 2;
+            Vector2 nodePosition = hit.point + hit.normal * Cable.cableWidth / 2;
 
             // Draw collision normals
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow, 30f);
 
-            pipeNodeController.PipeEnter(nodePosition, hit.normal);
+            pipeEntryNormal = hit.normal;
+
+            if (!AwayFromPreviousNode(nodePosition, hit.normal)) return;
+
+            var node = new PipeNode(hit.normal);
+            
+            Cable.CreateNodeAtIndex(node, nodePosition, Cable.nodes.Count - 1);
         }
 
         private void OnTriggerExit2D(Collider2D col)
         {
-            // TODO: Duplicate code. See OnTriggerEnter2D.
-            if (cableHead.Cable == null) return;
+            if (Cable == null) return;
             
             if (!col.CompareTag("Pipe")) return;
 
-            var hit = cableHead.TriggerCollision(-cableHead.velocity);
+            var hit = UtilityFunctions.TriggerCollision(collider2D, -velocityTracker.Velocity);
             
-            pipeNodeController.PipeExit(hit.normal);
+            if (Cable.nodes.Count <= 2) return;
+            
+            if (Vector2.Dot(pipeEntryNormal, hit.normal) < 0) return;
+            
+            Cable.DestroyNode(Cable.nodes[Cable.nodes.Count - 1]);
+        }
+        
+        private bool AwayFromPreviousNode(Vector2 nodePos, Vector2 normal)
+        {
+            return Vector2.Dot(nodePos - Cable.nodes[Cable.nodes.Count - 2].Position, normal) > 0;
         }
     }
 }

@@ -31,4 +31,10 @@ public static class UIEvents
             onClearRecipes();
         }
     }
+
+    public static Action<float> onHappinessChanged;
+    public static void HappinessChanged(float happiness)
+    {
+        onHappinessChanged?.Invoke(happiness);
+    }
 }
